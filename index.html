@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rayschic - Couture Masculine sur Mesure</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a1a2e;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #2d3047;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #d4af37;
+        }
+        
+        .slogan {
+            background-color: #2d3047;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            border-left: 3px solid #d4af37;
+            color: #fff;
+        }
+        
+        .slogan strong {
+            color: #d4af37;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 15px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #ddd;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: #d4af37;
+        }
+        
+        .nav-links a.active {
+            color: #d4af37;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #d4af37;
+        }
+        
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+            gap: 40px;
+            background: linear-gradient(to right, #1a1a2e, #2d3047);
+            color: white;
+        }
+        
+        .hero-text {
+            flex: 1;
+        }
+        
+        .hero-text h1 {
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-text h1 span {
+            color: #d4af37;
+        }
+        
+        .hero-text p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #d4af37;
+            color: #1a1a2e;
+            padding: 12px 28px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #b8941f;
+        }
+        
+        .hero-image {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            height: 400px;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Collections Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1a1a2e;
+            font-size: 2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #d4af37;
+        }
+        
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .collection-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+            border-top: 4px solid #d4af37;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .collection-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .collection-image {
+            height: 250px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .collection-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .collection-card:hover .collection-image img {
+            transform: scale(1.05);
+        }
+        
+        .collection-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .collection-content h3 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        
+        .collection-content p {
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .collection-tag {
+            color: #d4af37;
+            font-weight: 700;
+            margin-top: auto;
+        }
+        
+        /* Gallery Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: #1a1a2e;
+            margin: 40px auto;
+            max-width: 1200px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            background-color: #2d3047;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #d4af37;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #fff;
+        }
+        
+        .modal-gallery {
+            padding: 30px;
+        }
+        
+        .collection-description {
+            color: #ddd;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .modal-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .modal-gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            height: 250px;
+            position: relative;
+            background-color: #2d3047;
+            cursor: pointer;
+        }
+        
+        .modal-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .modal-gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .modal-gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(26,26,46,0.9), transparent);
+            color: white;
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-gallery-item:hover .modal-gallery-overlay {
+            opacity: 1;
+        }
+        
+        /* Specialization Section */
+        .specialization {
+            background-color: #1a1a2e;
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .specialization h2 {
+            color: #d4af37;
+            margin-bottom: 30px;
+        }
+        
+        .specialization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .specialization-item {
+            background-color: #2d3047;
+            padding: 30px;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .specialization-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .specialization-item i {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+        
+        /* Process Section */
+        .process {
+            margin-bottom: 60px;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .process-step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .process-step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            background-color: #d4af37;
+            color: #1a1a2e;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #1a1a2e;
+            color: #ecf0f1;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #d4af37;
+        }
+        
+        .address {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .address i {
+            color: #d4af37;
+            margin-right: 10px;
+        }
+        
+        .delivery-info {
+            background-color: #2d3047;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .delivery-info i {
+            color: #d4af37;
+            margin-right: 10px;
+        }
+        
+        .social-media {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-media a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #2d3047;
+            color: #d4af37;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-media a:hover {
+            background-color: #d4af37;
+            color: #1a1a2e;
+            transform: translateY(-3px);
+        }
+        
+        .whatsapp-link {
+            background-color: #25D366 !important;
+            color: white !important;
+        }
+        
+        .facebook-link {
+            background-color: #1877F2 !important;
+            color: white !important;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #2d3047;
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal pour afficher l'image en plein écran */
+        .fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fullscreen-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .fullscreen-modal-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .fullscreen-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 2001;
+            transition: color 0.3s;
+        }
+        
+        .fullscreen-modal-close:hover {
+            color: #d4af37;
+        }
+        
+        .fullscreen-modal-info {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+        
+        .fullscreen-modal-info h3 {
+            color: #d4af37;
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+        }
+        
+        /* Navigation entre images en plein écran */
+        .fullscreen-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .fullscreen-nav:hover {
+            background: rgba(212, 175, 55, 0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .fullscreen-nav.prev {
+            left: 20px;
+        }
+        
+        .fullscreen-nav.next {
+            right: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .hero {
+                flex-direction: column;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-image {
+                height: 300px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .collections-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+            
+            .modal-gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .modal-content {
+                margin: 20px;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .fullscreen-nav {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .fullscreen-nav.prev {
+                left: 10px;
+            }
+            
+            .fullscreen-nav.next {
+                right: 10px;
+            }
+            
+            .fullscreen-modal-close {
+                top: 10px;
+                right: 20px;
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .collections-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .specialization-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-image {
+                height: 250px;
+            }
+            
+            .fullscreen-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Améliorations pour les images */
+        .image-error {
+            background-color: #2d3047;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            padding: 20px;
+            text-align: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .image-error i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="#" class="logo">RAY<span>SCHIC</span></a>
+                <div class="slogan">
+                    <strong>L'excellence en couture masculine</strong> 
+                    <span style="color: #d4af37; margin-left: 5px;">sur mesure</span>
+                </div>
+            </div>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Accueil</a></li>
+                    <li><a href="#collections">Collections</a></li>
+                    <li><a href="#specialisation">Spécialisation</a></li>
+                    <li><a href="#process">Processus</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <h1>RAY<span>SCHIC</span><br>Couture Masculine d'Excellence</h1>
+                <p>Spécialiste en couture masculine sur mesure à Kinshasa. Chaque pièce est créée avec précision, élégance et une attention particulière aux détails pour l'homme moderne exigeant.</p>
+                <a href="#contact" class="cta-button">Prendre rendez-vous</a>
+            </div>
+            <div class="hero-image">
+                <!-- Image principale - Mettez votre meilleure photo ici -->
+                <img src="images/hero.jpg" alt="Costume masculin sur mesure" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'; this.alt='Image de costume masculin'">
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section id="collections" class="container">
+        <h2 class="section-title">Nos Collections sur Mesure</h2>
+        <p style="text-align: center; margin-bottom: 40px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto;">Découvrez nos créations exclusives, chaque pièce est conçue sur mesure pour s'adapter parfaitement à votre morphologie et à votre style personnel.</p>
+        
+        <div class="collections-grid">
+            <!-- Costumes -->
+            <div class="collection-card" data-collection="costumes">
+                <div class="collection-image">
+                    <img src="images/costume1.jpg" alt="Costumes sur mesure" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des costumes non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Costumes sur Mesure</h3>
+                    <p>Création de costumes élégants parfaitement adaptés à votre morphologie et à votre style, pour toutes les occasions.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            
+            <!-- Chemises -->
+            <div class="collection-card" data-collection="chemises">
+                <div class="collection-image">
+                    <img src="images/chemise1.jpg" alt="Chemises sur mesure" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des chemises non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Chemises sur Mesure</h3>
+                    <p>Chemises personnalisées avec choix des tissus, coupes et finitions pour un style unique et élégant.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            
+            <!-- Pantalons -->
+            <div class="collection-card" data-collection="pantalons">
+                <div class="collection-image">
+                    <img src="images/pantalon1.jpg" alt="Pantalons sur mesure" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des pantalons non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Pantalons sur Mesure</h3>
+                    <p>Pantalons confectionnés sur mesure pour un ajustement parfait, un confort optimal et une élégance remarquable.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            
+            <!-- Vestes -->
+            <div class="collection-card" data-collection="vestes">
+                <div class="collection-image">
+                    <img src="images/veste1.jpg" alt="Vestes sur mesure" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des vestes non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Vestes & Blazers</h3>
+                    <p>Vestes et blazers confectionnés sur mesure pour compléter votre garde-robe masculine avec élégance.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            
+            <!-- Tenues spécifiques -->
+            <div class="collection-card" data-collection="tenues">
+                <div class="collection-image">
+                    <img src="images/tenue1.jpg" alt="Tenues spécifiques" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des tenues non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Tenues Spécifiques</h3>
+                    <p>Créations pour occasions spéciales : mariages, cérémonies, événements d'affaires et autres moments importants.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            
+            <!-- Accessoires -->
+            <div class="collection-card" data-collection="accessoires">
+                <div class="collection-image">
+                    <img src="images/accessoire1.jpg" alt="Accessoires" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des accessoires non disponible</p></div>';">
+                </div>
+                <div class="collection-content">
+                    <h3>Accessoires Masculins</h3>
+                    <p>Accessoires soigneusement sélectionnés et personnalisés pour compléter votre tenue sur mesure.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specialization Section -->
+    <section id="specialisation" class="specialization">
+        <div class="container">
+            <h2>Notre Expertise Exclusive</h2>
+            <p style="max-width: 800px; margin: 0 auto 20px;">Exclusivement dédié à la couture masculine sur mesure, Rayschic combine savoir-faire traditionnel et créativité contemporaine.</p>
+            
+            <div class="specialization-grid">
+                <div class="specialization-item">
+                    <i class="fas fa-ruler-combined"></i>
+                    <h3>Sur Mesure Exclusif</h3>
+                    <p>Chaque création est unique, parfaitement adaptée à votre morphologie et à votre style personnel.</p>
+                </div>
+                
+                <div class="specialization-item">
+                    <i class="fas fa-gem"></i>
+                    <h3>Tissus de Qualité</h3>
+                    <p>Sélection rigoureuse de tissus premium pour un confort, une durabilité et une élégance exceptionnels.</p>
+                </div>
+                
+                <div class="specialization-item">
+                    <i class="fas fa-cut"></i>
+                    <h3>Précision Artisanale</h3>
+                    <p>Savoir-faire artisanal avec une attention particulière aux détails et aux finitions.</p>
+                </div>
+                
+                <div class="specialization-item">
+                    <i class="fas fa-award"></i>
+                    <h3>Excellence Créative</h3>
+                    <p>Approche créative unique qui allie tradition et modernité pour des pièces intemporelles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="process container">
+        <h2 class="section-title">Notre Processus de Création</h2>
+        <p style="text-align: center; margin-bottom: 40px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto;">Découvrez comment nous créons vos pièces sur mesure, de la conception à la livraison.</p>
+        
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="process-step-number">1</div>
+                <h3>Consultation</h3>
+                <p>Premier rendez-vous pour discuter de vos besoins, préférences et prendre vos mesures précises.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-step-number">2</div>
+                <h3>Sélection des Tissus</h3>
+                <p>Choix des matériaux parmi notre sélection de tissus premium adaptés à votre création.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-step-number">3</div>
+                <h3>Conception & Patron</h3>
+                <p>Création d'un patron unique sur mesure et début de la confection de votre pièce.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-step-number">4</div>
+                <h3>Essayages & Finitions</h3>
+                <p>Essayages intermédiaires pour ajustements et finitions méticuleuses pour un résultat parfait.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Modal -->
+    <div id="gallery-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Collection</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-gallery">
+                <p id="modal-description" class="collection-description"></p>
+                <div class="modal-gallery-grid" id="modal-gallery-grid">
+                    <!-- Les images seront ajoutées dynamiquement par JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div id="fullscreen-modal" class="fullscreen-modal">
+        <button class="fullscreen-modal-close">&times;</button>
+        <button class="fullscreen-nav prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="fullscreen-nav next"><i class="fas fa-chevron-right"></i></button>
+        <div class="fullscreen-modal-content">
+            <img id="fullscreen-image" src="" alt="">
+            <div class="fullscreen-modal-info">
+                <h3 id="fullscreen-title"></h3>
+                <p id="fullscreen-description"></p>
+                <p id="fullscreen-counter" style="margin-top: 10px; color: #d4af37;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>RAY<span>SCHIC</span></h3>
+                    <div class="delivery-info">
+                        <p><i class="fas fa-truck"></i> <strong>Livraison Porte à Porte</strong></p>
+                        <p style="margin-top: 8px; font-size: 0.9rem;">Nous livrons vos créations sur mesure directement à votre domicile dans toute la ville de Kinshasa.</p>
+                    </div>
+                    <p>Spécialiste en couture masculine sur mesure depuis plus de 10 ans, alliant tradition artisanale et style moderne pour l'homme élégant.</p>
+                    
+                    <div class="social-media">
+                        <a href="https://wa.me/243812345678?text=Bonjour%20Rayschic,%20je%20suis%20intéressé%20par%20vos%20créations%20sur%20mesure" 
+                           target="_blank" 
+                           class="whatsapp-link"
+                           title="Nous contacter sur WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://facebook.com/rayschic02" 
+                           target="_blank" 
+                           class="facebook-link"
+                           title="Suivez-nous sur Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>COLLECTIONS</h3>
+                    <ul>
+                        <li><a href="#" data-collection="costumes">COSTUMES SUR MESURE</a></li>
+                        <li><a href="#" data-collection="chemises">CHEMISES SUR MESURE</a></li>
+                        <li><a href="#" data-collection="pantalons">PANTALONS SUR MESURE</a></li>
+                        <li><a href="#" data-collection="vestes">VESTES & BLAZERS</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>SERVICES EXCLUSIFS</h3>
+                    <ul>
+                        <li><a href="#" data-collection="tenues">TENUES SPÉCIFIQUES</a></li>
+                        <li><a href="#" data-collection="accessoires">ACCESSOIRES</a></li>
+                        <li><a href="#process">CONSULTATION GRATUITE</a></li>
+                        <li><a href="#process">ESSAYAGES PERSONNALISÉS</a></li>
+                        <li><a href="#contact">LIVRAISON À DOMICILE</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>CONTACT & RENDEZ-VOUS</h3>
+                    <ul>
+                        <li>
+                            <a href="https://wa.me/243813733519?text=Bonjour%20Rayschic,%20je%20suis%20intéressé%20par%20vos%20créations%20sur%20mesure" 
+                               target="_blank" 
+                               style="color: #25D366;">
+                                <i class="fab fa-whatsapp"></i> WhatsApp: +243813733519
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://facebook.com/Rayschic" 
+                               target="_blank" 
+                               style="color: #1877F2;">
+                                <i class="fab fa-facebook-f"></i> Facebook: Rayschic
+                            </a>
+                        </li>
+                        <li><i class="fas fa-envelope"></i> contact@rayschic.cd</li>
+                        <li><i class="fas fa-clock"></i> Lun-Sam: 9h-18h</li>
+                        <li><i class="fas fa-calendar-alt"></i> Sur rendez-vous uniquement</li>
+                        <li><i class="fas fa-truck"></i> Livraison à domicile incluse</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 RAYSCHIC Couture Masculine sur Mesure. Tous droits réservés. | Kinshasa, RDC</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Données des collections - ADAPTÉ À VOS NOMS D'IMAGES
+        const collectionData = {
+            "costumes": {
+                title: "Collection - Costumes sur Mesure",
+                description: "Nos costumes sur mesure sont le fruit d'un savoir-faire artisanal exceptionnel. Chaque pièce est confectionnée avec les meilleurs tissus et une attention particulière aux détails, créant une silhouette parfaite et une élégance intemporelle.",
+                images: [
+                    // Remplacez ces noms par vos vrais noms d'images
+                    {src: "images/costume1.jpg", title: "Costume classique", desc: "Deux pièces en laine fine"},
+                    {src: "images/costume2.jpg", title: "Costume trois pièces", desc: "Pour occasions spéciales"},
+                    {src: "images/costume3.jpg", title: "Costume moderne", desc: "Coupe contemporaine et ajustée"},
+                    {src: "images/costume4.jpg", title: "Costume de cérémonie", desc: "Élégance pour événements"},
+                    {src: "images/costume5.jpg", title: "Costume d'affaires", desc: "Professionnel et raffiné"},
+                    {src: "images/costume6.jpg", title: "Costume sur mesure", desc: "Tissu premium, finitions main"}
+                ]
+            },
+            "chemises": {
+                title: "Collection - Chemises sur Mesure",
+                description: "Nos chemises sur mesure sont confectionnées avec des tissus de qualité supérieure et une coupe parfaitement adaptée à votre morphologie. Chaque détail, du col aux poignets, est pensé pour votre confort et votre élégance au quotidien.",
+                images: [
+                    {src: "images/chemise1.jpg", title: "Chemise formelle", desc: "Coton égyptien, col classique"},
+                    {src: "images/chemise2.jpg", title: "Chemise casual", desc: "Tissu léger, coupe décontractée"},
+                    {src: "images/chemise3.jpg", title: "Chemise à manches longues", desc: "Pour toutes les saisons"},
+                    {src: "images/chemise4.jpg", title: "Chemise à manches courtes", desc: "Parfaite pour l'été"},
+                    {src: "images/chemise5.jpg", title: "Chemise de cérémonie", desc: "Pour occasions spéciales"},
+                    {src: "images/chemise6.jpg", title: "Chemise sur mesure", desc: "Personnalisation complète"}
+                ]
+            },
+            "pantalons": {
+                title: "Collection - Pantalons sur Mesure",
+                description: "Nos pantalons sur mesure offrent un ajustement parfait et un confort exceptionnel. Chaque paire est confectionnée selon vos mesures exactes et vos préférences de style, garantissant une silhouette élégante et une liberté de mouvement.",
+                images: [
+                    {src: "images/pantalon1.jpg", title: "Pantalon de costume", desc: "Coupe droite, tissu premium"},
+                    {src: "images/pantalon2.jpg", title: "Pantalon chino", desc: "Décontracté mais élégant"},
+                    {src: "images/pantalon3.jpg", title: "Pantalon de ville", desc: "Pour un style urbain raffiné"},
+                    {src: "images/pantalon4.jpg", title: "Pantalon en lin", desc: "Léger et confortable"},
+                    {src: "images/pantalon5.jpg", title: "Pantalon à pinces", desc: "Style classique et élégant"},
+                    {src: "images/pantalon6.jpg", title: "Pantalon ajusté", desc: "Coupe moderne et flatteuse"}
+                ]
+            },
+            "vestes": {
+                title: "Collection - Vestes & Blazers sur Mesure",
+                description: "Nos vestes et blazers sur mesure sont conçus pour compléter parfaitement votre garde-robe masculine. Confectionnés avec précision et élégance, ils s'adaptent à toutes les occasions, du plus formel au plus décontracté.",
+                images: [
+                    {src: "images/veste1.jpg", title: "Veste de costume", desc: "Deux boutons, coupe classique"},
+                    {src: "images/veste2.jpg", title: "Blazer décontracté", desc: "Pour un style smart casual"},
+                    {src: "images/veste3.jpg", title: "Veste trois boutons", desc: "Style élégant et structuré"},
+                    {src: "images/veste4.jpg", title: "Veste en tweed", desc: "Tissu traditionnel, style intemporel"},
+                    {src: "images/veste5.jpg", title: "Veste d'été", desc: "Tissu léger, parfaite pour la saison chaude"},
+                    {src: "images/veste6.jpg", title: "Veste sur mesure", desc: "Personnalisation complète"}
+                ]
+            },
+            "tenues": {
+                title: "Collection - Tenues pour Occasions Spéciales",
+                description: "Nous créons des tenues sur mesure pour vos moments les plus importants. Mariages, cérémonies, événements d'affaires ou célébrations, chaque création est pensée pour vous mettre en valeur et refléter l'importance de l'occasion.",
+                images: [
+                    {src: "images/tenue1.jpg", title: "Tenue de mariage", desc: "Élégance pour le grand jour"},
+                    {src: "images/tenue2.jpg", title: "Costume de cérémonie", desc: "Pour événements officiels"},
+                    {src: "images/tenue3.jpg", title: "Tenue de gala", desc: "Raffinement pour soirées"},
+                    {src: "images/tenue4.jpg", title: "Tenue d'affaires", desc: "Professionnel et distingué"},
+                    {src: "images/tenue5.jpg", title: "Tenue de réception", desc: "Élégance pour réceptions"},
+                    {src: "images/tenue6.jpg", title: "Tenue sur mesure", desc: "Création unique pour votre événement"}
+                ]
+            },
+            "accessoires": {
+                title: "Collection - Accessoires Masculins",
+                description: "Complétez votre tenue sur mesure avec nos accessoires soigneusement sélectionnés et personnalisés. Chaque détail contribue à parfaire votre style et à affirmer votre personnalité.",
+                images: [
+                    {src: "images/accessoire1.jpg", title: "Cravates sur mesure", desc: "Tissus exclusifs, finitions main"},
+                    {src: "images/accessoire2.jpg", title: "Pochette de costume", desc: "Accord parfait avec votre tenue"},
+                    {src: "images/accessoire3.jpg", title: "Ceintures personnalisées", desc: "Cuirs sélectionnés, boucles uniques"},
+                    {src: "images/accessoire4.jpg", title: "Boutons de manchette", desc: "Élégance discrète et raffinée"},
+                    {src: "images/accessoire5.jpg", title: "Noeuds papillon", desc: "Classiques ou modernes"},
+                    {src: "images/accessoire6.jpg", title: "Accessoires personnalisés", desc: "Créés spécialement pour vous"}
+                ]
+            }
+        };
+
+        // Éléments du DOM
+        const modal = document.getElementById('gallery-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalGalleryGrid = document.getElementById('modal-gallery-grid');
+        const closeModalBtn = document.querySelector('.close-modal');
+        
+        // Éléments pour le modal plein écran
+        const fullscreenModal = document.getElementById('fullscreen-modal');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+        const fullscreenTitle = document.getElementById('fullscreen-title');
+        const fullscreenDescription = document.getElementById('fullscreen-description');
+        const fullscreenCounter = document.getElementById('fullscreen-counter');
+        const fullscreenCloseBtn = document.querySelector('.fullscreen-modal-close');
+        const prevBtn = document.querySelector('.fullscreen-nav.prev');
+        const nextBtn = document.querySelector('.fullscreen-nav.next');
+        
+        // Variables pour la navigation entre images
+        let currentCollectionId = '';
+        let currentImageIndex = 0;
+        let currentImages = [];
+
+        // Fonction pour créer un élément d'image avec gestion d'erreur
+        function createImageElement(imageSrc, imageAlt, imageTitle, imageDesc, index) {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'modal-gallery-item';
+            galleryItem.dataset.index = index;
+            
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.alt = imageAlt;
+            img.onerror = function() {
+                this.parentElement.innerHTML = `
+                    <div class="image-error">
+                        <i class="fas fa-image"></i>
+                        <h4>${imageTitle}</h4>
+                        <p>${imageDesc}</p>
+                        <p><small>Image non disponible</small></p>
+                    </div>
+                `;
+            };
+            
+            galleryItem.innerHTML = `
+                <div class="modal-gallery-overlay">
+                    <h4>${imageTitle}</h4>
+                    <p>${imageDesc}</p>
+                </div>
+            `;
+            
+            galleryItem.prepend(img);
+            return galleryItem;
+        }
+
+        // Fonction pour ouvrir la modale avec une collection
+        function openGallery(collectionId) {
+            const collection = collectionData[collectionId];
+            
+            if (!collection) return;
+            
+            // Stocker l'ID de collection actuelle
+            currentCollectionId = collectionId;
+            currentImages = collection.images;
+            
+            // Mettre à jour le contenu de la modale
+            modalTitle.textContent = collection.title;
+            modalDescription.textContent = collection.description;
+            
+            // Vider et remplir la galerie
+            modalGalleryGrid.innerHTML = '';
+            
+            collection.images.forEach((image, index) => {
+                const galleryItem = createImageElement(
+                    image.src, 
+                    image.title, 
+                    image.title, 
+                    image.desc,
+                    index
+                );
+                
+                // Ajouter un écouteur pour ouvrir l'image en plein écran
+                galleryItem.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openFullscreenImage(collectionId, index);
+                });
+                
+                modalGalleryGrid.appendChild(galleryItem);
+            });
+            
+            // Afficher la modale
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fonction pour ouvrir une image en plein écran
+        function openFullscreenImage(collectionId, index) {
+            const collection = collectionData[collectionId];
+            
+            if (!collection || !collection.images[index]) return;
+            
+            currentCollectionId = collectionId;
+            currentImageIndex = index;
+            currentImages = collection.images;
+            
+            const imageData = collection.images[index];
+            
+            // Mettre à jour l'image et les informations
+            fullscreenImage.src = imageData.src;
+            fullscreenImage.alt = imageData.title;
+            fullscreenTitle.textContent = imageData.title;
+            fullscreenDescription.textContent = imageData.desc;
+            fullscreenCounter.textContent = `${index + 1} / ${collection.images.length}`;
+            
+            // Gestion d'erreur pour l'image plein écran
+            fullscreenImage.onerror = function() {
+                this.style.display = 'none';
+                fullscreenTitle.textContent = "Image non disponible";
+                fullscreenDescription.textContent = "L'image n'a pas pu être chargée.";
+            };
+            
+            // Afficher le modal plein écran
+            fullscreenModal.style.display = 'flex';
+        }
+
+        // Fonction pour changer d'image dans le modal plein écran
+        function changeFullscreenImage(direction) {
+            const collection = collectionData[currentCollectionId];
+            if (!collection) return;
+            
+            // Calculer le nouvel index
+            let newIndex = currentImageIndex + direction;
+            
+            // Gérer les limites
+            if (newIndex < 0) {
+                newIndex = collection.images.length - 1;
+            } else if (newIndex >= collection.images.length) {
+                newIndex = 0;
+            }
+            
+            // Ouvrir la nouvelle image
+            openFullscreenImage(currentCollectionId, newIndex);
+        }
+
+        // Fermer la modale galerie
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Fermer la modale plein écran
+        function closeFullscreenModal() {
+            fullscreenModal.style.display = 'none';
+        }
+
+        // Navigation au clavier
+        function handleKeydown(e) {
+            // Échap pour fermer les modales
+            if (e.key === 'Escape') {
+                if (fullscreenModal.style.display === 'flex') {
+                    closeFullscreenModal();
+                } else if (modal.style.display === 'block') {
+                    closeModal();
+                }
+            }
+            
+            // Flèches pour navigation dans le modal plein écran
+            if (fullscreenModal.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') {
+                    changeFullscreenImage(-1);
+                } else if (e.key === 'ArrowRight') {
+                    changeFullscreenImage(1);
+                }
+            }
+        }
+
+        // Événements pour ouvrir les galeries
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clic sur les cartes de collection
+            document.querySelectorAll('.collection-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const collectionId = this.getAttribute('data-collection');
+                    openGallery(collectionId);
+                });
+            });
+            
+            // Clic sur les liens du footer
+            document.querySelectorAll('footer a[data-collection]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const collectionId = this.getAttribute('data-collection');
+                    openGallery(collectionId);
+                });
+            });
+            
+            // Clic sur le bouton de fermeture de la modale galerie
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // Clic en dehors de la modale galerie pour la fermer
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Clic sur le bouton de fermeture du modal plein écran
+            fullscreenCloseBtn.addEventListener('click', closeFullscreenModal);
+            
+            // Clic en dehors du modal plein écran pour le fermer
+            fullscreenModal.addEventListener('click', function(e) {
+                if (e.target === fullscreenModal) {
+                    closeFullscreenModal();
+                }
+            });
+            
+            // Navigation entre images plein écran
+            prevBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                changeFullscreenImage(-1);
+            });
+            
+            nextBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                changeFullscreenImage(1);
+            });
+            
+            // Navigation au clavier
+            document.addEventListener('keydown', handleKeydown);
+            
+            // Navigation fluide pour les ancres
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.hasAttribute('data-collection')) return;
+                    
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
