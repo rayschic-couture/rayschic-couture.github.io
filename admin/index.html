@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Rayschic Couture</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -22,142 +23,351 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+    }
+    
+    .admin-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     
     .admin-header {
       text-align: center;
-      margin-bottom: 40px;
-      padding: 20px;
+      margin-bottom: 50px;
+      padding: 30px;
+      background: rgba(45, 48, 71, 0.8);
+      border-radius: 20px;
+      border-top: 5px solid #d4af37;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 800px;
     }
     
-    .admin-header h1 {
-      color: #d4af37;
-      font-size: 2.5rem;
+    .logo-admin {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #fff;
       margin-bottom: 10px;
+      letter-spacing: 2px;
     }
     
-    .admin-header h1 span {
-      color: white;
+    .logo-admin span {
+      color: #d4af37;
     }
     
-    .admin-header p {
+    .admin-subtitle {
       color: #bdc3c7;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    
+    .admin-tagline {
+      color: #d4af37;
       font-size: 1.1rem;
+      font-weight: 500;
+      padding: 10px 20px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 30px;
+      display: inline-block;
+      border: 1px solid rgba(212, 175, 55, 0.3);
     }
     
     .login-container {
-      background-color: #2d3047;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      background: linear-gradient(145deg, #2d3047, #25283e);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
       text-align: center;
-      border-top: 4px solid #d4af37;
+      border: 2px solid rgba(212, 175, 55, 0.2);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 40px;
     }
     
-    .login-container h2 {
+    .login-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #d4af37, #b8941f);
+    }
+    
+    .login-title {
       color: #d4af37;
-      margin-bottom: 20px;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+    
+    .login-description {
+      color: #bdc3c7;
+      margin-bottom: 35px;
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
     
     .login-button {
-      display: inline-block;
-      background-color: #d4af37;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #d4af37, #b8941f);
       color: #1a1a2e;
-      padding: 12px 30px;
-      border-radius: 5px;
+      padding: 18px 40px;
+      border-radius: 12px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: all 0.3s;
+      font-weight: 700;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
       border: none;
       cursor: pointer;
       width: 100%;
-      margin-top: 20px;
+      margin-top: 25px;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
     }
     
     .login-button:hover {
-      background-color: #b8941f;
-      transform: translateY(-2px);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4);
+      background: linear-gradient(135deg, #e6c158, #d4af37);
+    }
+    
+    .login-button i {
+      font-size: 1.4rem;
+    }
+    
+    .admin-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 40px;
+    }
+    
+    .feature-card {
+      background: rgba(45, 48, 71, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      transition: all 0.3s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: #d4af37;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
+    
+    .feature-title {
+      color: #fff;
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    
+    .feature-desc {
+      color: #bdc3c7;
+      font-size: 1rem;
+      line-height: 1.5;
     }
     
     .admin-instructions {
-      margin-top: 30px;
-      background-color: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      text-align: left;
-      max-width: 400px;
+      background: rgba(45, 48, 71, 0.8);
+      padding: 35px;
+      border-radius: 15px;
+      margin-top: 50px;
+      width: 100%;
+      max-width: 800px;
+      border-left: 5px solid #d4af37;
     }
     
-    .admin-instructions h3 {
+    .instructions-title {
       color: #d4af37;
-      margin-bottom: 10px;
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     
-    .admin-instructions ul {
-      padding-left: 20px;
-      margin-bottom: 15px;
+    .instructions-title i {
+      font-size: 1.6rem;
     }
     
-    .admin-instructions li {
-      margin-bottom: 8px;
+    .instructions-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .instructions-list li {
+      margin-bottom: 20px;
+      padding-left: 35px;
+      position: relative;
+      color: #bdc3c7;
+      line-height: 1.6;
+    }
+    
+    .instructions-list li:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #d4af37;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
     
     .branding {
-      position: absolute;
-      bottom: 20px;
+      margin-top: 60px;
       text-align: center;
-      color: #bdc3c7;
-      font-size: 0.9rem;
+      color: #6c757d;
+      font-size: 0.95rem;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
     }
     
-    @media (max-width: 480px) {
-      .login-container {
-        padding: 30px 20px;
-        margin: 0 15px;
+    .branding a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+    
+    .branding a:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .admin-header {
+        padding: 20px;
       }
       
-      .admin-header h1 {
-        font-size: 2rem;
+      .logo-admin {
+        font-size: 2.5rem;
       }
+      
+      .login-container {
+        padding: 30px 20px;
+        margin: 0 10px;
+      }
+      
+      .login-title {
+        font-size: 1.8rem;
+      }
+      
+      .admin-features {
+        grid-template-columns: 1fr;
+      }
+      
+      .feature-card {
+        padding: 20px;
+      }
+    }
+    
+    /* Animation pour le bouton */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .login-button {
+      animation: pulse 2s infinite;
     }
   </style>
 </head>
 <body>
-  <div class="admin-header">
-    <h1>RAY<span>SCHIC</span> Admin</h1>
-    <p>Interface de gestion du contenu</p>
-  </div>
-  
-  <div class="login-container">
-    <h2>Connexion</h2>
-    <p style="color: #bdc3c7; margin-bottom: 20px;">Connectez-vous pour modifier le contenu du site</p>
+  <div class="admin-wrapper">
+    <div class="admin-header">
+      <h1 class="logo-admin">RAY<span>SCHIC</span></h1>
+      <p class="admin-subtitle">Interface d'Administration Professionnelle</p>
+      <div class="admin-tagline">
+        <i class="fas fa-crown"></i> Couture Masculine d'Excellence
+      </div>
+    </div>
     
-    <div id="netlify-identity-widget"></div>
+    <div class="login-container">
+      <h2 class="login-title">
+        <i class="fas fa-lock"></i> Connexion Sécurisée
+      </h2>
+      <p class="login-description">
+        Accédez à l'interface de gestion de contenu pour modifier 
+        les images et collections de votre site professionnel.
+      </p>
+      
+      <div id="netlify-identity-widget"></div>
+      
+      <button class="login-button" onclick="window.netlifyIdentity.open('login')">
+        <i class="fas fa-sign-in-alt"></i> SE CONNECTER À L'ADMIN
+      </button>
+    </div>
     
-    <button class="login-button" onclick="window.netlifyIdentity.open('login')">
-      <i class="fas fa-sign-in-alt"></i> Se connecter
-    </button>
-  </div>
-  
-  <div class="admin-instructions">
-    <h3>💡 Guide rapide :</h3>
-    <ul>
-      <li><strong>Image Hero</strong> : Modifier l'image et texte d'accueil</li>
-      <li><strong>Galerie d'images</strong> : Ajouter/modifier/supprimer des photos</li>
-      <li><strong>Collections</strong> : Gérer les différentes collections</li>
-      <li><strong>Contact</strong> : Mettre à jour les coordonnées</li>
-    </ul>
-    <p>Les modifications sont sauvegardées automatiquement sur GitHub.</p>
-  </div>
-  
-  <div class="branding">
-    <p>Rayschic Couture © 2023 | Interface Admin</p>
+    <div class="admin-features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-tshirt"></i>
+        </div>
+        <h3 class="feature-title">Costumes sur Mesure</h3>
+        <p class="feature-desc">Modifiez les 6 images de la collection costumes</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shirt"></i>
+        </div>
+        <h3 class="feature-title">Chemises Élégantes</h3>
+        <p class="feature-desc">Gérez les 6 images de la collection chemises</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <h3 class="feature-title">Interface Simple</h3>
+        <p class="feature-desc">Remplacez une image en 2 clics, pas besoin de coder</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <h3 class="feature-title">Mises à jour Instantanées</h3>
+        <p class="feature-desc">Les changements sont visibles en 1 minute</p>
+      </div>
+    </div>
+    
+    <div class="admin-instructions">
+      <h3 class="instructions-title">
+        <i class="fas fa-graduation-cap"></i> Guide Rapide d'Utilisation
+      </h3>
+      <ul class="instructions-list">
+        <li><strong>Cliquez sur "SE CONNECTER"</strong> et utilisez vos identifiants envoyés par email</li>
+        <li><strong>Sélectionnez une collection</strong> (Costumes, Chemises, etc.) dans le menu de gauche</li>
+        <li><strong>Choisissez l'image à modifier</strong> (Costume 1, Costume 2, etc.)</li>
+        <li><strong>Cliquez sur "Choose an image"</strong> pour sélectionner la nouvelle photo</li>
+        <li><strong>Sauvegardez avec "Save"</strong> - l'image est automatiquement remplacée sur le site</li>
+        <li><strong>Attendez 1 minute</strong> et rafraîchissez le site pour voir le changement</li>
+      </ul>
+    </div>
+    
+    <div class="branding">
+      <p>© 2023 <strong>RAY<span style="color: #d4af37;">SCHIC</span></strong> - Couture Masculine sur Mesure | Kinshasa, RDC</p>
+      <p><i class="fas fa-shield-alt"></i> Interface sécurisée | <i class="fas fa-sync-alt"></i> Synchronisation automatique</p>
+    </div>
   </div>
   
   <!-- Netlify CMS Script -->
@@ -184,12 +394,31 @@
     
     function initializeCMS() {
       // Netlify CMS will auto-initialize
+      console.log("CMS initialized for user");
     }
     
-    // Add Font Awesome for icons
-    const faScript = document.createElement('script');
-    faScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js';
-    document.head.appendChild(faScript);
+    // Add keyboard shortcut for admin (Ctrl+Shift+A)
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+          // Already logged in
+        } else {
+          window.netlifyIdentity.open('login');
+        }
+      }
+    });
+    
+    // Add subtle animation to features on hover
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.querySelector('.feature-icon').style.transform = 'scale(1.2)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.querySelector('.feature-icon').style.transform = 'scale(1)';
+      });
+    });
   </script>
 </body>
 </html>
