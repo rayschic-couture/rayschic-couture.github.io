@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rayschic - Couture Masculine sur Mesure</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Netlify Identity Widget CSS -->
+    <link rel="stylesheet" href="https://identity.netlify.com/v1/netlify-identity-widget.css">
     <style>
         * {
             margin: 0;
@@ -535,6 +537,26 @@
             font-size: 0.9rem;
         }
         
+        /* Admin link in footer */
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #2d3047;
+        }
+        
+        .admin-link a {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .admin-link a:hover {
+            opacity: 1;
+        }
+        
         /* Modal pour afficher l'image en plein écran */
         .fullscreen-modal {
             display: none;
@@ -1034,6 +1056,13 @@
             <div class="copyright">
                 <p>&copy; 2026 RAYSCHIC Couture Masculine sur Mesure. Tous droits réservés. | Kinshasa, RDC</p>
             </div>
+            
+            <!-- Admin Link (discret) -->
+            <div class="admin-link">
+                <a href="/admin/" title="Accéder à l'interface d'administration">
+                    <i class="fas fa-cog"></i> Administration
+                </a>
+            </div>
         </div>
     </footer>
 
@@ -1363,7 +1392,28 @@
             });
         });
     </script>
+    
+    <!-- Netlify Identity Widget Script -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script>
+        // Netlify Identity integration
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+        
+        // Keyboard shortcut for admin (Ctrl+Shift+A)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                window.location.href = '/admin/';
+            }
+        });
+    </script>
 </body>
 </html>
-
-
