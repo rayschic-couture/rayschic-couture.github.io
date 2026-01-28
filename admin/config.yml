@@ -1,0 +1,56 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "hero"
+    label: "Image Hero (Page d'accueil)"
+    files:
+      - label: "Image Hero"
+        name: "hero"
+        file: "index.html"
+        fields:
+          - {label: "Titre principal", name: "title", widget: "string", default: "RAY<span>SCHIC</span><br>Couture Masculine d'Excellence"}
+          - {label: "Description", name: "description", widget: "text", default: "Spécialiste en couture masculine sur mesure à Kinshasa. Chaque pièce est créée avec précision, élégance et une attention particulière aux détails pour l'homme moderne exigeant."}
+          - {label: "Image Hero", name: "hero_image", widget: "image", default: "images/hero.jpg"}
+
+  - name: "collections"
+    label: "Collections"
+    folder: "_data/collections"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nom de la collection", name: "name", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - label: "Images"
+        name: "images"
+        widget: "list"
+        fields:
+          - {label: "Image", name: "src", widget: "image"}
+          - {label: "Titre", name: "title", widget: "string"}
+          - {label: "Description", name: "desc", widget: "string"}
+
+  - name: "images_gallery"
+    label: "Galerie d'images"
+    folder: "images"
+    create: true
+    fields:
+      - {label: "Nom du fichier", name: "name", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Collection", name: "collection", widget: "select", options: ["costumes", "chemises", "pantalons", "vestes", "tenues", "accessoires"]}
+      - {label: "Description", name: "description", widget: "text"}
+
+  - name: "contact"
+    label: "Informations de contact"
+    files:
+      - label: "Footer"
+        name: "footer"
+        file: "index.html"
+        fields:
+          - {label: "WhatsApp", name: "whatsapp", widget: "string", default: "+243813733519"}
+          - {label: "Facebook", name: "facebook", widget: "string", default: "rayschic02"}
+          - {label: "Email", name: "email", widget: "string", default: "contact@rayschic.cd"}
+          - {label: "Heures d'ouverture", name: "hours", widget: "string", default: "Lun-Sam: 9h-18h"}
