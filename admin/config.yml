@@ -1,56 +1,178 @@
 backend:
   name: git-gateway
   branch: main
+  commit_messages:
+    create: '🔄 Mise à jour image : {{slug}}'
+    update: '🔄 Mise à jour image : {{slug}}'
+    delete: '🗑️ Suppression image : {{slug}}'
+    uploadMedia: '⬆️ Upload image : {{path}}'
+    deleteMedia: '🗑️ Suppression image : {{path}}'
 
+site_url: https://eloquent-banoffee-ec10de.netlify.app
+display_url: https://rayschic-couture.github.io
+logo_url: /favicon.ico
+
+# Configuration des médias
 media_folder: "images"
 public_folder: "/images"
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demopublickey
 
+# Interface personnalisée
+locale: 'fr'
+i18n:
+  structure: 'multiple_folders'
+  default_locale: 'fr'
+
+# Éditeur simplifié
+editor:
+  preview: false
+
+# Collections organisées
 collections:
+  # ===== SECTION COSTUMES =====
   - name: "costumes"
-    label: "👔 Costumes (1-6)"
+    label: "👔 COLLECTION COSTUMES"
+    description: "Gérer les 6 images de la collection Costumes sur Mesure"
+    icon: "tshirt"
+    folder: "images"
+    create: false
+    extension: "jpg"
+    format: "frontmatter"
+    slug: "{{name}}"
+    summary: "{{title}} - {{description}}"
+    
+    # Les 6 fichiers costumes
     files:
-      - label: "Costume 1"
+      - label: "🖼️ COSTUME 1 - Image principale"
         name: "costume1"
         file: "images/costume1.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume Classique", hint: "S'affiche dans la galerie"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Deux pièces en laine fine - Collection exclusive", hint: "Description sous l'image"}
           
-      - label: "Costume 2"
+      - label: "🖼️ COSTUME 2 - Variante moderne"
         name: "costume2"
         file: "images/costume2.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume Trois Pièces"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Pour occasions spéciales - Élégance raffinée"}
           
-      - label: "Costume 3"
+      - label: "🖼️ COSTUME 3 - Coupe contemporaine"
         name: "costume3"
         file: "images/costume3.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume Moderne"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Coupe ajustée - Style contemporain"}
           
-      - label: "Costume 4"
+      - label: "🖼️ COSTUME 4 - Cérémonie"
         name: "costume4"
         file: "images/costume4.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume de Cérémonie"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Élégance pour événements officiels"}
           
-      - label: "Costume 5"
+      - label: "🖼️ COSTUME 5 - Affaires"
         name: "costume5"
         file: "images/costume5.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume d'Affaires"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Professionnel et distingué"}
           
-      - label: "Costume 6"
+      - label: "🖼️ COSTUME 6 - Sur mesure"
         name: "costume6"
         file: "images/costume6.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Costume sur Mesure"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Tissu premium, finitions main"}
 
+  # ===== SECTION CHEMISES =====
   - name: "chemises"
-    label: "👕 Chemises (1-6)"
+    label: "👕 COLLECTION CHEMISES"
+    description: "Gérer les 6 images de la collection Chemises sur Mesure"
+    icon: "shirt"
+    folder: "images"
+    create: false
+    extension: "jpg"
+    format: "frontmatter"
+    slug: "{{name}}"
+    summary: "{{title}} - {{description}}"
+    
+    # Les 6 fichiers chemises
     files:
-      - label: "Chemise 1"
+      - label: "🖼️ CHEMISE 1 - Formelle"
         name: "chemise1"
         file: "images/chemise1.jpg"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-      # ... répéter pour chemises 2-6
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise Formelle"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Coton égyptien, col classique"}
+          
+      - label: "🖼️ CHEMISE 2 - Décontractée"
+        name: "chemise2"
+        file: "images/chemise2.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise Casual"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Tissu léger, coupe décontractée"}
+          
+      - label: "🖼️ CHEMISE 3 - Manches longues"
+        name: "chemise3"
+        file: "images/chemise3.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise à Manches Longues"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Pour toutes les saisons"}
+          
+      - label: "🖼️ CHEMISE 4 - Manches courtes"
+        name: "chemise4"
+        file: "images/chemise4.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise à Manches Courtes"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Parfaite pour l'été"}
+          
+      - label: "🖼️ CHEMISE 5 - Cérémonie"
+        name: "chemise5"
+        file: "images/chemise5.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise de Cérémonie"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Pour occasions spéciales"}
+          
+      - label: "🖼️ CHEMISE 6 - Sur mesure"
+        name: "chemise6"
+        file: "images/chemise6.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE", name: "image", widget: "image", required: true}
+          - {label: "🏷️ Titre affiché", name: "title", widget: "string", default: "Chemise sur Mesure"}
+          - {label: "📝 Description", name: "description", widget: "text", default: "Personnalisation complète"}
+
+  # ===== IMAGE HERO (Page d'accueil) =====
+  - name: "hero"
+    label: "🌟 IMAGE PRINCIPALE (HERO)"
+    description: "Modifier l'image d'accueil du site"
+    icon: "star"
+    files:
+      - label: "🖼️ Image Hero - Page d'accueil"
+        name: "hero"
+        file: "images/hero.jpg"
+        fields:
+          - {label: "📸 NOUVELLE IMAGE HERO", name: "image", widget: "image", required: true, hint: "Image large (format paysage)"}
+          - {label: "💬 Texte alternatif", name: "alt", widget: "string", default: "Costume masculin sur mesure - Rayschic", hint: "Pour l'accessibilité et le SEO"}
+
+# Widgets personnalisés
+widgets:
+  - name: "image"
+    label: "Image"
+    media_library:
+      config:
+        multiple: false
