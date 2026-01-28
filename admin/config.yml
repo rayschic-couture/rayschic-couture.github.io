@@ -1,37 +1,56 @@
 backend:
   name: git-gateway
   branch: main
-  commit_messages:
-    create: 'Ajout image : {{slug}}'
-    update: 'Mise à jour image : {{slug}}'
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
   - name: "costumes"
-    label: "👔 Costumes"
-    folder: "images/costumes"
-    create: true
-    slug: "{{name}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
+    label: "👔 Costumes (1-6)"
+    files:
+      - label: "Costume 1"
+        name: "costume1"
+        file: "images/costume1.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+          
+      - label: "Costume 2"
+        name: "costume2"
+        file: "images/costume2.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+          
+      - label: "Costume 3"
+        name: "costume3"
+        file: "images/costume3.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+          
+      - label: "Costume 4"
+        name: "costume4"
+        file: "images/costume4.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+          
+      - label: "Costume 5"
+        name: "costume5"
+        file: "images/costume5.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+          
+      - label: "Costume 6"
+        name: "costume6"
+        file: "images/costume6.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
 
   - name: "chemises"
-    label: "👕 Chemises"
-    folder: "images/chemises"
-    create: true
-    slug: "{{name}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
-
-  - name: "pantalons"
-    label: "👖 Pantalons"
-    folder: "images/pantalons"
-    create: true
-    slug: "{{name}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
+    label: "👕 Chemises (1-6)"
+    files:
+      - label: "Chemise 1"
+        name: "chemise1"
+        file: "images/chemise1.jpg"
+        fields:
+          - {label: "Nouvelle image", name: "body", widget: "image"}
+      # ... répéter pour chemises 2-6
