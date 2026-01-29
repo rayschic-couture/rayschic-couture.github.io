@@ -1,43 +1,426 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Rayschic</title>
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  <title>Admin Rayschic - Gestion des images</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d3047 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #2d3047;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border-top: 4px solid #d4af37;
+    }
+    
+    h1 {
+      color: #d4af37;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    h1 span {
+      color: white;
+    }
+    
+    .section {
+      background: rgba(255,255,255,0.05);
+      padding: 25px;
+      border-radius: 10px;
+      margin: 25px 0;
+      border-left: 4px solid #d4af37;
+    }
+    
+    .drop-zone {
+      border: 3px dashed #d4af37;
+      border-radius: 10px;
+      padding: 40px;
+      text-align: center;
+      margin: 20px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .drop-zone:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+    
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .image-card {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    
+    .image-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .image-preview {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .image-info {
+      padding: 15px;
+    }
+    
+    .btn {
+      background: #d4af37;
+      color: #1a1a2e;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 5px;
+      display: inline-block;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      background: #b8941f;
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #d4af37;
+      border: 2px solid #d4af37;
+    }
+    
+    .status {
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    
+    .success {
+      background: rgba(46, 213, 115, 0.2);
+      border: 1px solid #2ed573;
+      color: #2ed573;
+    }
+    
+    .error {
+      background: rgba(255, 71, 87, 0.2);
+      border: 1px solid #ff4757;
+      color: #ff4757;
+    }
+    
+    .instructions {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    
+    .instructions h3 {
+      color: #d4af37;
+      margin-bottom: 10px;
+    }
+    
+    .instructions ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    
+    .instructions li {
+      margin: 8px 0;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+      display: none;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: #d4af37;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
 </head>
 <body>
-  <script>
-    // Initialisation simple
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Chargement du CMS...');
+  <div class="container">
+    <h1>RAY<span>SCHIC</span> Admin</h1>
+    <p style="text-align: center; color: #bdc3c7;">Interface de gestion des images</p>
+    
+    <div class="section">
+      <h2>📤 Uploader une nouvelle image</h2>
       
-      if (typeof CMS !== 'undefined') {
-        console.log('CMS détecté, initialisation...');
-        CMS.init();
-        
-        // Rediriger vers les collections
-        window.location.hash = '#/collections';
-      } else {
-        console.error('CMS non chargé');
-        document.body.innerHTML = `
-          <div style="padding: 50px; text-align: center;">
-            <h1>Erreur de chargement</h1>
-            <p>Le CMS ne s'est pas chargé correctement.</p>
-            <p>Vérifiez que le fichier <strong>admin/config.yml</strong> existe.</p>
-            <p>
-              <a href="https://github.com/rayschic-couture/rayschic-couture.github.io/blob/main/admin/config.yml" 
-                 target="_blank" style="color: blue;">
-                Vérifier config.yml sur GitHub
-              </a>
-            </p>
-            <button onclick="location.reload()" style="padding: 10px 20px; margin: 10px;">
-              Rafraîchir
-            </button>
-          </div>
-        `;
+      <div class="drop-zone" id="dropZone">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #d4af37; margin-bottom: 15px;"></i>
+        <h3>Glissez-déposez vos images ici</h3>
+        <p>Ou cliquez pour sélectionner des fichiers</p>
+        <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
+          Formats acceptés : JPG, PNG, GIF • Max : 5MB
+        </p>
+        <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+      </div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      
+      <div id="status" class="status"></div>
+      
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="btn" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i> Parcourir les fichiers
+        </button>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>🖼️ Images actuelles</h2>
+      <div class="image-grid" id="imageGrid">
+        <!-- Les images seront chargées ici -->
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="btn" onclick="loadImages()">
+          <i class="fas fa-sync-alt"></i> Actualiser la liste
+        </button>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <h3>📋 Comment utiliser :</h3>
+      <ol>
+        <li><strong>Pour modifier une image</strong> : Cliquez sur "Modifier sur GitHub"</li>
+        <li><strong>Pour ajouter une image</strong> : Glissez-déposez ou cliquez sur "Parcourir"</li>
+        <li><strong>Nommez correctement</strong> : hero.jpg, costume1.jpg, chemise1.jpg, etc.</li>
+        <li><strong>Après upload</strong> : Attendez 1-2 minutes que GitHub se synchronise</li>
+      </ol>
+      <p style="margin-top: 15px;">
+        <i class="fas fa-info-circle" style="color: #d4af37;"></i>
+        Les images sont directement sauvegardées sur votre dépôt GitHub.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const REPO_OWNER = 'rayschic-couture';
+    const REPO_NAME = 'rayschic-couture.github.io';
+    const GITHUB_TOKEN = ''; // Laissez vide pour l'upload via interface web
+    const IMAGE_FILES = [
+      'hero.jpg',
+      'costume1.jpg', 'costume2.jpg', 'costume3.jpg', 'costume4.jpg', 'costume5.jpg', 'costume6.jpg',
+      'chemise1.jpg', 'chemise2.jpg', 'chemise3.jpg', 'chemise4.jpg', 'chemise5.jpg', 'chemise6.jpg',
+      'pantalon1.jpg', 'pantalon2.jpg', 'pantalon3.jpg', 'pantalon4.jpg', 'pantalon5.jpg', 'pantalon6.jpg',
+      'veste1.jpg', 'veste2.jpg', 'veste3.jpg', 'veste4.jpg', 'veste5.jpg', 'veste6.jpg'
+    ];
+    
+    // Éléments DOM
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const imageGrid = document.getElementById('imageGrid');
+    const statusDiv = document.getElementById('status');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    
+    // Charger les images au démarrage
+    document.addEventListener('DOMContentLoaded', loadImages);
+    
+    // Drag & drop
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.background = 'rgba(212, 175, 55, 0.15)';
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.background = '';
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.background = '';
+      if (e.dataTransfer.files.length) {
+        handleFiles(e.dataTransfer.files);
       }
     });
+    
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        handleFiles(e.target.files);
+      }
+    });
+    
+    // Fonction pour gérer les fichiers
+    function handleFiles(files) {
+      statusDiv.innerHTML = '';
+      statusDiv.className = 'status';
+      
+      // Limite à 5 fichiers
+      const filesArray = Array.from(files).slice(0, 5);
+      
+      filesArray.forEach((file, index) => {
+        // Vérifier la taille (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          showError(`Fichier trop grand : ${file.name} (max 5MB)`);
+          return;
+        }
+        
+        // Vérifier le type
+        if (!file.type.match('image.*')) {
+          showError(`Format non supporté : ${file.name}`);
+          return;
+        }
+        
+        // Demander le nom du fichier
+        const originalName = file.name;
+        const newName = prompt(`Nom du fichier pour ${originalName} :`, originalName);
+        
+        if (newName) {
+          uploadToGitHub(file, newName, index, filesArray.length);
+        }
+      });
+    }
+    
+    // Upload vers GitHub via l'interface web
+    function uploadToGitHub(file, filename, current, total) {
+      showProgress(`Upload de ${filename}...`, current, total);
+      
+      // Créer un FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Lien vers l'upload GitHub
+      const githubUploadURL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/upload/main/images/${filename}`;
+      
+      // Afficher le lien et instructions
+      setTimeout(() => {
+        progressBar.style.display = 'none';
+        showSuccess(`
+          <strong>Étape manuelle requise :</strong>
+          <ol style="text-align: left; margin: 10px 0;">
+            <li>Ouvrez <a href="${githubUploadURL}" target="_blank" style="color: #d4af37;">ce lien</a></li>
+            <li>Glissez-déposez votre fichier "${filename}"</li>
+            <li>Cliquez sur "Commit changes"</li>
+            <li>Attendez 1 minute pour la synchronisation</li>
+          </ol>
+          <button class="btn" onclick="window.open('${githubUploadURL}', '_blank')">
+            <i class="fab fa-github"></i> Upload sur GitHub
+          </button>
+        `);
+      }, 1000);
+    }
+    
+    // Charger les images existantes
+    function loadImages() {
+      imageGrid.innerHTML = '';
+      
+      IMAGE_FILES.forEach(filename => {
+        const imageUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/images/${filename}`;
+        const githubEditUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/edit/main/images/${filename}`;
+        const githubUploadUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/upload/main/images`;
+        
+        const card = document.createElement('div');
+        card.className = 'image-card';
+        
+        card.innerHTML = `
+          <img src="${imageUrl}" class="image-preview" 
+               onerror="this.onerror=null; this.src='https://via.placeholder.com/200x150/2d3047/d4af37?text=${filename}'"
+               alt="${filename}">
+          <div class="image-info">
+            <p style="margin: 5px 0; font-weight: bold;">${filename}</p>
+            <div style="display: flex; gap: 5px; margin-top: 10px;">
+              <a href="${githubEditUrl}" target="_blank" class="btn" style="flex: 1;">
+                <i class="fas fa-edit"></i> Modifier
+              </a>
+              <button onclick="uploadNewVersion('${filename}')" class="btn btn-secondary" style="flex: 1;">
+                <i class="fas fa-upload"></i> Remplacer
+              </button>
+            </div>
+          </div>
+        `;
+        
+        imageGrid.appendChild(card);
+      });
+    }
+    
+    // Upload d'une nouvelle version
+    function uploadNewVersion(filename) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      
+      input.onchange = (e) => {
+        if (e.target.files[0]) {
+          const file = e.target.files[0];
+          
+          // Vérifier la taille
+          if (file.size > 5 * 1024 * 1024) {
+            showError('Fichier trop grand (max 5MB)');
+            return;
+          }
+          
+          const confirmUpload = confirm(`Remplacer ${filename} par ce nouveau fichier ?`);
+          if (confirmUpload) {
+            uploadToGitHub(file, filename, 0, 1);
+          }
+        }
+      };
+      
+      input.click();
+    }
+    
+    // Fonctions d'affichage
+    function showProgress(message, current, total) {
+      progressBar.style.display = 'block';
+      const percent = ((current + 1) / total) * 100;
+      progressFill.style.width = percent + '%';
+      statusDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+      statusDiv.className = 'status';
+    }
+    
+    function showSuccess(message) {
+      statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      statusDiv.className = 'status success';
+    }
+    
+    function showError(message) {
+      statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+      statusDiv.className = 'status error';
+    }
+    
+    // Charger Font Awesome
+    const faScript = document.createElement('script');
+    faScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js';
+    document.head.appendChild(faScript);
   </script>
 </body>
 </html>
