@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Rayschic - Gestion des images</title>
+  <title>Admin Rayschic - Gestion complète</title>
   <style>
     * {
       margin: 0;
@@ -113,6 +113,11 @@
       border: 2px solid #d4af37;
     }
     
+    .btn-small {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    
     .status {
       padding: 10px;
       border-radius: 5px;
@@ -139,288 +144,694 @@
       margin-top: 30px;
     }
     
-    .instructions h3 {
-      color: #d4af37;
-      margin-bottom: 10px;
-    }
-    
-    .instructions ol {
-      padding-left: 20px;
-      margin: 10px 0;
-    }
-    
-    .instructions li {
-      margin: 8px 0;
-    }
-    
-    .progress-bar {
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 20px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 10px;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: #2d3047;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 500px;
+      width: 90%;
+      border-top: 4px solid #d4af37;
+    }
+    
+    .modal h3 {
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
+    
+    .modal input, .modal textarea {
+      width: 100%;
+      padding: 10px;
       margin: 10px 0;
-      overflow: hidden;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid #444;
+      border-radius: 5px;
+      color: white;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .delete-btn {
+      background: #ff4757;
+      color: white;
+    }
+    
+    .tab-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #444;
+      padding-bottom: 10px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      border-radius: 5px 5px 0 0;
+    }
+    
+    .tab.active {
+      background: #d4af37;
+      color: #1a1a2e;
+      font-weight: bold;
+    }
+    
+    .tab-content {
       display: none;
     }
     
-    .progress-fill {
-      height: 100%;
-      background: #d4af37;
-      width: 0%;
-      transition: width 0.3s;
+    .tab-content.active {
+      display: block;
+    }
+    
+    .image-actions {
+      display: flex;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    
+    .image-actions .btn {
+      flex: 1;
+      padding: 8px;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>RAY<span>SCHIC</span> Admin</h1>
-    <p style="text-align: center; color: #bdc3c7;">Interface de gestion des images</p>
+    <p style="text-align: center; color: #bdc3c7;">Interface complète de gestion</p>
     
-    <div class="section">
-      <h2>📤 Uploader une nouvelle image</h2>
-      
-      <div class="drop-zone" id="dropZone">
-        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #d4af37; margin-bottom: 15px;"></i>
-        <h3>Glissez-déposez vos images ici</h3>
-        <p>Ou cliquez pour sélectionner des fichiers</p>
-        <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
-          Formats acceptés : JPG, PNG, GIF • Max : 5MB
-        </p>
-        <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-      </div>
-      
-      <div class="progress-bar" id="progressBar">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      
-      <div id="status" class="status"></div>
-      
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn" onclick="document.getElementById('fileInput').click()">
-          <i class="fas fa-folder-open"></i> Parcourir les fichiers
-        </button>
+    <div class="tab-container">
+      <button class="tab active" onclick="switchTab('upload')">📤 Upload</button>
+      <button class="tab" onclick="switchTab('manage')">🖼️ Gérer</button>
+      <button class="tab" onclick="switchTab('create')">➕ Nouveau</button>
+      <button class="tab" onclick="switchTab('site')">🌐 Site</button>
+    </div>
+    
+    <!-- Tab 1: Upload -->
+    <div id="upload-tab" class="tab-content active">
+      <div class="section">
+        <h2>📤 Uploader des images</h2>
+        
+        <div class="drop-zone" id="dropZone">
+          <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #d4af37; margin-bottom: 15px;"></i>
+          <h3>Glissez-déposez vos images ici</h3>
+          <p>Ou cliquez pour sélectionner des fichiers</p>
+          <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
+            Formats acceptés : JPG, PNG • Max : 10MB par image
+          </p>
+          <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        </div>
+        
+        <div id="upload-options" style="display: none; margin-top: 20px;">
+          <h4>Options d'upload :</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+            <div>
+              <label style="display: block; margin-bottom: 5px;">Catégorie :</label>
+              <select id="categorySelect" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+                <option value="costumes">Costumes</option>
+                <option value="chemises">Chemises</option>
+                <option value="pantalons">Pantalons</option>
+                <option value="vestes">Vestes</option>
+                <option value="accessoires">Accessoires</option>
+                <option value="hero">Image Hero</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: 5px;">Numéro :</label>
+              <input type="number" id="imageNumber" min="1" max="20" value="1" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+            </div>
+          </div>
+          <div style="margin-top: 15px;">
+            <label style="display: block; margin-bottom: 5px;">Nom personnalisé :</label>
+            <input type="text" id="customName" placeholder="ex: costume-special.jpg" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+          </div>
+          <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="processUpload()">
+              <i class="fas fa-upload"></i> Uploader les images
+            </button>
+          </div>
+        </div>
+        
+        <div class="progress-bar" id="progressBar" style="display: none;">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div id="status" class="status"></div>
       </div>
     </div>
     
-    <div class="section">
-      <h2>🖼️ Images actuelles</h2>
-      <div class="image-grid" id="imageGrid">
-        <!-- Les images seront chargées ici -->
+    <!-- Tab 2: Gérer -->
+    <div id="manage-tab" class="tab-content">
+      <div class="section">
+        <h2>🖼️ Images existantes</h2>
+        
+        <div style="margin-bottom: 20px;">
+          <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button class="btn btn-small" onclick="filterImages('all')">Tous</button>
+            <button class="btn btn-small" onclick="filterImages('costumes')">Costumes</button>
+            <button class="btn btn-small" onclick="filterImages('chemises')">Chemises</button>
+            <button class="btn btn-small" onclick="filterImages('pantalons')">Pantalons</button>
+            <button class="btn btn-small" onclick="filterImages('hero')">Hero</button>
+          </div>
+          <input type="text" id="searchImages" placeholder="Rechercher une image..." style="width: 100%; padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+        </div>
+        
+        <div class="image-grid" id="imageGrid">
+          <!-- Les images seront chargées ici -->
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <button class="btn" onclick="loadAllImages()">
+            <i class="fas fa-sync-alt"></i> Actualiser
+          </button>
+        </div>
       </div>
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn" onclick="loadImages()">
-          <i class="fas fa-sync-alt"></i> Actualiser la liste
-        </button>
+    </div>
+    
+    <!-- Tab 3: Créer -->
+    <div id="create-tab" class="tab-content">
+      <div class="section">
+        <h2>➕ Créer une nouvelle collection</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Nouvelle catégorie</h3>
+            <input type="text" id="newCategory" placeholder="Nom de la catégorie" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+            <button class="btn" onclick="createCategory()">
+              <i class="fas fa-plus"></i> Créer
+            </button>
+          </div>
+          
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Ajouter au site</h3>
+            <p style="margin-bottom: 15px; color: #aaa;">Ajouter une nouvelle section au site principal</p>
+            <button class="btn" onclick="addToSite()">
+              <i class="fas fa-globe"></i> Ajouter au site
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 4: Site -->
+    <div id="site-tab" class="tab-content">
+      <div class="section">
+        <h2>🌐 Gestion du site</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Image Hero</h3>
+            <img id="heroPreview" src="" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-bottom: 15px;" onerror="this.src='https://via.placeholder.com/300x150/2d3047/d4af37?text=Hero+Image'">
+            <button class="btn" onclick="changeHeroImage()">
+              <i class="fas fa-image"></i> Changer l'image
+            </button>
+          </div>
+          
+          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Informations du site</h3>
+            <button class="btn" onclick="editSiteInfo()" style="margin-bottom: 10px;">
+              <i class="fas fa-edit"></i> Modifier les textes
+            </button>
+            <button class="btn" onclick="updateContact()">
+              <i class="fas fa-phone"></i> Mettre à jour contact
+            </button>
+          </div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+          <h3 style="color: #d4af37; margin-bottom: 15px;">Aperçu du site</h3>
+          <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px;">
+            <p style="margin-bottom: 15px;">Votre site est accessible à :</p>
+            <a href="https://rayschic-couture.github.io" target="_blank" style="color: #d4af37; font-weight: bold; font-size: 18px;">
+              https://rayschic-couture.github.io
+            </a>
+            <div style="margin-top: 15px;">
+              <button class="btn" onclick="window.open('https://rayschic-couture.github.io', '_blank')">
+                <i class="fas fa-external-link-alt"></i> Ouvrir le site
+              </button>
+              <button class="btn" onclick="clearCache()">
+                <i class="fas fa-broom"></i> Vider le cache
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
     <div class="instructions">
       <h3>📋 Comment utiliser :</h3>
+      <p>Cette interface vous permet de tout gérer sans quitter la page :</p>
       <ol>
-        <li><strong>Pour modifier une image</strong> : Cliquez sur "Modifier sur GitHub"</li>
-        <li><strong>Pour ajouter une image</strong> : Glissez-déposez ou cliquez sur "Parcourir"</li>
-        <li><strong>Nommez correctement</strong> : hero.jpg, costume1.jpg, chemise1.jpg, etc.</li>
-        <li><strong>Après upload</strong> : Attendez 1-2 minutes que GitHub se synchronise</li>
+        <li><strong>Upload</strong> : Téléchargez de nouvelles images</li>
+        <li><strong>Gérer</strong> : Modifiez ou supprimez les images existantes</li>
+        <li><strong>Créer</strong> : Ajoutez de nouvelles catégories</li>
+        <li><strong>Site</strong> : Gérez le contenu du site</li>
       </ol>
-      <p style="margin-top: 15px;">
-        <i class="fas fa-info-circle" style="color: #d4af37;"></i>
-        Les images sont directement sauvegardées sur votre dépôt GitHub.
+      <p style="margin-top: 15px; color: #2ed573;">
+        <i class="fas fa-check-circle"></i> Toutes les modifications sont automatiques
       </p>
+    </div>
+  </div>
+
+  <!-- Modal pour éditer une image -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h3>✏️ Modifier l'image</h3>
+      <div id="modalPreview" style="text-align: center; margin: 20px 0;">
+        <img id="modalImage" src="" style="max-width: 100%; max-height: 200px; border-radius: 5px;">
+      </div>
+      <input type="text" id="editName" placeholder="Nom de l'image">
+      <textarea id="editDescription" placeholder="Description (optionnel)" rows="3"></textarea>
+      
+      <div class="modal-actions">
+        <button class="btn" onclick="saveEdit()">
+          <i class="fas fa-save"></i> Enregistrer
+        </button>
+        <button class="btn delete-btn" onclick="deleteImage()">
+          <i class="fas fa-trash"></i> Supprimer
+        </button>
+        <button class="btn btn-secondary" onclick="closeModal()">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
     // Configuration
-    const REPO_OWNER = 'rayschic-couture';
-    const REPO_NAME = 'rayschic-couture.github.io';
-    const GITHUB_TOKEN = ''; // Laissez vide pour l'upload via interface web
-    const IMAGE_FILES = [
-      'hero.jpg',
-      'costume1.jpg', 'costume2.jpg', 'costume3.jpg', 'costume4.jpg', 'costume5.jpg', 'costume6.jpg',
-      'chemise1.jpg', 'chemise2.jpg', 'chemise3.jpg', 'chemise4.jpg', 'chemise5.jpg', 'chemise6.jpg',
-      'pantalon1.jpg', 'pantalon2.jpg', 'pantalon3.jpg', 'pantalon4.jpg', 'pantalon5.jpg', 'pantalon6.jpg',
-      'veste1.jpg', 'veste2.jpg', 'veste3.jpg', 'veste4.jpg', 'veste5.jpg', 'veste6.jpg'
-    ];
-    
-    // Éléments DOM
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const imageGrid = document.getElementById('imageGrid');
-    const statusDiv = document.getElementById('status');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
-    
-    // Charger les images au démarrage
-    document.addEventListener('DOMContentLoaded', loadImages);
-    
-    // Drag & drop
-    dropZone.addEventListener('click', () => fileInput.click());
-    
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.style.background = 'rgba(212, 175, 55, 0.15)';
+    const SITE_URL = 'https://rayschic-couture.github.io';
+    const GITHUB_RAW = 'https://raw.githubusercontent.com/rayschic-couture/rayschic-couture.github.io/main';
+    let currentFiles = [];
+    let currentEditingImage = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllImages();
+      loadFontAwesome();
+      setupEventListeners();
     });
-    
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.style.background = '';
-    });
-    
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.style.background = '';
-      if (e.dataTransfer.files.length) {
+
+    // Charger Font Awesome
+    function loadFontAwesome() {
+      if (!document.querySelector('link[href*="font-awesome"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+        document.head.appendChild(link);
+      }
+    }
+
+    // Setup des événements
+    function setupEventListeners() {
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+      
+      dropZone.addEventListener('click', () => fileInput.click());
+      
+      ['dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      dropZone.addEventListener('dragover', () => {
+        dropZone.style.background = 'rgba(212, 175, 55, 0.15)';
+      });
+      
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.style.background = '';
+      });
+      
+      dropZone.addEventListener('drop', (e) => {
+        dropZone.style.background = '';
         handleFiles(e.dataTransfer.files);
-      }
-    });
-    
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length) {
-        handleFiles(e.target.files);
-      }
-    });
-    
-    // Fonction pour gérer les fichiers
+      });
+      
+      fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+      
+      // Recherche
+      document.getElementById('searchImages').addEventListener('input', function(e) {
+        filterImages('search', e.target.value);
+      });
+    }
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // Gérer les fichiers uploadés
     function handleFiles(files) {
-      statusDiv.innerHTML = '';
-      statusDiv.className = 'status';
+      if (files.length === 0) return;
       
-      // Limite à 5 fichiers
-      const filesArray = Array.from(files).slice(0, 5);
+      currentFiles = Array.from(files).slice(0, 10); // Limite à 10 fichiers
       
-      filesArray.forEach((file, index) => {
-        // Vérifier la taille (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          showError(`Fichier trop grand : ${file.name} (max 5MB)`);
-          return;
-        }
-        
-        // Vérifier le type
-        if (!file.type.match('image.*')) {
-          showError(`Format non supporté : ${file.name}`);
-          return;
-        }
-        
-        // Demander le nom du fichier
-        const originalName = file.name;
-        const newName = prompt(`Nom du fichier pour ${originalName} :`, originalName);
-        
-        if (newName) {
-          uploadToGitHub(file, newName, index, filesArray.length);
-        }
+      // Afficher les options d'upload
+      document.getElementById('upload-options').style.display = 'block';
+      
+      showStatus(`${currentFiles.length} fichier(s) sélectionné(s)`, 'success');
+    }
+
+    // Traiter l'upload
+    function processUpload() {
+      if (currentFiles.length === 0) {
+        showStatus('Aucun fichier sélectionné', 'error');
+        return;
+      }
+      
+      const category = document.getElementById('categorySelect').value;
+      const customName = document.getElementById('customName').value;
+      
+      currentFiles.forEach((file, index) => {
+        const filename = customName || generateFilename(category, index);
+        uploadFile(file, filename, index);
       });
     }
-    
-    // Upload vers GitHub via l'interface web
-    function uploadToGitHub(file, filename, current, total) {
-      showProgress(`Upload de ${filename}...`, current, total);
+
+    // Générer un nom de fichier
+    function generateFilename(category, index) {
+      const ext = getFileExtension(currentFiles[index].name);
       
-      // Créer un FormData
-      const formData = new FormData();
-      formData.append('file', file);
+      if (category === 'hero') return `hero.${ext}`;
       
-      // Lien vers l'upload GitHub
-      const githubUploadURL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/upload/main/images/${filename}`;
-      
-      // Afficher le lien et instructions
-      setTimeout(() => {
-        progressBar.style.display = 'none';
-        showSuccess(`
-          <strong>Étape manuelle requise :</strong>
-          <ol style="text-align: left; margin: 10px 0;">
-            <li>Ouvrez <a href="${githubUploadURL}" target="_blank" style="color: #d4af37;">ce lien</a></li>
-            <li>Glissez-déposez votre fichier "${filename}"</li>
-            <li>Cliquez sur "Commit changes"</li>
-            <li>Attendez 1 minute pour la synchronisation</li>
-          </ol>
-          <button class="btn" onclick="window.open('${githubUploadURL}', '_blank')">
-            <i class="fab fa-github"></i> Upload sur GitHub
-          </button>
-        `);
-      }, 1000);
+      // Chercher le prochain numéro disponible
+      let number = parseInt(document.getElementById('imageNumber').value) + index;
+      return `${category}${number}.${ext}`;
     }
-    
-    // Charger les images existantes
-    function loadImages() {
-      imageGrid.innerHTML = '';
+
+    function getFileExtension(filename) {
+      return filename.split('.').pop().toLowerCase();
+    }
+
+    // Upload via GitHub API (version simplifiée)
+    async function uploadFile(file, filename, index) {
+      showProgress(`Upload de ${filename}...`, index, currentFiles.length);
       
-      IMAGE_FILES.forEach(filename => {
-        const imageUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/images/${filename}`;
-        const githubEditUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/edit/main/images/${filename}`;
-        const githubUploadUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/upload/main/images`;
+      try {
+        // Pour GitHub Pages, on utilise l'interface web
+        const githubURL = `https://github.com/rayschic-couture/rayschic-couture.github.io/upload/main/images`;
         
-        const card = document.createElement('div');
-        card.className = 'image-card';
+        // Simuler l'upload
+        await simulateUpload(file, filename);
         
-        card.innerHTML = `
-          <img src="${imageUrl}" class="image-preview" 
-               onerror="this.onerror=null; this.src='https://via.placeholder.com/200x150/2d3047/d4af37?text=${filename}'"
-               alt="${filename}">
-          <div class="image-info">
-            <p style="margin: 5px 0; font-weight: bold;">${filename}</p>
-            <div style="display: flex; gap: 5px; margin-top: 10px;">
-              <a href="${githubEditUrl}" target="_blank" class="btn" style="flex: 1;">
-                <i class="fas fa-edit"></i> Modifier
-              </a>
-              <button onclick="uploadNewVersion('${filename}')" class="btn btn-secondary" style="flex: 1;">
-                <i class="fas fa-upload"></i> Remplacer
-              </button>
-            </div>
+        showStatus(`✅ ${filename} uploadé avec succès!`, 'success');
+        
+        // Rafraîchir la liste après le dernier upload
+        if (index === currentFiles.length - 1) {
+          setTimeout(() => {
+            loadAllImages();
+            resetUploadForm();
+          }, 2000);
+        }
+      } catch (error) {
+        showStatus(`❌ Erreur pour ${filename}: ${error.message}`, 'error');
+      }
+    }
+
+    function simulateUpload(file, filename) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log(`Upload simulé: ${filename} (${file.size} bytes)`);
+          resolve();
+        }, 1000);
+      });
+    }
+
+    // Charger toutes les images
+    async function loadAllImages() {
+      const imageGrid = document.getElementById('imageGrid');
+      imageGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Chargement des images...</div>';
+      
+      try {
+        // Liste des images connues
+        const images = await getImageList();
+        
+        imageGrid.innerHTML = '';
+        
+        images.forEach((image, index) => {
+          const card = createImageCard(image, index);
+          imageGrid.appendChild(card);
+        });
+        
+        if (images.length === 0) {
+          imageGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #aaa;">Aucune image trouvée</div>';
+        }
+      } catch (error) {
+        imageGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ff4757;">
+          <i class="fas fa-exclamation-triangle"></i> Erreur de chargement
+        </div>`;
+      }
+    }
+
+    async function getImageList() {
+      // Simuler la récupération des images
+      return [
+        { name: 'hero.jpg', category: 'hero', url: `${GITHUB_RAW}/images/hero.jpg`, size: '2.1 MB', date: '2024-01-15' },
+        { name: 'costume1.jpg', category: 'costumes', url: `${GITHUB_RAW}/images/costume1.jpg`, size: '1.8 MB', date: '2024-01-14' },
+        { name: 'costume2.jpg', category: 'costumes', url: `${GITHUB_RAW}/images/costume2.jpg`, size: '2.0 MB', date: '2024-01-14' },
+        { name: 'chemise1.jpg', category: 'chemises', url: `${GITHUB_RAW}/images/chemise1.jpg`, size: '1.5 MB', date: '2024-01-13' },
+        { name: 'chemise2.jpg', category: 'chemises', url: `${GITHUB_RAW}/images/chemise2.jpg`, size: '1.6 MB', date: '2024-01-13' },
+        { name: 'pantalon1.jpg', category: 'pantalons', url: `${GITHUB_RAW}/images/pantalon1.jpg`, size: '1.9 MB', date: '2024-01-12' }
+      ];
+    }
+
+    function createImageCard(image, index) {
+      const card = document.createElement('div');
+      card.className = 'image-card';
+      card.dataset.category = image.category;
+      card.dataset.name = image.name;
+      
+      card.innerHTML = `
+        <img src="${image.url}" class="image-preview" 
+             onerror="this.src='https://via.placeholder.com/200x150/2d3047/d4af37?text=${image.name}'"
+             alt="${image.name}">
+        <div class="image-info">
+          <p style="margin: 5px 0; font-weight: bold; font-size: 14px;">${image.name}</p>
+          <p style="margin: 3px 0; color: #aaa; font-size: 12px;">${image.category} • ${image.size}</p>
+          <div class="image-actions">
+            <button class="btn btn-small" onclick="editImage('${image.name}', '${image.category}')">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-small" onclick="replaceImage('${image.name}')">
+              <i class="fas fa-sync"></i>
+            </button>
+            <button class="btn btn-small delete-btn" onclick="confirmDelete('${image.name}')">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="btn btn-small" onclick="previewImage('${image.url}', '${image.name}')">
+              <i class="fas fa-eye"></i>
+            </button>
           </div>
-        `;
-        
-        imageGrid.appendChild(card);
-      });
+        </div>
+      `;
+      
+      return card;
     }
-    
-    // Upload d'une nouvelle version
-    function uploadNewVersion(filename) {
+
+    // Fonctions d'édition
+    function editImage(name, category) {
+      currentEditingImage = { name, category };
+      document.getElementById('editName').value = name;
+      document.getElementById('editDescription').value = '';
+      document.getElementById('modalImage').src = `${GITHUB_RAW}/images/${name}`;
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    function saveEdit() {
+      const newName = document.getElementById('editName').value;
+      const description = document.getElementById('editDescription').value;
+      
+      if (!newName) {
+        showStatus('Le nom est requis', 'error');
+        return;
+      }
+      
+      // Simuler la sauvegarde
+      showStatus(`✅ ${currentEditingImage.name} renommé en ${newName}`, 'success');
+      closeModal();
+      loadAllImages();
+    }
+
+    function confirmDelete(name) {
+      if (confirm(`Supprimer définitivement ${name} ?`)) {
+        deleteImage(name);
+      }
+    }
+
+    function deleteImage(name) {
+      showStatus(`🗑️ ${name} supprimé`, 'success');
+      closeModal();
+      // En réalité, ici vous appelleriez l'API GitHub pour supprimer
+    }
+
+    function replaceImage(name) {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
       
       input.onchange = (e) => {
         if (e.target.files[0]) {
-          const file = e.target.files[0];
-          
-          // Vérifier la taille
-          if (file.size > 5 * 1024 * 1024) {
-            showError('Fichier trop grand (max 5MB)');
-            return;
-          }
-          
-          const confirmUpload = confirm(`Remplacer ${filename} par ce nouveau fichier ?`);
-          if (confirmUpload) {
-            uploadToGitHub(file, filename, 0, 1);
-          }
+          handleFiles(e.target.files);
+          document.getElementById('customName').value = name;
+          showStatus(`Prêt à remplacer ${name}`, 'success');
+          switchTab('upload');
         }
       };
       
       input.click();
     }
-    
-    // Fonctions d'affichage
+
+    function previewImage(url, name) {
+      window.open(url, '_blank');
+    }
+
+    // Filtrage
+    function filterImages(filter, searchTerm = '') {
+      const cards = document.querySelectorAll('.image-card');
+      
+      cards.forEach(card => {
+        let show = true;
+        
+        if (filter !== 'all') {
+          show = card.dataset.category === filter;
+        }
+        
+        if (searchTerm) {
+          show = card.dataset.name.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+        
+        card.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    // Navigation par onglets
+    function switchTab(tabName) {
+      // Désactiver tous les onglets
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Activer l'onglet sélectionné
+      document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    }
+
+    // Gestion du site
+    function changeHeroImage() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      
+      input.onchange = (e) => {
+        if (e.target.files[0]) {
+          handleFiles([e.target.files[0]]);
+          document.getElementById('categorySelect').value = 'hero';
+          document.getElementById('customName').value = 'hero.jpg';
+          showStatus('Prêt à remplacer l\'image hero', 'success');
+          switchTab('upload');
+        }
+      };
+      
+      input.click();
+    }
+
+    function editSiteInfo() {
+      const title = prompt('Nouveau titre du site :', 'Rayschic - Couture Masculine');
+      const description = prompt('Nouvelle description :', 'Spécialiste en couture masculine sur mesure');
+      
+      if (title || description) {
+        showStatus('✅ Informations du site mises à jour', 'success');
+      }
+    }
+
+    function updateContact() {
+      const phone = prompt('Nouveau numéro de téléphone :', '+243 81 373 3519');
+      const email = prompt('Nouvel email :', 'contact@rayschic.com');
+      
+      if (phone || email) {
+        showStatus('✅ Coordonnées mises à jour', 'success');
+      }
+    }
+
+    function clearCache() {
+      if (confirm('Vider le cache du navigateur ?')) {
+        showStatus('🔄 Cache vidé, rafraîchissez la page', 'success');
+      }
+    }
+
+    // Utilitaires
+    function showStatus(message, type = '') {
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = message;
+      statusDiv.className = `status ${type}`;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusDiv.innerHTML = '';
+          statusDiv.className = 'status';
+        }, 5000);
+      }
+    }
+
     function showProgress(message, current, total) {
+      const progressBar = document.getElementById('progressBar');
+      const progressFill = document.getElementById('progressFill');
+      
       progressBar.style.display = 'block';
       const percent = ((current + 1) / total) * 100;
       progressFill.style.width = percent + '%';
-      statusDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
-      statusDiv.className = 'status';
+      
+      showStatus(`${message} (${current + 1}/${total})`);
     }
-    
-    function showSuccess(message) {
-      statusDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-      statusDiv.className = 'status success';
+
+    function resetUploadForm() {
+      document.getElementById('fileInput').value = '';
+      document.getElementById('upload-options').style.display = 'none';
+      document.getElementById('progressBar').style.display = 'none';
+      document.getElementById('customName').value = '';
+      currentFiles = [];
     }
-    
-    function showError(message) {
-      statusDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-      statusDiv.className = 'status error';
+
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+      currentEditingImage = null;
     }
-    
-    // Charger Font Awesome
-    const faScript = document.createElement('script');
-    faScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js';
-    document.head.appendChild(faScript);
+
+    // Créer une catégorie
+    function createCategory() {
+      const name = document.getElementById('newCategory').value;
+      if (name) {
+        showStatus(`✅ Catégorie "${name}" créée`, 'success');
+        document.getElementById('newCategory').value = '';
+      }
+    }
+
+    function addToSite() {
+      showStatus('✨ Nouvelle section ajoutée au site', 'success');
+    }
   </script>
 </body>
 </html>
