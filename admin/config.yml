@@ -1,56 +1,48 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: rayschic-couture/rayschic-couture.github.io
   branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: /auth
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "costumes"
-    label: "👔 Costumes (1-6)"
+  - name: "site"
+    label: "🌐 Site"
     files:
-      - label: "Costume 1"
-        name: "costume1"
-        file: "images/costume1.jpg"
+      - name: "home"
+        label: "Page d'accueil"
+        file: "index.html"
         fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-          
-      - label: "Costume 2"
-        name: "costume2"
-        file: "images/costume2.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-          
-      - label: "Costume 3"
-        name: "costume3"
-        file: "images/costume3.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-          
-      - label: "Costume 4"
-        name: "costume4"
-        file: "images/costume4.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-          
-      - label: "Costume 5"
-        name: "costume5"
-        file: "images/costume5.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-          
-      - label: "Costume 6"
-        name: "costume6"
-        file: "images/costume6.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
+          - {label: "Titre", name: "title", widget: "string"}
+          - {label: "Description", name: "description", widget: "text"}
+          - {label: "Image Hero", name: "hero_image", widget: "image"}
+
+  - name: "costumes"
+    label: "👔 Costumes"
+    folder: "images/costumes"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Nom", name: "name", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
 
   - name: "chemises"
-    label: "👕 Chemises (1-6)"
-    files:
-      - label: "Chemise 1"
-        name: "chemise1"
-        file: "images/chemise1.jpg"
-        fields:
-          - {label: "Nouvelle image", name: "body", widget: "image"}
-      # ... répéter pour chemises 2-6
+    label: "👕 Chemises"
+    folder: "images/chemises"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Nom", name: "name", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
+
+  - name: "pantalons"
+    label: "👖 Pantalons"
+    folder: "images/pantalons"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Nom", name: "name", widget: "string"}
+      - {label: "Image", name: "image", widget: "image"}
