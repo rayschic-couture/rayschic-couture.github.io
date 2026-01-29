@@ -4,205 +4,40 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Rayschic</title>
-  <!-- Netlify CMS -->
   <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #1a1a2e 0%, #2d3047 100%);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    
-    .container {
-      background: #2d3047;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      width: 100%;
-      max-width: 500px;
-      text-align: center;
-      border-top: 4px solid #d4af37;
-    }
-    
-    h1 {
-      color: #d4af37;
-      margin-bottom: 10px;
-    }
-    
-    h1 span {
-      color: white;
-    }
-    
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #d4af37;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .btn {
-      background: #d4af37;
-      color: #1a1a2e;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      margin: 10px;
-      transition: all 0.3s;
-    }
-    
-    .btn:hover {
-      background: #b8941f;
-      transform: translateY(-2px);
-    }
-    
-    .error-message {
-      background: rgba(255, 0, 0, 0.1);
-      border-left: 4px solid #ff4757;
-      padding: 20px;
-      margin: 20px 0;
-      text-align: left;
-      border-radius: 5px;
-    }
-    
-    .instructions {
-      margin-top: 30px;
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 10px;
-      text-align: left;
-    }
-    
-    .instructions h3 {
-      color: #d4af37;
-      margin-bottom: 10px;
-    }
-    
-    .instructions ul {
-      padding-left: 20px;
-      margin-bottom: 15px;
-    }
-    
-    .instructions li {
-      margin-bottom: 8px;
-    }
-    
-    .success {
-      color: #2ed573;
-      margin-top: 20px;
-    }
-  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>RAY<span>SCHIC</span> Admin</h1>
-    <p>Interface de gestion du contenu</p>
-    
-    <div id="loading">
-      <div class="spinner"></div>
-      <p>Chargement de l'interface...</p>
-    </div>
-    
-    <div id="error" class="error-message" style="display: none;">
-      <h3>⚠️ Impossible de charger l'interface</h3>
-      <p><strong>Solutions :</strong></p>
-      <ol>
-        <li>Vérifiez que le fichier <code>admin/config.yml</code> existe</li>
-        <li>Vérifiez votre connexion Netlify Identity</li>
-        <li>Rafraîchissez la page (F5)</li>
-        <li>Essayez en navigation privée</li>
-      </ol>
-      
-      <div style="margin-top: 20px;">
-        <button class="btn" onclick="location.reload()">🔄 Réessayer</button>
-        <a href="/" class="btn">🏠 Retour au site</a>
-        <a href="https://github.com/rayschic-couture/rayschic-couture.github.io/blob/main/admin/config.yml" 
-           target="_blank" class="btn">📁 Vérifier config.yml</a>
-      </div>
-    </div>
-    
-    <div id="success" style="display: none;">
-      <p class="success">✅ Interface chargée avec succès !</p>
-      <p>Vous pouvez maintenant modifier les images du site.</p>
-    </div>
-    
-    <div class="instructions">
-      <h3>💡 Comment utiliser :</h3>
-      <ul>
-        <li><strong>Image Hero</strong> : Modifier l'image principale</li>
-        <li><strong>Costumes</strong> : Modifier les 6 costumes</li>
-        <li><strong>Chemises</strong> : Modifier les 6 chemises</li>
-      </ul>
-      <p>Cliquez sur "Choose an image" pour uploader une nouvelle photo.</p>
-    </div>
-  </div>
-
   <script>
-    // Attendre que le DOM soit chargé
+    // Initialisation simple
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('Page admin chargée');
+      console.log('Chargement du CMS...');
       
-      // Vérifier si CMS est disponible
       if (typeof CMS !== 'undefined') {
-        console.log('Netlify CMS détecté');
+        console.log('CMS détecté, initialisation...');
+        CMS.init();
         
-        try {
-          // Initialiser le CMS
-          CMS.init();
-          
-          // Masquer le chargement et montrer le succès
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('success').style.display = 'block';
-          
-          console.log('CMS initialisé avec succès');
-        } catch (error) {
-          console.error('Erreur d\'initialisation CMS:', error);
-          showError();
-        }
+        // Rediriger vers les collections
+        window.location.hash = '#/collections';
       } else {
-        console.error('Netlify CMS non détecté');
-        
-        // Essayer de charger le CMS manuellement
-        setTimeout(function() {
-          if (typeof CMS === 'undefined') {
-            showError();
-          }
-        }, 3000);
+        console.error('CMS non chargé');
+        document.body.innerHTML = `
+          <div style="padding: 50px; text-align: center;">
+            <h1>Erreur de chargement</h1>
+            <p>Le CMS ne s'est pas chargé correctement.</p>
+            <p>Vérifiez que le fichier <strong>admin/config.yml</strong> existe.</p>
+            <p>
+              <a href="https://github.com/rayschic-couture/rayschic-couture.github.io/blob/main/admin/config.yml" 
+                 target="_blank" style="color: blue;">
+                Vérifier config.yml sur GitHub
+              </a>
+            </p>
+            <button onclick="location.reload()" style="padding: 10px 20px; margin: 10px;">
+              Rafraîchir
+            </button>
+          </div>
+        `;
       }
     });
-    
-    function showError() {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('error').style.display = 'block';
-    }
-    
-    // Vérifier si on est sur la bonne URL
-    if (window.location.hash === '') {
-      window.location.hash = '#/collections';
-    }
   </script>
 </body>
 </html>
