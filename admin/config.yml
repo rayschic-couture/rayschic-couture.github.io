@@ -1,24 +1,28 @@
 backend:
-  name: github
-  repo: rayschic-couture/rayschic-couture.github.io
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com
-  auth_endpoint: /auth
+  commit_messages:
+    create: 'Création : {{collection}} - {{slug}}'
+    update: 'Mise à jour : {{collection}} - {{slug}}'
+    delete: 'Suppression : {{collection}} - {{slug}}'
+    uploadMedia: 'Upload : {{path}}'
+    deleteMedia: 'Suppression : {{path}}'
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "site"
-    label: "🌐 Site"
-    files:
-      - name: "home"
-        label: "Page d'accueil"
-        file: "index.html"
-        fields:
-          - {label: "Titre", name: "title", widget: "string"}
-          - {label: "Description", name: "description", widget: "text"}
-          - {label: "Image Hero", name: "hero_image", widget: "image"}
+  - name: "images"
+    label: "🖼️ Images"
+    folder: "images"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Nom", name: "name", widget: "string", required: true}
+      - {label: "Image", name: "image", widget: "image", required: true}
+      - {label: "Catégorie", name: "category", widget: "select", 
+         options: ["hero", "costumes", "chemises", "pantalons", "vestes", "accessoires"]}
+      - {label: "Description", name: "description", widget: "text"}
 
   - name: "costumes"
     label: "👔 Costumes"
@@ -26,8 +30,9 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Nom", name: "name", widget: "string", required: true}
+      - {label: "Image", name: "image", widget: "image", required: true}
+      - {label: "Description", name: "description", widget: "text"}
 
   - name: "chemises"
     label: "👕 Chemises"
@@ -35,14 +40,6 @@ collections:
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
-
-  - name: "pantalons"
-    label: "👖 Pantalons"
-    folder: "images/pantalons"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string"}
-      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Nom", name: "name", widget: "string", required: true}
+      - {label: "Image", name: "image", widget: "image", required: true}
+      - {label: "Description", name: "description", widget: "text"}
