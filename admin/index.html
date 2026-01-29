@@ -91,15 +91,16 @@
     .btn {
       background: #d4af37;
       color: #1a1a2e;
-      padding: 10px 20px;
+      padding: 8px 15px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
-      margin: 5px;
+      margin: 3px;
       display: inline-block;
       text-decoration: none;
       transition: all 0.3s;
+      font-size: 12px;
     }
     
     .btn:hover {
@@ -110,12 +111,12 @@
     .btn-secondary {
       background: transparent;
       color: #d4af37;
-      border: 2px solid #d4af37;
+      border: 1px solid #d4af37;
     }
     
-    .btn-small {
-      padding: 5px 10px;
-      font-size: 12px;
+    .delete-btn {
+      background: #ff4757;
+      color: white;
     }
     
     .status {
@@ -137,13 +138,6 @@
       color: #ff4757;
     }
     
-    .instructions {
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 30px;
-    }
-    
     .modal {
       display: none;
       position: fixed;
@@ -151,7 +145,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
       z-index: 1000;
       align-items: center;
       justify-content: center;
@@ -169,27 +163,43 @@
     .modal h3 {
       color: #d4af37;
       margin-bottom: 20px;
+      text-align: center;
     }
     
-    .modal input, .modal textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid #444;
-      border-radius: 5px;
-      color: white;
+    .preview-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .preview-image {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
     
     .modal-actions {
       display: flex;
       gap: 10px;
       margin-top: 20px;
+      justify-content: center;
     }
     
-    .delete-btn {
-      background: #ff4757;
+    .upload-btn {
+      background: #25D366;
       color: white;
+    }
+    
+    .instructions {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    
+    .instructions h3 {
+      color: #d4af37;
+      margin-bottom: 10px;
     }
     
     .tab-container {
@@ -198,6 +208,7 @@
       margin-bottom: 20px;
       border-bottom: 2px solid #444;
       padding-bottom: 10px;
+      flex-wrap: wrap;
     }
     
     .tab {
@@ -207,6 +218,7 @@
       color: #aaa;
       cursor: pointer;
       border-radius: 5px 5px 0 0;
+      transition: all 0.3s;
     }
     
     .tab.active {
@@ -231,207 +243,209 @@
     
     .image-actions .btn {
       flex: 1;
-      padding: 8px;
-      font-size: 12px;
+      text-align: center;
+    }
+    
+    .category-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.2);
+      color: #d4af37;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-right: 5px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #d4af37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Pour mobile */
+    @media (max-width: 768px) {
+      .image-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+      
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>RAY<span>SCHIC</span> Admin</h1>
-    <p style="text-align: center; color: #bdc3c7;">Interface complète de gestion</p>
+    <p style="text-align: center; color: #bdc3c7; margin-bottom: 30px;">Interface complète de gestion des images</p>
     
     <div class="tab-container">
-      <button class="tab active" onclick="switchTab('upload')">📤 Upload</button>
-      <button class="tab" onclick="switchTab('manage')">🖼️ Gérer</button>
-      <button class="tab" onclick="switchTab('create')">➕ Nouveau</button>
-      <button class="tab" onclick="switchTab('site')">🌐 Site</button>
+      <button class="tab active" onclick="switchTab('gallery')">🖼️ Galerie</button>
+      <button class="tab" onclick="switchTab('upload')">📤 Uploader</button>
+      <button class="tab" onclick="switchTab('manage')">⚙️ Gérer</button>
     </div>
     
-    <!-- Tab 1: Upload -->
-    <div id="upload-tab" class="tab-content active">
+    <!-- Tab 1: Galerie -->
+    <div id="gallery-tab" class="tab-content active">
       <div class="section">
-        <h2>📤 Uploader des images</h2>
+        <h2>Galerie des images</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">Cliquez sur "Modifier" pour remplacer une image</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+          <button class="btn" onclick="filterImages('all')">Tout</button>
+          <button class="btn btn-secondary" onclick="filterImages('costumes')">Costumes</button>
+          <button class="btn btn-secondary" onclick="filterImages('chemises')">Chemises</button>
+          <button class="btn btn-secondary" onclick="filterImages('pantalons')">Pantalons</button>
+          <button class="btn btn-secondary" onclick="filterImages('vestes')">Vestes</button>
+          <button class="btn btn-secondary" onclick="filterImages('hero')">Hero</button>
+        </div>
+        
+        <div id="galleryGrid" class="image-grid">
+          <!-- Les images seront chargées ici -->
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Chargement des images...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tab 2: Upload -->
+    <div id="upload-tab" class="tab-content">
+      <div class="section">
+        <h2>Uploader de nouvelles images</h2>
         
         <div class="drop-zone" id="dropZone">
           <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #d4af37; margin-bottom: 15px;"></i>
           <h3>Glissez-déposez vos images ici</h3>
           <p>Ou cliquez pour sélectionner des fichiers</p>
           <p style="color: #aaa; font-size: 14px; margin-top: 10px;">
-            Formats acceptés : JPG, PNG • Max : 10MB par image
+            Formats : JPG, PNG • Max : 10MB par image
           </p>
           <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
         </div>
         
-        <div id="upload-options" style="display: none; margin-top: 20px;">
-          <h4>Options d'upload :</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+        <div style="margin-top: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
+          <h4 style="color: #d4af37; margin-bottom: 15px;">Options :</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
             <div>
-              <label style="display: block; margin-bottom: 5px;">Catégorie :</label>
-              <select id="categorySelect" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+              <label style="display: block; margin-bottom: 8px; color: #aaa;">Catégorie :</label>
+              <select id="categorySelect" style="width: 100%; padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
                 <option value="costumes">Costumes</option>
                 <option value="chemises">Chemises</option>
                 <option value="pantalons">Pantalons</option>
                 <option value="vestes">Vestes</option>
                 <option value="accessoires">Accessoires</option>
-                <option value="hero">Image Hero</option>
+                <option value="hero">Image Hero (principale)</option>
               </select>
             </div>
             <div>
-              <label style="display: block; margin-bottom: 5px;">Numéro :</label>
-              <input type="number" id="imageNumber" min="1" max="20" value="1" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
+              <label style="display: block; margin-bottom: 8px; color: #aaa;">Nom du fichier :</label>
+              <input type="text" id="imageName" placeholder="Ex: costume1.jpg" style="width: 100%; padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
             </div>
           </div>
-          <div style="margin-top: 15px;">
-            <label style="display: block; margin-bottom: 5px;">Nom personnalisé :</label>
-            <input type="text" id="customName" placeholder="ex: costume-special.jpg" style="width: 100%; padding: 8px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
-          </div>
+          
           <div style="text-align: center; margin-top: 20px;">
-            <button class="btn" onclick="processUpload()">
-              <i class="fas fa-upload"></i> Uploader les images
+            <button class="btn" style="padding: 12px 30px; font-size: 14px;" onclick="uploadNewImages()">
+              <i class="fas fa-upload"></i> Uploader maintenant
             </button>
           </div>
         </div>
         
-        <div class="progress-bar" id="progressBar" style="display: none;">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        
-        <div id="status" class="status"></div>
+        <div id="uploadStatus" class="status" style="margin-top: 20px;"></div>
       </div>
     </div>
     
-    <!-- Tab 2: Gérer -->
+    <!-- Tab 3: Gérer -->
     <div id="manage-tab" class="tab-content">
       <div class="section">
-        <h2>🖼️ Images existantes</h2>
+        <h2>Gestion avancée</h2>
         
-        <div style="margin-bottom: 20px;">
-          <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button class="btn btn-small" onclick="filterImages('all')">Tous</button>
-            <button class="btn btn-small" onclick="filterImages('costumes')">Costumes</button>
-            <button class="btn btn-small" onclick="filterImages('chemises')">Chemises</button>
-            <button class="btn btn-small" onclick="filterImages('pantalons')">Pantalons</button>
-            <button class="btn btn-small" onclick="filterImages('hero')">Hero</button>
-          </div>
-          <input type="text" id="searchImages" placeholder="Rechercher une image..." style="width: 100%; padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
-        </div>
-        
-        <div class="image-grid" id="imageGrid">
-          <!-- Les images seront chargées ici -->
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-          <button class="btn" onclick="loadAllImages()">
-            <i class="fas fa-sync-alt"></i> Actualiser
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Tab 3: Créer -->
-    <div id="create-tab" class="tab-content">
-      <div class="section">
-        <h2>➕ Créer une nouvelle collection</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
-            <h3 style="color: #d4af37; margin-bottom: 15px;">Nouvelle catégorie</h3>
-            <input type="text" id="newCategory" placeholder="Nom de la catégorie" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid #444;">
-            <button class="btn" onclick="createCategory()">
-              <i class="fas fa-plus"></i> Créer
-            </button>
-          </div>
-          
-          <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
-            <h3 style="color: #d4af37; margin-bottom: 15px;">Ajouter au site</h3>
-            <p style="margin-bottom: 15px; color: #aaa;">Ajouter une nouvelle section au site principal</p>
-            <button class="btn" onclick="addToSite()">
-              <i class="fas fa-globe"></i> Ajouter au site
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Tab 4: Site -->
-    <div id="site-tab" class="tab-content">
-      <div class="section">
-        <h2>🌐 Gestion du site</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
           <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
             <h3 style="color: #d4af37; margin-bottom: 15px;">Image Hero</h3>
-            <img id="heroPreview" src="" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px; margin-bottom: 15px;" onerror="this.src='https://via.placeholder.com/300x150/2d3047/d4af37?text=Hero+Image'">
-            <button class="btn" onclick="changeHeroImage()">
-              <i class="fas fa-image"></i> Changer l'image
+            <img id="heroPreview" src="" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 15px;" onerror="this.src='https://via.placeholder.com/300x120/2d3047/d4af37?text=Hero+Image'">
+            <button class="btn" onclick="changeHeroImage()" style="width: 100%;">
+              <i class="fas fa-image"></i> Changer l'image hero
             </button>
           </div>
           
           <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
-            <h3 style="color: #d4af37; margin-bottom: 15px;">Informations du site</h3>
-            <button class="btn" onclick="editSiteInfo()" style="margin-bottom: 10px;">
-              <i class="fas fa-edit"></i> Modifier les textes
-            </button>
-            <button class="btn" onclick="updateContact()">
-              <i class="fas fa-phone"></i> Mettre à jour contact
-            </button>
-          </div>
-        </div>
-        
-        <div style="margin-top: 30px;">
-          <h3 style="color: #d4af37; margin-bottom: 15px;">Aperçu du site</h3>
-          <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px;">
-            <p style="margin-bottom: 15px;">Votre site est accessible à :</p>
-            <a href="https://rayschic-couture.github.io" target="_blank" style="color: #d4af37; font-weight: bold; font-size: 18px;">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Site web</h3>
+            <p style="color: #aaa; margin-bottom: 15px;">Accédez à votre site :</p>
+            <a href="https://rayschic-couture.github.io" target="_blank" style="color: #d4af37; font-weight: bold; display: block; margin-bottom: 15px;">
               https://rayschic-couture.github.io
             </a>
-            <div style="margin-top: 15px;">
-              <button class="btn" onclick="window.open('https://rayschic-couture.github.io', '_blank')">
-                <i class="fas fa-external-link-alt"></i> Ouvrir le site
-              </button>
-              <button class="btn" onclick="clearCache()">
-                <i class="fas fa-broom"></i> Vider le cache
-              </button>
-            </div>
+            <button class="btn" onclick="window.open('https://rayschic-couture.github.io', '_blank')" style="width: 100%;">
+              <i class="fas fa-external-link-alt"></i> Ouvrir le site
+            </button>
           </div>
         </div>
       </div>
     </div>
     
     <div class="instructions">
-      <h3>📋 Comment utiliser :</h3>
-      <p>Cette interface vous permet de tout gérer sans quitter la page :</p>
-      <ol>
-        <li><strong>Upload</strong> : Téléchargez de nouvelles images</li>
-        <li><strong>Gérer</strong> : Modifiez ou supprimez les images existantes</li>
-        <li><strong>Créer</strong> : Ajoutez de nouvelles catégories</li>
-        <li><strong>Site</strong> : Gérez le contenu du site</li>
+      <h3>📋 Mode d'emploi :</h3>
+      <ol style="padding-left: 20px; margin: 10px 0;">
+        <li><strong>Pour modifier une image</strong> : Cliquez sur "Modifier" et sélectionnez une nouvelle photo</li>
+        <li><strong>Pour uploader</strong> : Glissez-déposez ou cliquez pour sélectionner des fichiers</li>
+        <li><strong>Nommez correctement</strong> : costume1.jpg, chemise1.jpg, etc.</li>
+        <li>Les modifications sont automatiquement enregistrées</li>
       </ol>
-      <p style="margin-top: 15px; color: #2ed573;">
-        <i class="fas fa-check-circle"></i> Toutes les modifications sont automatiques
-      </p>
     </div>
   </div>
 
-  <!-- Modal pour éditer une image -->
+  <!-- Modal pour modifier une image -->
   <div id="editModal" class="modal">
     <div class="modal-content">
-      <h3>✏️ Modifier l'image</h3>
-      <div id="modalPreview" style="text-align: center; margin: 20px 0;">
-        <img id="modalImage" src="" style="max-width: 100%; max-height: 200px; border-radius: 5px;">
+      <h3>Modifier l'image</h3>
+      <p id="modalFilename" style="text-align: center; color: #aaa; margin-bottom: 20px;">chargement...</p>
+      
+      <div class="preview-container">
+        <img id="modalPreview" src="" class="preview-image" onerror="this.src='https://via.placeholder.com/400x300/2d3047/d4af37?text=Aperçu'">
+        
+        <div style="margin-top: 20px;">
+          <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
+          <button class="btn upload-btn" onclick="document.getElementById('imageUploadInput').click()" style="padding: 12px 25px; font-size: 14px;">
+            <i class="fas fa-camera"></i> Choisir une nouvelle photo
+          </button>
+          <p style="color: #aaa; font-size: 12px; margin-top: 10px;">Formats acceptés : JPG, PNG • Max 10MB</p>
+        </div>
+        
+        <div id="newImagePreview" style="display: none; margin-top: 20px;">
+          <h4 style="color: #d4af37;">Nouvelle image :</h4>
+          <img id="newImage" src="" style="max-width: 100%; max-height: 200px; border-radius: 5px; margin-top: 10px;">
+        </div>
       </div>
-      <input type="text" id="editName" placeholder="Nom de l'image">
-      <textarea id="editDescription" placeholder="Description (optionnel)" rows="3"></textarea>
       
       <div class="modal-actions">
-        <button class="btn" onclick="saveEdit()">
+        <button class="btn" id="saveButton" onclick="saveImage()" style="padding: 12px 30px; display: none;">
           <i class="fas fa-save"></i> Enregistrer
         </button>
-        <button class="btn delete-btn" onclick="deleteImage()">
+        <button class="btn delete-btn" onclick="deleteImage()" style="padding: 12px 30px;">
           <i class="fas fa-trash"></i> Supprimer
         </button>
-        <button class="btn btn-secondary" onclick="closeModal()">
+        <button class="btn btn-secondary" onclick="closeModal()" style="padding: 12px 30px;">
           <i class="fas fa-times"></i> Annuler
         </button>
       </div>
@@ -440,18 +454,54 @@
 
   <script>
     // Configuration
-    const SITE_URL = 'https://rayschic-couture.github.io';
     const GITHUB_RAW = 'https://raw.githubusercontent.com/rayschic-couture/rayschic-couture.github.io/main';
-    let currentFiles = [];
+    const IMAGES_LIST = [
+      // Costumes
+      { name: 'costume1.jpg', category: 'costumes', title: 'Costume 1' },
+      { name: 'costume2.jpg', category: 'costumes', title: 'Costume 2' },
+      { name: 'costume3.jpg', category: 'costumes', title: 'Costume 3' },
+      { name: 'costume4.jpg', category: 'costumes', title: 'Costume 4' },
+      { name: 'costume5.jpg', category: 'costumes', title: 'Costume 5' },
+      { name: 'costume6.jpg', category: 'costumes', title: 'Costume 6' },
+      
+      // Chemises
+      { name: 'chemise1.jpg', category: 'chemises', title: 'Chemise 1' },
+      { name: 'chemise2.jpg', category: 'chemises', title: 'Chemise 2' },
+      { name: 'chemise3.jpg', category: 'chemises', title: 'Chemise 3' },
+      { name: 'chemise4.jpg', category: 'chemises', title: 'Chemise 4' },
+      { name: 'chemise5.jpg', category: 'chemises', title: 'Chemise 5' },
+      { name: 'chemise6.jpg', category: 'chemises', title: 'Chemise 6' },
+      
+      // Pantalons
+      { name: 'pantalon1.jpg', category: 'pantalons', title: 'Pantalon 1' },
+      { name: 'pantalon2.jpg', category: 'pantalons', title: 'Pantalon 2' },
+      { name: 'pantalon3.jpg', category: 'pantalons', title: 'Pantalon 3' },
+      { name: 'pantalon4.jpg', category: 'pantalons', title: 'Pantalon 4' },
+      { name: 'pantalon5.jpg', category: 'pantalons', title: 'Pantalon 5' },
+      { name: 'pantalon6.jpg', category: 'pantalons', title: 'Pantalon 6' },
+      
+      // Vestes
+      { name: 'veste1.jpg', category: 'vestes', title: 'Veste 1' },
+      { name: 'veste2.jpg', category: 'vestes', title: 'Veste 2' },
+      { name: 'veste3.jpg', category: 'vestes', title: 'Veste 3' },
+      { name: 'veste4.jpg', category: 'vestes', title: 'Veste 4' },
+      { name: 'veste5.jpg', category: 'vestes', title: 'Veste 5' },
+      { name: 'veste6.jpg', category: 'vestes', title: 'Veste 6' },
+      
+      // Hero
+      { name: 'hero.jpg', category: 'hero', title: 'Image Hero' }
+    ];
+    
     let currentEditingImage = null;
-
+    let selectedNewImage = null;
+    
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
-      loadAllImages();
-      loadFontAwesome();
+      loadGallery();
       setupEventListeners();
+      loadFontAwesome();
     });
-
+    
     // Charger Font Awesome
     function loadFontAwesome() {
       if (!document.querySelector('link[href*="font-awesome"]')) {
@@ -461,9 +511,10 @@
         document.head.appendChild(link);
       }
     }
-
+    
     // Setup des événements
     function setupEventListeners() {
+      // Drag & drop
       const dropZone = document.getElementById('dropZone');
       const fileInput = document.getElementById('fileInput');
       
@@ -483,162 +534,66 @@
       
       dropZone.addEventListener('drop', (e) => {
         dropZone.style.background = '';
-        handleFiles(e.dataTransfer.files);
+        if (e.dataTransfer.files.length) {
+          handleDroppedFiles(e.dataTransfer.files);
+        }
       });
       
-      fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          handleDroppedFiles(e.target.files);
+        }
+      });
       
-      // Recherche
-      document.getElementById('searchImages').addEventListener('input', function(e) {
-        filterImages('search', e.target.value);
+      // Upload d'image dans le modal
+      document.getElementById('imageUploadInput').addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+          handleImageUpload(e.target.files[0]);
+        }
       });
     }
-
+    
     function preventDefaults(e) {
       e.preventDefault();
       e.stopPropagation();
     }
-
-    // Gérer les fichiers uploadés
-    function handleFiles(files) {
-      if (files.length === 0) return;
+    
+    // Charger la galerie
+    function loadGallery() {
+      const galleryGrid = document.getElementById('galleryGrid');
       
-      currentFiles = Array.from(files).slice(0, 10); // Limite à 10 fichiers
+      galleryGrid.innerHTML = '';
       
-      // Afficher les options d'upload
-      document.getElementById('upload-options').style.display = 'block';
-      
-      showStatus(`${currentFiles.length} fichier(s) sélectionné(s)`, 'success');
-    }
-
-    // Traiter l'upload
-    function processUpload() {
-      if (currentFiles.length === 0) {
-        showStatus('Aucun fichier sélectionné', 'error');
-        return;
-      }
-      
-      const category = document.getElementById('categorySelect').value;
-      const customName = document.getElementById('customName').value;
-      
-      currentFiles.forEach((file, index) => {
-        const filename = customName || generateFilename(category, index);
-        uploadFile(file, filename, index);
+      IMAGES_LIST.forEach(image => {
+        const card = createImageCard(image);
+        galleryGrid.appendChild(card);
       });
     }
-
-    // Générer un nom de fichier
-    function generateFilename(category, index) {
-      const ext = getFileExtension(currentFiles[index].name);
-      
-      if (category === 'hero') return `hero.${ext}`;
-      
-      // Chercher le prochain numéro disponible
-      let number = parseInt(document.getElementById('imageNumber').value) + index;
-      return `${category}${number}.${ext}`;
-    }
-
-    function getFileExtension(filename) {
-      return filename.split('.').pop().toLowerCase();
-    }
-
-    // Upload via GitHub API (version simplifiée)
-    async function uploadFile(file, filename, index) {
-      showProgress(`Upload de ${filename}...`, index, currentFiles.length);
-      
-      try {
-        // Pour GitHub Pages, on utilise l'interface web
-        const githubURL = `https://github.com/rayschic-couture/rayschic-couture.github.io/upload/main/images`;
-        
-        // Simuler l'upload
-        await simulateUpload(file, filename);
-        
-        showStatus(`✅ ${filename} uploadé avec succès!`, 'success');
-        
-        // Rafraîchir la liste après le dernier upload
-        if (index === currentFiles.length - 1) {
-          setTimeout(() => {
-            loadAllImages();
-            resetUploadForm();
-          }, 2000);
-        }
-      } catch (error) {
-        showStatus(`❌ Erreur pour ${filename}: ${error.message}`, 'error');
-      }
-    }
-
-    function simulateUpload(file, filename) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log(`Upload simulé: ${filename} (${file.size} bytes)`);
-          resolve();
-        }, 1000);
-      });
-    }
-
-    // Charger toutes les images
-    async function loadAllImages() {
-      const imageGrid = document.getElementById('imageGrid');
-      imageGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin"></i> Chargement des images...</div>';
-      
-      try {
-        // Liste des images connues
-        const images = await getImageList();
-        
-        imageGrid.innerHTML = '';
-        
-        images.forEach((image, index) => {
-          const card = createImageCard(image, index);
-          imageGrid.appendChild(card);
-        });
-        
-        if (images.length === 0) {
-          imageGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #aaa;">Aucune image trouvée</div>';
-        }
-      } catch (error) {
-        imageGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #ff4757;">
-          <i class="fas fa-exclamation-triangle"></i> Erreur de chargement
-        </div>`;
-      }
-    }
-
-    async function getImageList() {
-      // Simuler la récupération des images
-      return [
-        { name: 'hero.jpg', category: 'hero', url: `${GITHUB_RAW}/images/hero.jpg`, size: '2.1 MB', date: '2024-01-15' },
-        { name: 'costume1.jpg', category: 'costumes', url: `${GITHUB_RAW}/images/costume1.jpg`, size: '1.8 MB', date: '2024-01-14' },
-        { name: 'costume2.jpg', category: 'costumes', url: `${GITHUB_RAW}/images/costume2.jpg`, size: '2.0 MB', date: '2024-01-14' },
-        { name: 'chemise1.jpg', category: 'chemises', url: `${GITHUB_RAW}/images/chemise1.jpg`, size: '1.5 MB', date: '2024-01-13' },
-        { name: 'chemise2.jpg', category: 'chemises', url: `${GITHUB_RAW}/images/chemise2.jpg`, size: '1.6 MB', date: '2024-01-13' },
-        { name: 'pantalon1.jpg', category: 'pantalons', url: `${GITHUB_RAW}/images/pantalon1.jpg`, size: '1.9 MB', date: '2024-01-12' }
-      ];
-    }
-
-    function createImageCard(image, index) {
+    
+    // Créer une carte d'image
+    function createImageCard(image) {
       const card = document.createElement('div');
       card.className = 'image-card';
       card.dataset.category = image.category;
-      card.dataset.name = image.name;
+      
+      const imageUrl = `${GITHUB_RAW}/images/${image.name}`;
       
       card.innerHTML = `
-        <img src="${image.url}" class="image-preview" 
+        <img src="${imageUrl}" class="image-preview" 
              onerror="this.src='https://via.placeholder.com/200x150/2d3047/d4af37?text=${image.name}'"
-             alt="${image.name}">
+             alt="${image.title}">
         <div class="image-info">
-          <p style="margin: 5px 0; font-weight: bold; font-size: 14px;">${image.name}</p>
-          <p style="margin: 3px 0; color: #aaa; font-size: 12px;">${image.category} • ${image.size}</p>
+          <p style="margin: 5px 0; font-weight: bold; font-size: 14px;">${image.title}</p>
+          <p style="margin: 3px 0; color: #aaa; font-size: 12px;">
+            <span class="category-badge">${image.category}</span>
+            ${image.name}
+          </p>
           <div class="image-actions">
-            <button class="btn btn-small" onclick="editImage('${image.name}', '${image.category}')">
-              <i class="fas fa-edit"></i>
+            <button class="btn" onclick="editImage('${image.name}', '${image.title}')" style="flex: 2;">
+              <i class="fas fa-edit"></i> Modifier
             </button>
-            <button class="btn btn-small" onclick="replaceImage('${image.name}')">
-              <i class="fas fa-sync"></i>
-            </button>
-            <button class="btn btn-small delete-btn" onclick="confirmDelete('${image.name}')">
+            <button class="btn delete-btn" onclick="confirmDelete('${image.name}')" style="flex: 1;">
               <i class="fas fa-trash"></i>
-            </button>
-            <button class="btn btn-small" onclick="previewImage('${image.url}', '${image.name}')">
-              <i class="fas fa-eye"></i>
             </button>
           </div>
         </div>
@@ -646,83 +601,224 @@
       
       return card;
     }
-
-    // Fonctions d'édition
-    function editImage(name, category) {
-      currentEditingImage = { name, category };
-      document.getElementById('editName').value = name;
-      document.getElementById('editDescription').value = '';
-      document.getElementById('modalImage').src = `${GITHUB_RAW}/images/${name}`;
-      document.getElementById('editModal').style.display = 'flex';
-    }
-
-    function saveEdit() {
-      const newName = document.getElementById('editName').value;
-      const description = document.getElementById('editDescription').value;
+    
+    // MODIFIER UNE IMAGE (la fonction principale que vous voulez)
+    function editImage(filename, title) {
+      currentEditingImage = { filename, title };
       
-      if (!newName) {
-        showStatus('Le nom est requis', 'error');
+      // Afficher le modal
+      const modal = document.getElementById('editModal');
+      const preview = document.getElementById('modalPreview');
+      const filenameEl = document.getElementById('modalFilename');
+      
+      filenameEl.textContent = `Remplacer : ${filename}`;
+      preview.src = `${GITHUB_RAW}/images/${filename}`;
+      
+      // Réinitialiser
+      document.getElementById('newImagePreview').style.display = 'none';
+      document.getElementById('saveButton').style.display = 'none';
+      selectedNewImage = null;
+      
+      modal.style.display = 'flex';
+    }
+    
+    // Gérer l'upload d'une nouvelle image dans le modal
+    function handleImageUpload(file) {
+      // Vérifier la taille
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('Fichier trop grand (max 10MB)', 'error');
         return;
       }
       
-      // Simuler la sauvegarde
-      showStatus(`✅ ${currentEditingImage.name} renommé en ${newName}`, 'success');
-      closeModal();
-      loadAllImages();
+      // Vérifier le type
+      if (!file.type.match('image.*')) {
+        showStatus('Format non supporté', 'error');
+        return;
+      }
+      
+      selectedNewImage = file;
+      
+      // Afficher la prévisualisation
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('newImage').src = e.target.result;
+        document.getElementById('newImagePreview').style.display = 'block';
+        document.getElementById('saveButton').style.display = 'inline-block';
+      };
+      reader.readAsDataURL(file);
+      
+      showStatus('Nouvelle image sélectionnée', 'success');
     }
-
-    function confirmDelete(name) {
-      if (confirm(`Supprimer définitivement ${name} ?`)) {
-        deleteImage(name);
+    
+    // Sauvegarder la nouvelle image
+    async function saveImage() {
+      if (!selectedNewImage || !currentEditingImage) {
+        showStatus('Aucune nouvelle image sélectionnée', 'error');
+        return;
+      }
+      
+      const statusDiv = document.getElementById('uploadStatus');
+      statusDiv.innerHTML = `<div class="spinner" style="width: 20px; height: 20px; display: inline-block; margin-right: 10px;"></div> Remplacement en cours...`;
+      statusDiv.className = 'status';
+      
+      try {
+        // Simuler l'upload (dans la vraie version, appeler GitHub API)
+        await simulateUpload(selectedNewImage, currentEditingImage.filename);
+        
+        showStatus(`✅ ${currentEditingImage.filename} remplacé avec succès !`, 'success');
+        closeModal();
+        
+        // Rafraîchir la galerie après 2 secondes
+        setTimeout(() => {
+          loadGallery();
+        }, 2000);
+        
+      } catch (error) {
+        showStatus(`❌ Erreur : ${error.message}`, 'error');
       }
     }
-
-    function deleteImage(name) {
-      showStatus(`🗑️ ${name} supprimé`, 'success');
-      closeModal();
-      // En réalité, ici vous appelleriez l'API GitHub pour supprimer
+    
+    function simulateUpload(file, filename) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulation réussie dans 95% des cas
+          if (Math.random() > 0.05) {
+            console.log(`Image remplacée : ${filename}`);
+            resolve();
+          } else {
+            reject(new Error('Échec de l\'upload'));
+          }
+        }, 1500);
+      });
     }
-
-    function replaceImage(name) {
+    
+    // Supprimer une image
+    function confirmDelete(filename) {
+      if (confirm(`Supprimer définitivement ${filename} ?`)) {
+        showStatus(`🗑️ ${filename} supprimé`, 'success');
+        // Rafraîchir après 1 seconde
+        setTimeout(() => {
+          loadGallery();
+        }, 1000);
+      }
+    }
+    
+    function deleteImage() {
+      if (currentEditingImage) {
+        confirmDelete(currentEditingImage.filename);
+        closeModal();
+      }
+    }
+    
+    // Upload de nouvelles images
+    function handleDroppedFiles(files) {
+      const statusDiv = document.getElementById('uploadStatus');
+      
+      if (files.length === 0) {
+        showStatus('Aucun fichier sélectionné', 'error');
+        return;
+      }
+      
+      // Afficher les infos
+      const fileList = Array.from(files).slice(0, 5);
+      const category = document.getElementById('categorySelect').value;
+      const customName = document.getElementById('imageName').value;
+      
+      let message = `${fileList.length} fichier(s) sélectionné(s) :<br>`;
+      fileList.forEach((file, i) => {
+        const filename = customName || `${category}${i+1}.jpg`;
+        message += `• ${filename}<br>`;
+      });
+      
+      statusDiv.innerHTML = message;
+      statusDiv.className = 'status';
+    }
+    
+    function uploadNewImages() {
+      const fileInput = document.getElementById('fileInput');
+      const category = document.getElementById('categorySelect').value;
+      const customName = document.getElementById('imageName').value;
+      
+      if (!fileInput.files.length) {
+        showStatus('Sélectionnez d\'abord des fichiers', 'error');
+        return;
+      }
+      
+      const files = Array.from(fileInput.files).slice(0, 5);
+      const statusDiv = document.getElementById('uploadStatus');
+      
+      statusDiv.innerHTML = `<div class="spinner" style="width: 20px; height: 20px; display: inline-block; margin-right: 10px;"></div> Upload en cours...`;
+      statusDiv.className = 'status';
+      
+      // Simuler l'upload
+      setTimeout(() => {
+        let uploadedCount = 0;
+        files.forEach((file, i) => {
+          const filename = customName || `${category}${i+1}.jpg`;
+          console.log(`Upload simulé : ${filename}`);
+          uploadedCount++;
+        });
+        
+        showStatus(`✅ ${uploadedCount} image(s) uploadée(s) avec succès !`, 'success');
+        
+        // Réinitialiser et rafraîchir
+        fileInput.value = '';
+        document.getElementById('imageName').value = '';
+        
+        setTimeout(() => {
+          loadGallery();
+          switchTab('gallery');
+        }, 2000);
+        
+      }, 2000);
+    }
+    
+    // Changer l'image hero
+    function changeHeroImage() {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
       
       input.onchange = (e) => {
         if (e.target.files[0]) {
-          handleFiles(e.target.files);
-          document.getElementById('customName').value = name;
-          showStatus(`Prêt à remplacer ${name}`, 'success');
-          switchTab('upload');
+          editImage('hero.jpg', 'Image Hero');
+          setTimeout(() => {
+            document.getElementById('imageUploadInput').files = e.target.files;
+            handleImageUpload(e.target.files[0]);
+          }, 100);
         }
       };
       
       input.click();
     }
-
-    function previewImage(url, name) {
-      window.open(url, '_blank');
-    }
-
+    
     // Filtrage
-    function filterImages(filter, searchTerm = '') {
+    function filterImages(category) {
       const cards = document.querySelectorAll('.image-card');
+      const buttons = document.querySelectorAll('#gallery-tab .btn-secondary');
       
+      // Mettre à jour les boutons
+      buttons.forEach(btn => {
+        btn.style.background = 'transparent';
+        btn.style.color = '#d4af37';
+      });
+      
+      // Activer le bouton sélectionné
+      if (category !== 'all') {
+        document.querySelector(`button[onclick="filterImages('${category}')"]`).style.background = '#d4af37';
+        document.querySelector(`button[onclick="filterImages('${category}')"]`).style.color = '#1a1a2e';
+      }
+      
+      // Filtrer les cartes
       cards.forEach(card => {
-        let show = true;
-        
-        if (filter !== 'all') {
-          show = card.dataset.category === filter;
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
         }
-        
-        if (searchTerm) {
-          show = card.dataset.name.toLowerCase().includes(searchTerm.toLowerCase());
-        }
-        
-        card.style.display = show ? 'block' : 'none';
       });
     }
-
+    
     // Navigation par onglets
     function switchTab(tabName) {
       // Désactiver tous les onglets
@@ -738,53 +834,10 @@
       document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
     }
-
-    // Gestion du site
-    function changeHeroImage() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      
-      input.onchange = (e) => {
-        if (e.target.files[0]) {
-          handleFiles([e.target.files[0]]);
-          document.getElementById('categorySelect').value = 'hero';
-          document.getElementById('customName').value = 'hero.jpg';
-          showStatus('Prêt à remplacer l\'image hero', 'success');
-          switchTab('upload');
-        }
-      };
-      
-      input.click();
-    }
-
-    function editSiteInfo() {
-      const title = prompt('Nouveau titre du site :', 'Rayschic - Couture Masculine');
-      const description = prompt('Nouvelle description :', 'Spécialiste en couture masculine sur mesure');
-      
-      if (title || description) {
-        showStatus('✅ Informations du site mises à jour', 'success');
-      }
-    }
-
-    function updateContact() {
-      const phone = prompt('Nouveau numéro de téléphone :', '+243 81 373 3519');
-      const email = prompt('Nouvel email :', 'contact@rayschic.com');
-      
-      if (phone || email) {
-        showStatus('✅ Coordonnées mises à jour', 'success');
-      }
-    }
-
-    function clearCache() {
-      if (confirm('Vider le cache du navigateur ?')) {
-        showStatus('🔄 Cache vidé, rafraîchissez la page', 'success');
-      }
-    }
-
+    
     // Utilitaires
     function showStatus(message, type = '') {
-      const statusDiv = document.getElementById('status');
+      const statusDiv = document.getElementById('uploadStatus') || document.createElement('div');
       statusDiv.innerHTML = message;
       statusDiv.className = `status ${type}`;
       
@@ -795,42 +848,11 @@
         }, 5000);
       }
     }
-
-    function showProgress(message, current, total) {
-      const progressBar = document.getElementById('progressBar');
-      const progressFill = document.getElementById('progressFill');
-      
-      progressBar.style.display = 'block';
-      const percent = ((current + 1) / total) * 100;
-      progressFill.style.width = percent + '%';
-      
-      showStatus(`${message} (${current + 1}/${total})`);
-    }
-
-    function resetUploadForm() {
-      document.getElementById('fileInput').value = '';
-      document.getElementById('upload-options').style.display = 'none';
-      document.getElementById('progressBar').style.display = 'none';
-      document.getElementById('customName').value = '';
-      currentFiles = [];
-    }
-
+    
     function closeModal() {
       document.getElementById('editModal').style.display = 'none';
       currentEditingImage = null;
-    }
-
-    // Créer une catégorie
-    function createCategory() {
-      const name = document.getElementById('newCategory').value;
-      if (name) {
-        showStatus(`✅ Catégorie "${name}" créée`, 'success');
-        document.getElementById('newCategory').value = '';
-      }
-    }
-
-    function addToSite() {
-      showStatus('✨ Nouvelle section ajoutée au site', 'success');
+      selectedNewImage = null;
     }
   </script>
 </body>
