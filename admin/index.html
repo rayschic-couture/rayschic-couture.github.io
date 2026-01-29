@@ -3,46 +3,111 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Rayschic</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <title>Admin - Rayschic</title>
+  <!-- Netlify CMS -->
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 50px auto;
-      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
     }
-    .login-btn {
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #d4af37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    
+    .btn {
       background: #d4af37;
       color: #000;
-      padding: 15px 30px;
+      padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
+      font-weight: bold;
+      margin-top: 15px;
+      display: inline-block;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h1>Admin Rayschic</h1>
-  <p>Gérez votre contenu facilement</p>
+  <!-- Écran de chargement -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <h2>Chargement de l'interface d'administration...</h2>
+    <p>Veuillez patienter</p>
+  </div>
   
-  <button class="login-btn" onclick="window.netlifyIdentity.open('login')">
-    Se connecter
-  </button>
-
+  <!-- Message d'erreur (caché par défaut) -->
+  <div class="error-message" id="error-message" style="display: none;">
+    <h3>⚠️ Impossible de charger l'interface</h3>
+    <p>Problèmes possibles :</p>
+    <ol style="text-align: left; margin: 15px 0;">
+      <li>Fichier config.yml manquant</li>
+      <li>Problème de connexion à Netlify Identity</li>
+      <li>Configuration incorrecte</li>
+    </ol>
+    <button class="btn" onclick="location.reload()">Réessayer</button>
+    <a href="/" class="btn">Retour au site</a>
+  </div>
+  
   <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/#/collections";
-          });
-        } else {
-          window.location.href = "/admin/#/collections";
+    // Attendre que Netlify CMS soit chargé
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        // Si le CMS ne s'est pas chargé après 5 secondes
+        if (!window.CMS) {
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('error-message').style.display = 'block';
         }
+      }, 5000);
+    });
+    
+    // Initialisation du CMS
+    if (typeof CMS !== 'undefined') {
+      CMS.init();
+      
+      // Masquer le chargement quand le CMS est prêt
+      CMS.registerEventListener({
+        name: 'prePublish',
+        handler: () => console.log('Prêt à publier')
       });
     }
   </script>
