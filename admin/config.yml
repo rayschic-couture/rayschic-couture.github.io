@@ -1,45 +1,94 @@
 backend:
   name: git-gateway
   branch: main
-  commit_messages:
-    create: 'Création : {{collection}} - {{slug}}'
-    update: 'Mise à jour : {{collection}} - {{slug}}'
-    delete: 'Suppression : {{collection}} - {{slug}}'
-    uploadMedia: 'Upload : {{path}}'
-    deleteMedia: 'Suppression : {{path}}'
 
 media_folder: "images"
 public_folder: "/images"
 
 collections:
-  - name: "images"
-    label: "🖼️ Images"
-    folder: "images"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string", required: true}
-      - {label: "Image", name: "image", widget: "image", required: true}
-      - {label: "Catégorie", name: "category", widget: "select", 
-         options: ["hero", "costumes", "chemises", "pantalons", "vestes", "accessoires"]}
-      - {label: "Description", name: "description", widget: "text"}
+  - name: "hero"
+    label: "🏠 Image Hero"
+    files:
+      - name: "hero"
+        label: "Image principale"
+        file: "images/hero.jpg"
+        fields:
+          - {label: "Image Hero", name: "body", widget: "image"}
 
   - name: "costumes"
-    label: "👔 Costumes"
-    folder: "images/costumes"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string", required: true}
-      - {label: "Image", name: "image", widget: "image", required: true}
-      - {label: "Description", name: "description", widget: "text"}
+    label: "👔 Costumes (1-6)"
+    files:
+      - name: "costume1"
+        label: "Costume 1"
+        file: "images/costume1.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "costume2"
+        label: "Costume 2"
+        file: "images/costume2.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "costume3"
+        label: "Costume 3"
+        file: "images/costume3.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "costume4"
+        label: "Costume 4"
+        file: "images/costume4.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "costume5"
+        label: "Costume 5"
+        file: "images/costume5.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "costume6"
+        label: "Costume 6"
+        file: "images/costume6.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
 
   - name: "chemises"
-    label: "👕 Chemises"
-    folder: "images/chemises"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    fields:
-      - {label: "Nom", name: "name", widget: "string", required: true}
-      - {label: "Image", name: "image", widget: "image", required: true}
-      - {label: "Description", name: "description", widget: "text"}
+    label: "👕 Chemises (1-6)"
+    files:
+      - name: "chemise1"
+        label: "Chemise 1"
+        file: "images/chemise1.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "chemise2"
+        label: "Chemise 2"
+        file: "images/chemise2.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "chemise3"
+        label: "Chemise 3"
+        file: "images/chemise3.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "chemise4"
+        label: "Chemise 4"
+        file: "images/chemise4.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "chemise5"
+        label: "Chemise 5"
+        file: "images/chemise5.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
+          
+      - name: "chemise6"
+        label: "Chemise 6"
+        file: "images/chemise6.jpg"
+        fields:
+          - {label: "Image", name: "body", widget: "image"}
