@@ -332,28 +332,10 @@
     <h1>RAY<span>SCHIC</span> Admin</h1>
     <p style="text-align: center; color: #bdc3c7; margin-bottom: 30px;">Interface sécurisée de gestion des images</p>
     
-    <!-- TOKEN REVOKE WARNING -->
-    <div class="token-warning">
-      <h3 style="color: #ff4757; margin-bottom: 10px;">⚠️ IMPORTANT : Sécurité du token</h3>
-      <p>Pour votre sécurité, créez un nouveau token avec uniquement les permissions nécessaires :</p>
-      <ol style="text-align: left; margin: 10px 0; padding-left: 20px;">
-        <li><strong>repo</strong> (accès complet aux repositories)</li>
-        <li><strong>workflow</strong> (si vous utilisez GitHub Actions)</li>
-      </ol>
-      <div style="margin-top: 15px;">
-        <a href="https://github.com/settings/tokens/new" target="_blank" class="btn" style="background: #d4af37;">
-          <i class="fas fa-key"></i> Créer un nouveau token
-        </a>
-        <button class="btn delete-btn" onclick="clearToken()">
-          <i class="fas fa-trash"></i> Effacer le token actuel
-        </button>
-      </div>
-    </div>
-    
     <!-- LOGIN SECTION -->
     <div id="loginSection" class="login-section">
       <h3>🔐 Connexion Sécurisée</h3>
-      <p style="margin-bottom: 20px; color: #aaa;">Entrez votre token GitHub pour gérer les images du site</p>
+      <p style="margin-bottom: 20px; color: #aaa;">Pour modifier les images du site</p>
       
       <div style="margin: 20px 0;">
         <input type="password" id="githubToken" placeholder="Token GitHub personnel" style="width: 100%; max-width: 400px;">
@@ -370,7 +352,7 @@
       
       <div>
         <button class="btn" onclick="loginWithToken()">
-          <i class="fas fa-lock"></i> Se connecter
+          <i class="fas fa-lock"></i> Se connecter avec Token
         </button>
         <button class="btn btn-secondary" onclick="loginWithoutToken()">
           <i class="fab fa-github"></i> Mode GitHub direct
@@ -422,9 +404,6 @@
             </button>
             <button class="btn upload-btn" onclick="showUploadModal()">
               <i class="fas fa-plus"></i> Nouvelle Image
-            </button>
-            <button class="btn delete-btn" onclick="showDeleteAllModal()" style="background: #ff6b6b;">
-              <i class="fas fa-broom"></i> Nettoyer
             </button>
             <button class="btn" onclick="logout()" style="background: #666;">
               <i class="fas fa-sign-out-alt"></i> Déconnexion
@@ -490,26 +469,20 @@
       <p id="modalFilename" style="text-align: center; color: #aaa; margin-bottom: 20px;"></p>
       
       <div style="text-align: center; margin: 20px 0;">
-        <div style="position: relative; display: inline-block;">
-          <img id="modalPreview" src="" style="max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #d4af37;" 
-               onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/2d3047/d4af37?text=Image+Non+Disponible'">
-          <div id="imageSizeBadge" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px;">
-            Chargement...
-          </div>
-        </div>
+        <img id="modalPreview" src="" style="max-width: 100%; max-height: 250px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #d4af37;" 
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x250/2d3047/d4af37?text=Image+Non+Disponible'">
         
-        <input type="file" id="newImageInput" accept="image/jpeg,image/png,image/jpg" style="display: none;">
-        <button class="btn" onclick="document.getElementById('newImageInput').click()" style="width: 100%; margin-bottom: 15px;">
+        <input type="file" id="newImageInput" accept="image/*" style="display: none;">
+        <button class="btn" onclick="chooseNewPhoto()" style="width: 100%; margin-bottom: 15px;">
           <i class="fas fa-camera"></i> Choisir une nouvelle photo
         </button>
         
         <div id="fileInfo" style="display: none; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; margin: 10px 0;">
           <p style="margin: 5px 0; color: #d4af37;" id="selectedFileName"></p>
           <p style="margin: 5px 0; color: #aaa; font-size: 12px;" id="selectedFileSize"></p>
-          <p style="margin: 5px 0; color: #aaa; font-size: 12px;" id="selectedFileDimensions"></p>
         </div>
         
-        <p style="color: #aaa; font-size: 12px;">Formats : JPG, PNG • Max 5MB • Recommandé : 800x600px min</p>
+        <p style="color: #aaa; font-size: 12px;">Formats : JPG, PNG • Max 5MB</p>
       </div>
       
       <div class="modal-actions">
@@ -532,51 +505,27 @@
       <h3><i class="fas fa-upload"></i> Uploader une nouvelle image</h3>
       
       <div style="margin: 20px 0;">
-        <input type="file" id="uploadImageInput" accept="image/jpeg,image/png,image/jpg" style="display: none;">
-        <button class="btn" onclick="document.getElementById('uploadImageInput').click()" style="width: 100%; margin-bottom: 15px;">
+        <input type="file" id="uploadImageInput" accept="image/*" style="display: none;">
+        <button class="btn" onclick="chooseUploadPhoto()" style="width: 100%; margin-bottom: 15px;">
           <i class="fas fa-upload"></i> Sélectionner une image
         </button>
         
-        <div style="margin-bottom: 15px;">
-          <label style="display: block; margin-bottom: 5px; color: #d4af37; font-weight: bold;">Nom du fichier</label>
-          <div style="display: flex; gap: 10px;">
-            <input type="text" id="uploadName" placeholder="ex: costume" style="flex: 2;">
-            <select id="uploadNumber" style="flex: 1;">
-              <option value="">Numéro</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-            </select>
-            <select id="uploadExtension" style="flex: 1;">
-              <option value=".jpg">.jpg</option>
-              <option value=".jpeg">.jpeg</option>
-              <option value=".png">.png</option>
-            </select>
-          </div>
-          <p id="generatedFilename" style="margin-top: 5px; color: #2ed573; font-size: 12px;"></p>
-        </div>
+        <input type="text" id="uploadFilename" placeholder="Nom du fichier (ex: costume7.jpg)" 
+               style="width: 100%; margin-bottom: 15px;">
         
         <select id="uploadCategory" style="width: 100%; margin-bottom: 15px;">
           <option value="">Choisir une catégorie</option>
-          <option value="costumes">Costumes (costume1.jpg, etc.)</option>
-          <option value="chemises">Chemises (chemise1.jpg, etc.)</option>
-          <option value="pantalons">Pantalons (pantalon1.jpg, etc.)</option>
-          <option value="vestes">Vestes (veste1.jpg, etc.)</option>
-          <option value="tenues">Tenues (tenue1.jpg, etc.)</option>
-          <option value="accessoires">Accessoires (accessoire1.jpg, etc.)</option>
-          <option value="hero">Image Hero (hero.jpg)</option>
-          <option value="autre">Autre</option>
+          <option value="costumes">Costumes</option>
+          <option value="chemises">Chemises</option>
+          <option value="pantalons">Pantalons</option>
+          <option value="vestes">Vestes</option>
+          <option value="accessoires">Accessoires</option>
+          <option value="hero">Image Hero (principale)</option>
         </select>
         
         <div id="uploadFileInfo" style="display: none; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px;">
           <p style="margin: 5px 0; color: #d4af37;" id="uploadFileName"></p>
           <p style="margin: 5px 0; color: #aaa; font-size: 12px;" id="uploadFileSize"></p>
-          <p style="margin: 5px 0; color: #aaa; font-size: 12px;" id="uploadFileDimensions"></p>
         </div>
       </div>
       
@@ -585,35 +534,6 @@
           <i class="fas fa-upload"></i> Uploader
         </button>
         <button class="btn btn-secondary" onclick="closeUploadModal()">
-          <i class="fas fa-times"></i> Annuler
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: DELETE ALL -->
-  <div id="deleteAllModal" class="modal">
-    <div class="modal-content">
-      <h3><i class="fas fa-exclamation-triangle"></i> Nettoyage des images</h3>
-      
-      <div style="margin: 20px 0; text-align: center;">
-        <div style="font-size: 5rem; color: #ff6b6b; margin-bottom: 20px;">
-          <i class="fas fa-broom"></i>
-        </div>
-        <p style="color: #ff6b6b; font-weight: bold; margin-bottom: 15px;">ATTENTION : Action irréversible</p>
-        <p style="color: #aaa; margin-bottom: 20px;">Cette action va vérifier toutes les images et supprimer celles qui ne sont plus utilisées dans le site.</p>
-        
-        <div style="background: rgba(255, 107, 107, 0.1); padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <h4 style="color: #ff6b6b; margin-bottom: 10px;">Images qui seront conservées :</h4>
-          <div id="keptImagesList" style="text-align: left; max-height: 150px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;"></div>
-        </div>
-      </div>
-      
-      <div class="modal-actions">
-        <button class="btn delete-btn" onclick="scanAndCleanImages()">
-          <i class="fas fa-search"></i> Scanner d'abord
-        </button>
-        <button class="btn btn-secondary" onclick="closeDeleteAllModal()">
           <i class="fas fa-times"></i> Annuler
         </button>
       </div>
@@ -633,34 +553,23 @@
     let currentEditingImage = null;
     let selectedFile = null;
     
-    // Images du site principal (DOIT correspondre à index.html)
-    const SITE_IMAGES = {
-      hero: ['hero.jpg'],
-      costumes: [
-        'costume1.jpg', 'costume2.jpg', 'costume3.jpg', 
-        'costume4.jpg', 'costume5.jpg', 'costume6.jpg'
-      ],
-      chemises: [
-        'chemise1.jpg', 'chemise2.jpg', 'chemise3.jpg', 
-        'chemise4.jpg', 'chemise5.jpg', 'chemise6.jpg'
-      ],
-      pantalons: [
-        'pantalon1.jpg', 'pantalon2.jpg', 'pantalon3.jpg', 
-        'pantalon4.jpg', 'pantalon5.jpg', 'pantalon6.jpg'
-      ],
-      vestes: [
-        'veste1.jpg', 'veste2.jpg', 'veste3.jpg', 
-        'veste4.jpg', 'veste5.jpg', 'veste6.jpg'
-      ],
-      tenues: [
-        'tenue1.jpg', 'tenue2.jpg', 'tenue3.jpg', 
-        'tenue4.jpg', 'tenue5.jpg', 'tenue6.jpg'
-      ],
-      accessoires: [
-        'accessoire1.jpg', 'accessoire2.jpg', 'accessoire3.jpg', 
-        'accessoire4.jpg', 'accessoire5.jpg', 'accessoire6.jpg'
-      ]
-    };
+    // Images du site
+    const SITE_IMAGES = [
+      // Hero
+      'hero.jpg',
+      // Costumes
+      'costume1.jpg', 'costume2.jpg', 'costume3.jpg', 'costume4.jpg', 'costume5.jpg', 'costume6.jpg',
+      // Chemises
+      'chemise1.jpg', 'chemise2.jpg', 'chemise3.jpg', 'chemise4.jpg', 'chemise5.jpg', 'chemise6.jpg',
+      // Pantalons
+      'pantalon1.jpg', 'pantalon2.jpg', 'pantalon3.jpg', 'pantalon4.jpg', 'pantalon5.jpg', 'pantalon6.jpg',
+      // Vestes
+      'veste1.jpg', 'veste2.jpg', 'veste3.jpg', 'veste4.jpg', 'veste5.jpg', 'veste6.jpg',
+      // Tenues
+      'tenue1.jpg', 'tenue2.jpg', 'tenue3.jpg', 'tenue4.jpg', 'tenue5.jpg', 'tenue6.jpg',
+      // Accessoires
+      'accessoire1.jpg', 'accessoire2.jpg', 'accessoire3.jpg', 'accessoire4.jpg', 'accessoire5.jpg', 'accessoire6.jpg'
+    ];
     
     // ============================================
     // INITIALISATION
@@ -668,7 +577,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       loadFontAwesome();
       setupEventListeners();
-      setupAutoFilenameGenerator();
       checkSavedToken();
     });
     
@@ -684,6 +592,7 @@
     function setupEventListeners() {
       // Edit modal file input
       document.getElementById('newImageInput').addEventListener('change', function(e) {
+        console.log('Fichier sélectionné pour édition:', e.target.files[0]);
         if (e.target.files[0]) {
           handleImageSelection(e.target.files[0], 'edit');
         }
@@ -691,57 +600,13 @@
       
       // Upload modal file input
       document.getElementById('uploadImageInput').addEventListener('change', function(e) {
+        console.log('Fichier sélectionné pour upload:', e.target.files[0]);
         if (e.target.files[0]) {
           handleImageSelection(e.target.files[0], 'upload');
         }
       });
-      
-      // Auto-update filename based on category and number
-      document.getElementById('uploadCategory').addEventListener('change', updateGeneratedFilename);
-      document.getElementById('uploadName').addEventListener('input', updateGeneratedFilename);
-      document.getElementById('uploadNumber').addEventListener('change', updateGeneratedFilename);
-      document.getElementById('uploadExtension').addEventListener('change', updateGeneratedFilename);
     }
     
-    function setupAutoFilenameGenerator() {
-      // Set default values
-      document.getElementById('uploadExtension').value = '.jpg';
-    }
-    
-    function updateGeneratedFilename() {
-      const category = document.getElementById('uploadCategory').value;
-      const name = document.getElementById('uploadName').value.trim();
-      const number = document.getElementById('uploadNumber').value;
-      const extension = document.getElementById('uploadExtension').value;
-      
-      let filename = '';
-      
-      if (category && name) {
-        filename = name + (number ? number : '') + extension;
-      } else if (category) {
-        // Auto-generate based on category
-        const categoryNames = {
-          'costumes': 'costume',
-          'chemises': 'chemise',
-          'pantalons': 'pantalon',
-          'vestes': 'veste',
-          'tenues': 'tenue',
-          'accessoires': 'accessoire',
-          'hero': 'hero'
-        };
-        
-        if (categoryNames[category]) {
-          filename = categoryNames[category] + (number ? number : '') + extension;
-        }
-      }
-      
-      document.getElementById('generatedFilename').textContent = filename ? 
-        `Nom généré : ${filename}` : 'Choisissez une catégorie et un nom';
-    }
-    
-    // ============================================
-    // GESTION DU TOKEN ET CONNEXION
-    // ============================================
     function checkSavedToken() {
       const savedToken = localStorage.getItem('rayschic_github_token');
       if (savedToken) {
@@ -751,6 +616,9 @@
       }
     }
     
+    // ============================================
+    // GESTION DU TOKEN ET CONNEXION
+    // ============================================
     function loginWithToken() {
       const tokenInput = document.getElementById('githubToken');
       const token = tokenInput.value.trim();
@@ -760,58 +628,23 @@
         return;
       }
       
-      // Test du token
-      showStatus('<div class="spinner"></div> Vérification du token...', '');
+      // Masquer le token dans l'interface
+      tokenInput.type = 'password';
+      tokenInput.value = '••••••••••••••••';
       
-      testGitHubToken(token).then(isValid => {
-        if (isValid) {
-          // Masquer le token dans l'interface
-          tokenInput.type = 'password';
-          tokenInput.value = '••••••••••••••••';
-          
-          // Stocker le token localement
-          githubToken = token;
-          localStorage.setItem('rayschic_github_token', token);
-          
-          showAdminInterface();
-          showStatus('✅ Connexion réussie avec token', 'success');
-        } else {
-          showStatus('❌ Token invalide. Vérifiez les permissions.', 'error');
-          githubToken = '';
-        }
-      }).catch(error => {
-        showStatus(`❌ Erreur : ${error.message}`, 'error');
-      });
-    }
-    
-    async function testGitHubToken(token) {
-      try {
-        const response = await fetch(`${GITHUB_API}/user`, {
-          headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
-        
-        if (response.ok) {
-          const userData = await response.json();
-          console.log('✅ Token valide pour :', userData.login);
-          return true;
-        } else {
-          console.log('❌ Token invalide');
-          return false;
-        }
-      } catch (error) {
-        console.error('Erreur test token:', error);
-        return false;
-      }
+      // Stocker le token localement
+      githubToken = token;
+      localStorage.setItem('rayschic_github_token', token);
+      
+      showAdminInterface();
+      showStatus('✅ Connexion réussie avec token', 'success');
     }
     
     function loginWithoutToken() {
       githubToken = '';
       localStorage.removeItem('rayschic_github_token');
       showAdminInterface();
-      showStatus('⚠️ Mode GitHub direct activé', 'warning');
+      showStatus('⚠️ Mode GitHub direct activé - redirection vers GitHub', 'warning');
     }
     
     function clearToken() {
@@ -828,8 +661,14 @@
       
       if (showToken) {
         tokenInput.type = 'text';
+        if (tokenInput.value === '••••••••••••••••') {
+          tokenInput.value = githubToken || '';
+        }
       } else {
         tokenInput.type = 'password';
+        if (githubToken && tokenInput.value === githubToken) {
+          tokenInput.value = '••••••••••••••••';
+        }
       }
     }
     
@@ -865,38 +704,27 @@
         let imagesHtml = '';
         let imageCount = 0;
         
-        // Flatten all images into one array
-        const allImages = Object.values(SITE_IMAGES).flat();
-        
-        // Check each image
-        for (const filename of allImages) {
+        SITE_IMAGES.forEach(filename => {
           const category = getCategoryFromFilename(filename);
           const imageUrl = `${GITHUB_RAW}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${filename}?t=${Date.now()}`;
           const displayName = filename.replace('.jpg', '').replace(/(\d+)/, ' $1').toUpperCase();
           
-          // Test if image exists
-          const exists = await testImageExists(imageUrl);
-          
           imagesHtml += `
-            <div class="image-card" data-category="${category}" data-exists="${exists}">
+            <div class="image-card" data-category="${category}">
               <img src="${imageUrl}" class="image-preview" 
-                   onerror="this.onerror=null; this.src='https://via.placeholder.com/200x140/2d3047/${exists ? '2ed573' : 'ff6b6b'}?text=${exists ? '✓' : '✗'}+${filename}'"
+                   onerror="this.onerror=null; this.src='https://via.placeholder.com/200x140/2d3047/d4af37?text=${filename}'"
                    alt="${filename}" loading="lazy">
               <div class="image-info">
-                <p style="margin: 5px 0; font-weight: bold; font-size: 14px; color: ${exists ? 'white' : '#ff6b6b'}">
-                  ${displayName} ${exists ? '' : '(manquante)'}
-                </p>
+                <p style="margin: 5px 0; font-weight: bold; font-size: 14px;">${displayName}</p>
                 <p style="margin: 3px 0; color: #aaa; font-size: 12px;">
-                  <span class="category-badge" style="background: ${exists ? 'rgba(212, 175, 55, 0.2)' : 'rgba(255, 107, 107, 0.2)'}">
-                    ${category}
-                  </span>
+                  <span class="category-badge">${category}</span>
                   ${filename}
                 </p>
                 <div class="image-actions">
-                  <button class="btn" onclick="editImage('${filename}')" ${!exists ? 'style="background: #ff6b6b;"' : ''}>
-                    <i class="fas fa-${exists ? 'edit' : 'plus'}"></i> ${exists ? 'Modifier' : 'Créer'}
+                  <button class="btn" onclick="editImage('${filename}')">
+                    <i class="fas fa-edit"></i> Modifier
                   </button>
-                  <button class="btn delete-btn" onclick="confirmDelete('${filename}')" ${!exists ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                  <button class="btn delete-btn" onclick="confirmDelete('${filename}')">
                     <i class="fas fa-trash"></i>
                   </button>
                 </div>
@@ -905,7 +733,7 @@
           `;
           
           imageCount++;
-        }
+        });
         
         imageGrid.innerHTML = imagesHtml;
         document.getElementById('imageCount').textContent = imageCount;
@@ -915,19 +743,10 @@
         
       } catch (error) {
         imageGrid.innerHTML = `<div class="status error">
-          <p>Erreur de chargement : ${error.message}</p>
+          <p>Erreur de chargement</p>
           <button class="btn" onclick="loadImages()">Réessayer</button>
         </div>`;
         refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Actualiser';
-      }
-    }
-    
-    async function testImageExists(url) {
-      try {
-        const response = await fetch(url, { method: 'HEAD' });
-        return response.ok;
-      } catch (error) {
-        return false;
       }
     }
     
@@ -943,9 +762,20 @@
     }
     
     // ============================================
-    // MODALES ET INTERACTIONS
+    // MODALES ET INTERACTIONS - FONCTIONS CORRIGÉES
     // ============================================
+    function chooseNewPhoto() {
+      console.log('Ouvrir sélecteur de fichier pour édition');
+      document.getElementById('newImageInput').click();
+    }
+    
+    function chooseUploadPhoto() {
+      console.log('Ouvrir sélecteur de fichier pour upload');
+      document.getElementById('uploadImageInput').click();
+    }
+    
     function editImage(filename) {
+      console.log('Éditer l\'image:', filename);
       currentEditingImage = { filename };
       
       const modal = document.getElementById('editModal');
@@ -953,15 +783,7 @@
       const filenameEl = document.getElementById('modalFilename');
       
       filenameEl.textContent = `Remplacer : ${filename}`;
-      const imageUrl = `${GITHUB_RAW}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${filename}?t=${Date.now()}`;
-      preview.src = imageUrl;
-      
-      // Get image dimensions
-      getImageDimensions(imageUrl).then(dimensions => {
-        document.getElementById('imageSizeBadge').textContent = dimensions;
-      }).catch(() => {
-        document.getElementById('imageSizeBadge').textContent = 'N/A';
-      });
+      preview.src = `${GITHUB_RAW}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${filename}?t=${Date.now()}`;
       
       // Reset
       document.getElementById('replaceButton').style.display = 'none';
@@ -971,20 +793,9 @@
       modal.style.display = 'flex';
     }
     
-    async function getImageDimensions(url) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = function() {
-          resolve(`${this.width}×${this.height}px`);
-        };
-        img.onerror = function() {
-          resolve('Dimensions inconnues');
-        };
-        img.src = url;
-      });
-    }
-    
     function handleImageSelection(file, type) {
+      console.log('Handle image selection:', file.name, type);
+      
       // Validation
       if (file.size > 5 * 1024 * 1024) {
         showStatus('❌ Fichier trop grand (max 5MB)', 'error');
@@ -1001,70 +812,44 @@
       // Display file info
       const fileSize = (file.size / 1024 / 1024).toFixed(2);
       
-      // Get image dimensions
-      const img = new Image();
-      img.onload = function() {
-        const dimensions = `${this.width}×${this.height}px`;
+      if (type === 'edit') {
+        console.log('Affichage info fichier édition');
+        document.getElementById('selectedFileName').textContent = file.name;
+        document.getElementById('selectedFileSize').textContent = `${fileSize} MB`;
+        document.getElementById('fileInfo').style.display = 'block';
+        document.getElementById('replaceButton').style.display = 'inline-block';
         
-        if (type === 'edit') {
-          document.getElementById('selectedFileName').textContent = file.name;
-          document.getElementById('selectedFileSize').textContent = `${fileSize} MB`;
-          document.getElementById('selectedFileDimensions').textContent = dimensions;
-          document.getElementById('fileInfo').style.display = 'block';
-          document.getElementById('replaceButton').style.display = 'inline-block';
-          
-          // Preview
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            document.getElementById('modalPreview').src = e.target.result;
-            document.getElementById('imageSizeBadge').textContent = dimensions;
-          };
-          reader.readAsDataURL(file);
-          
-        } else if (type === 'upload') {
-          document.getElementById('uploadFileName').textContent = file.name;
-          document.getElementById('uploadFileSize').textContent = `${fileSize} MB`;
-          document.getElementById('uploadFileDimensions').textContent = dimensions;
-          document.getElementById('uploadFileInfo').style.display = 'block';
-          
-          // Auto-set category if filename matches pattern
-          const fileNameLower = file.name.toLowerCase();
-          if (fileNameLower.includes('costume')) {
-            document.getElementById('uploadCategory').value = 'costumes';
-            document.getElementById('uploadName').value = 'costume';
-          } else if (fileNameLower.includes('chemise')) {
-            document.getElementById('uploadCategory').value = 'chemises';
-            document.getElementById('uploadName').value = 'chemise';
-          } else if (fileNameLower.includes('pantalon')) {
-            document.getElementById('uploadCategory').value = 'pantalons';
-            document.getElementById('uploadName').value = 'pantalon';
-          } else if (fileNameLower.includes('veste')) {
-            document.getElementById('uploadCategory').value = 'vestes';
-            document.getElementById('uploadName').value = 'veste';
-          } else if (fileNameLower.includes('tenue')) {
-            document.getElementById('uploadCategory').value = 'tenues';
-            document.getElementById('uploadName').value = 'tenue';
-          } else if (fileNameLower.includes('accessoire')) {
-            document.getElementById('uploadCategory').value = 'accessoires';
-            document.getElementById('uploadName').value = 'accessoire';
-          } else if (fileNameLower.includes('hero')) {
-            document.getElementById('uploadCategory').value = 'hero';
-            document.getElementById('uploadName').value = 'hero';
-          }
-          
-          updateGeneratedFilename();
+        // Preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          console.log('Preview chargée');
+          document.getElementById('modalPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+      } else if (type === 'upload') {
+        console.log('Affichage info fichier upload');
+        document.getElementById('uploadFileName').textContent = file.name;
+        document.getElementById('uploadFileSize').textContent = `${fileSize} MB`;
+        document.getElementById('uploadFileInfo').style.display = 'block';
+        
+        // Auto-generate filename if empty
+        if (!document.getElementById('uploadFilename').value) {
+          const ext = file.name.split('.').pop();
+          const timestamp = Date.now();
+          document.getElementById('uploadFilename').value = `image_${timestamp}.${ext}`;
         }
-        
-        showStatus(`✅ Image sélectionnée : ${file.name} (${dimensions})`, 'success');
-      };
+      }
       
-      img.src = URL.createObjectURL(file);
+      showStatus('✅ Image sélectionnée : ' + file.name, 'success');
     }
     
     // ============================================
-    // UPLOAD ET REMPLACEMENT
+    // UPLOAD ET REMPLACEMENT - FONCTIONS SIMPLIFIÉES
     // ============================================
     async function replaceImage() {
+      console.log('Fonction replaceImage appelée');
+      
       if (!selectedFile || !currentEditingImage) {
         showStatus('❌ Aucune image sélectionnée', 'error');
         return;
@@ -1077,9 +862,6 @@
           // With token: direct API call
           await uploadWithToken(selectedFile, currentEditingImage.filename, 'update');
           showStatus(`✅ "${currentEditingImage.filename}" remplacé avec succès !`, 'success');
-          
-          // Force cache refresh on main site
-          setTimeout(() => forceCacheBuster(), 1000);
         } else {
           // Without token: redirect to GitHub
           redirectToGitHubUpload(currentEditingImage.filename);
@@ -1088,39 +870,21 @@
         closeEditModal();
         setTimeout(() => loadImages(), 2000);
         
+        // Force cache refresh
+        forceCacheBuster();
+        
       } catch (error) {
         showStatus(`❌ Erreur : ${error.message}`, 'error');
       }
     }
     
     async function uploadNewImage() {
-      const name = document.getElementById('uploadName').value.trim();
-      const number = document.getElementById('uploadNumber').value;
-      const extension = document.getElementById('uploadExtension').value;
+      const filename = document.getElementById('uploadFilename').value.trim();
       const category = document.getElementById('uploadCategory').value;
       
-      if (!selectedFile || !category) {
-        showStatus('❌ Veuillez sélectionner une image et une catégorie', 'error');
+      if (!selectedFile || !filename || !category) {
+        showStatus('❌ Veuillez remplir tous les champs', 'error');
         return;
-      }
-      
-      // Generate filename
-      let filename;
-      if (name) {
-        filename = name + (number ? number : '') + extension;
-      } else {
-        // Auto-generate from category
-        const categoryNames = {
-          'costumes': 'costume',
-          'chemises': 'chemise',
-          'pantalons': 'pantalon',
-          'vestes': 'veste',
-          'tenues': 'tenue',
-          'accessoires': 'accessoire',
-          'hero': 'hero',
-          'autre': 'image'
-        };
-        filename = (categoryNames[category] || 'image') + (number ? number : '') + extension;
       }
       
       // Validate filename
@@ -1129,23 +893,13 @@
         return;
       }
       
-      // Check if file already exists
-      const exists = await testImageExists(`${GITHUB_RAW}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${filename}`);
-      if (exists && !confirm(`"${filename}" existe déjà. Remplacer ?`)) {
-        return;
-      }
-      
       showStatus('<div class="spinner"></div> 📤 Upload en cours...', '');
       
       try {
         if (githubToken) {
           // With token: direct API call
-          const mode = exists ? 'update' : 'create';
-          await uploadWithToken(selectedFile, filename, mode);
+          await uploadWithToken(selectedFile, filename, 'create');
           showStatus(`✅ "${filename}" uploadé avec succès !`, 'success');
-          
-          // Force cache refresh on main site
-          setTimeout(() => forceCacheBuster(), 1000);
         } else {
           // Without token: redirect to GitHub
           redirectToGitHubUpload(filename);
@@ -1154,78 +908,117 @@
         closeUploadModal();
         setTimeout(() => loadImages(), 2000);
         
+        // Force cache refresh
+        forceCacheBuster();
+        
       } catch (error) {
         showStatus(`❌ Erreur : ${error.message}`, 'error');
       }
     }
     
     async function uploadWithToken(file, filename, mode) {
-      // Convert file to base64
-      const content = await fileToBase64(file);
-      
-      let url = `${GITHUB_API}/repos/${GITHUB_REPO}/contents/images/${filename}`;
-      let method = 'PUT';
-      let body = {
-        message: `${mode === 'update' ? 'Mise à jour' : 'Ajout'}: ${filename}`,
-        content: content,
-        branch: GITHUB_BRANCH
-      };
-      
-      // For update, need SHA of existing file
-      if (mode === 'update') {
-        try {
-          const existingFile = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/contents/images/${filename}`, {
-            headers: {
-              'Authorization': `token ${githubToken}`,
-              'Accept': 'application/vnd.github.v3+json'
+      try {
+        console.log('Début uploadWithToken:', { filename, mode });
+        
+        // Convert file to base64
+        const base64Content = await fileToBase64(file);
+        const content = base64Content.split(',')[1]; // Remove data:image/... prefix
+        
+        console.log('Content prêt, longueur:', content.length);
+        
+        let url = `${GITHUB_API}/repos/${GITHUB_REPO}/contents/images/${filename}`;
+        let body = {
+          message: `${mode === 'update' ? 'Mise à jour' : 'Ajout'}: ${filename}`,
+          content: content,
+          branch: GITHUB_BRANCH
+        };
+        
+        // For update, need SHA of existing file
+        if (mode === 'update') {
+          try {
+            console.log('Vérification fichier existant...');
+            const existingFile = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/contents/images/${filename}`, {
+              headers: {
+                'Authorization': `token ${githubToken}`,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            });
+            
+            if (existingFile.ok) {
+              const fileData = await existingFile.json();
+              body.sha = fileData.sha;
+              console.log('Fichier existant trouvé, SHA:', fileData.sha.substring(0, 10) + '...');
             }
-          });
-          
-          if (existingFile.ok) {
-            const fileData = await existingFile.json();
-            body.sha = fileData.sha;
+          } catch (e) {
+            console.log('Fichier non existant, création nouvelle');
           }
-        } catch (e) {
-          // File doesn't exist, continue with create
         }
+        
+        console.log('Envoi requête à GitHub...');
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${githubToken}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+        
+        console.log('Réponse reçue, status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Erreur GitHub:', errorData);
+          
+          if (response.status === 401) {
+            throw new Error('Token invalide. Vérifiez vos permissions GitHub.');
+          } else if (response.status === 403) {
+            throw new Error('Accès refusé. Vérifiez que le token a les permissions "repo".');
+          } else {
+            throw new Error(errorData.message || 'Erreur GitHub');
+          }
+        }
+        
+        const result = await response.json();
+        console.log('Upload réussi');
+        return result;
+        
+      } catch (error) {
+        console.error('Échec upload:', error);
+        throw error;
       }
-      
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Authorization': `token ${githubToken}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Erreur GitHub');
-      }
-      
-      return await response.json();
     }
     
     function redirectToGitHubUpload(filename) {
       const githubUploadURL = `https://github.com/${GITHUB_REPO}/upload/${GITHUB_BRANCH}/images`;
       
       showStatus(`
-        <p>📤 Ouvrez <a href="${githubUploadURL}" target="_blank" style="color: #d4af37; font-weight: bold;">GitHub</a> :</p>
-        <ol style="text-align: left; margin: 10px 0; padding-left: 20px;">
-          <li>Glissez-déposez le fichier</li>
-          <li>Renommez-le en <strong>"${filename}"</strong></li>
-          <li>Cliquez sur "Commit changes"</li>
-          <li>Attendez 1-2 minutes</li>
-        </ol>
-        <div style="margin-top: 15px;">
-          <a href="${githubUploadURL}" target="_blank" class="btn" style="background: #d4af37;">
-            <i class="fab fa-github"></i> Ouvrir GitHub
-          </a>
-          <button class="btn btn-secondary" onclick="forceCacheBuster()">
-            <i class="fas fa-sync"></i> Forcer rechargement
-          </button>
+        <div style="text-align: center;">
+          <p style="color: #d4af37; font-weight: bold; margin-bottom: 15px;">📤 Upload manuel sur GitHub</p>
+          <div style="background: rgba(212,175,55,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <p style="color: white; margin-bottom: 10px;">
+              <strong>Nom du fichier :</strong><br>
+              <code style="background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 4px; display: inline-block; margin-top: 5px;">
+                ${filename}
+              </code>
+            </p>
+          </div>
+          <ol style="text-align: left; margin: 15px 0; padding-left: 20px; color: #aaa;">
+            <li>Ouvrez GitHub (lien ci-dessous)</li>
+            <li>Glissez-déposez votre image</li>
+            <li>Renommez en <strong>"${filename}"</strong></li>
+            <li>Cliquez sur "Commit changes"</li>
+            <li>Attendez 1 minute</li>
+          </ol>
+          <div style="margin-top: 20px;">
+            <a href="${githubUploadURL}" target="_blank" class="btn" style="background: #d4af37;">
+              <i class="fab fa-github"></i> Ouvrir GitHub maintenant
+            </a>
+            <button class="btn btn-secondary" onclick="forceCacheBuster()" style="margin-left: 10px;">
+              <i class="fas fa-sync"></i> Forcer rechargement
+            </button>
+          </div>
         </div>
       `, 'warning');
     }
@@ -1276,7 +1069,7 @@
               showStatus(`🗑️ "${filename}" supprimé avec succès`, 'success');
               
               // Force cache refresh
-              setTimeout(() => forceCacheBuster(), 1000);
+              forceCacheBuster();
             } else {
               throw new Error('Échec de la suppression');
             }
@@ -1313,23 +1106,13 @@
       // Update localStorage cache version
       localStorage.setItem('rayschic_cache_version', timestamp.toString());
       
-      // Update session cache version
-      sessionStorage.setItem('rayschic_session_cache', timestamp.toString());
-      
-      // Notify main site if open
-      try {
-        if (window.opener) {
-          window.opener.postMessage({
-            type: 'FORCE_CACHE_REFRESH',
-            timestamp: timestamp
-          }, '*');
-        }
-      } catch (e) {
-        // Cross-origin error, ignore
-      }
-      
       showStatus(`🔄 Cache forcé (${new Date(timestamp).toLocaleTimeString()})`, 'success');
       updateCacheStatus();
+      
+      // Open site in new tab with cache bust
+      setTimeout(() => {
+        window.open(`https://rayschic-couture.github.io?v=${timestamp}`, '_blank');
+      }, 1000);
     }
     
     function invalidateLocalStorage() {
@@ -1357,130 +1140,24 @@
     }
     
     function previewSiteChanges() {
-      const siteUrl = window.location.hostname === 'localhost' ? 
-        'http://localhost:8080' : 
-        'https://rayschic-couture.github.io';
-      
+      const siteUrl = 'https://rayschic-couture.github.io';
       window.open(`${siteUrl}?preview=${Date.now()}`, '_blank');
-    }
-    
-    // ============================================
-    // NETTOYAGE AUTOMATIQUE
-    // ============================================
-    function showDeleteAllModal() {
-      document.getElementById('deleteAllModal').style.display = 'flex';
-      document.getElementById('keptImagesList').innerHTML = '<p style="color: #aaa; text-align: center;">Cliquez sur "Scanner" pour analyser...</p>';
-    }
-    
-    async function scanAndCleanImages() {
-      showStatus('<div class="spinner"></div> 🔍 Analyse des images en cours...', '');
-      
-      try {
-        // Get list of images from GitHub
-        const response = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/contents/images`, {
-          headers: githubToken ? {
-            'Authorization': `token ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json'
-          } : {}
-        });
-        
-        if (!response.ok) {
-          throw new Error('Impossible de récupérer la liste des images');
-        }
-        
-        const files = await response.json();
-        const imageFiles = files.filter(file => file.type === 'file' && file.name.match(/\.(jpg|jpeg|png)$/i));
-        
-        // Flatten needed images
-        const neededImages = Object.values(SITE_IMAGES).flat();
-        
-        // Find unused images
-        const unusedImages = imageFiles.filter(file => !neededImages.includes(file.name));
-        
-        // Update modal with kept images
-        const keptImagesList = document.getElementById('keptImagesList');
-        keptImagesList.innerHTML = neededImages.length > 0 ? 
-          neededImages.map(img => `<div style="padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">✓ ${img}</div>`).join('') :
-          '<p style="color: #ff6b6b;">Aucune image configurée dans SITE_IMAGES</p>';
-        
-        if (unusedImages.length === 0) {
-          showStatus('✅ Toutes les images sont utilisées. Aucun nettoyage nécessaire.', 'success');
-          closeDeleteAllModal();
-          return;
-        }
-        
-        // Ask for confirmation
-        const confirmMessage = `Trouvé ${unusedImages.length} image(s) inutilisée(s) :\n\n` +
-          unusedImages.map(img => `• ${img.name}`).join('\n') +
-          `\n\nSupprimer ces ${unusedImages.length} image(s) ?`;
-        
-        if (confirm(confirmMessage)) {
-          await deleteUnusedImages(unusedImages);
-        }
-        
-      } catch (error) {
-        showStatus(`❌ Erreur : ${error.message}`, 'error');
-      }
-    }
-    
-    async function deleteUnusedImages(unusedImages) {
-      let deletedCount = 0;
-      let errorCount = 0;
-      
-      for (const file of unusedImages) {
-        try {
-          if (githubToken) {
-            const deleteResponse = await fetch(`${GITHUB_API}/repos/${GITHUB_REPO}/contents/images/${file.name}`, {
-              method: 'DELETE',
-              headers: {
-                'Authorization': `token ${githubToken}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                message: `Nettoyage: ${file.name}`,
-                sha: file.sha,
-                branch: GITHUB_BRANCH
-              })
-            });
-            
-            if (deleteResponse.ok) {
-              deletedCount++;
-              showStatus(`🗑️ Suppression: ${file.name} (${deletedCount}/${unusedImages.length})`, '');
-            } else {
-              errorCount++;
-            }
-          }
-        } catch (error) {
-          errorCount++;
-        }
-      }
-      
-      showStatus(`✅ Nettoyage terminé : ${deletedCount} supprimée(s), ${errorCount} erreur(s)`, 
-                 errorCount === 0 ? 'success' : 'warning');
-      
-      closeDeleteAllModal();
-      setTimeout(() => loadImages(), 3000);
     }
     
     // ============================================
     // UTILITAIRES
     // ============================================
-    function fileToBase64(file) {
+    async function fileToBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        };
+        reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
       });
     }
     
     function showUploadModal() {
       document.getElementById('uploadModal').style.display = 'flex';
-      updateGeneratedFilename();
     }
     
     function closeEditModal() {
@@ -1492,16 +1169,10 @@
     function closeUploadModal() {
       document.getElementById('uploadModal').style.display = 'none';
       document.getElementById('uploadImageInput').value = '';
-      document.getElementById('uploadName').value = '';
-      document.getElementById('uploadNumber').value = '';
+      document.getElementById('uploadFilename').value = '';
       document.getElementById('uploadCategory').value = '';
       document.getElementById('uploadFileInfo').style.display = 'none';
-      document.getElementById('generatedFilename').textContent = '';
       selectedFile = null;
-    }
-    
-    function closeDeleteAllModal() {
-      document.getElementById('deleteAllModal').style.display = 'none';
     }
     
     function refreshImages() {
