@@ -894,7 +894,7 @@
                 <a href="#contact" class="cta-button">Prendre rendez-vous</a>
             </div>
             <div class="hero-image">
-                <!-- Image chargée dynamiquement -->
+                <!-- Image chargée dynamiquement depuis l'API Python -->
                 <img id="hero-img" src="" alt="Costume masculin sur mesure">
             </div>
         </div>
@@ -906,7 +906,7 @@
         <p style="text-align: center; margin-bottom: 40px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto;">Découvrez nos créations exclusives, chaque pièce est conçue sur mesure pour s'adapter parfaitement à votre morphologie et à votre style personnel.</p>
         
         <div class="collections-grid" id="collections-container">
-            <!-- Rempli dynamiquement par JavaScript -->
+            <!-- Rempli dynamiquement par JavaScript depuis l'API Python -->
         </div>
     </section>
 
@@ -1079,8 +1079,11 @@
             <div class="copyright">
                 <p>&copy; 2026 RAYSCHIC Couture Masculine sur Mesure. Tous droits réservés. | Kinshasa, RDC</p>
                 <p style="margin-top: 10px; font-size: 0.9em;">
+                    <a href="https://rayschic-python-admin.onrender.com/static/admin.html" target="_blank" style="color: #d4af37;">
+                        <i class="fas fa-images"></i> Admin des Images
+                    </a> | 
                     <a href="#" onclick="openImageManager(); return false;" style="color: #d4af37;">
-                        <i class="fas fa-images"></i> Gérer les images
+                        <i class="fas fa-cog"></i> Gérer les images
                     </a>
                 </p>
             </div>
@@ -1093,40 +1096,37 @@
             <h2><i class="fas fa-images"></i> Gestionnaire d'Images</h2>
             
             <div class="manager-section">
-                <h3>Structure des dossiers :</h3>
-                <pre style="background: #1a1a2e; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 15px 0; color: #d4af37;">
-images/
-├── costumes/     (1.jpg, 2.jpg, ... 6.jpg)
-├── chemises/     (1.jpg, 2.jpg, ... 6.jpg)
-├── pantalons/    (1.jpg, 2.jpg, ... 6.jpg)
-├── vestes/       (1.jpg, 2.jpg, ... 6.jpg)
-├── tenues/       (1.jpg, 2.jpg, ... 6.jpg)
-├── accessoires/  (1.jpg, 2.jpg, ... 6.jpg)
-└── hero/         (1.jpg)</pre>
+                <h3>Système d'Images - Python</h3>
+                <p><strong>Serveur Python :</strong> https://rayschic-python-admin.onrender.com</p>
+                <p><strong>Interface Admin :</strong> <a href="https://rayschic-python-admin.onrender.com/static/admin.html" target="_blank" style="color:#d4af37;">Ouvrir l'Admin Python</a></p>
                 
-                <p><strong>Instructions :</strong></p>
-                <ul style="margin-left: 20px; line-height: 1.6;">
-                    <li>Les images sont automatiquement détectées par numéro</li>
-                    <li>Pour ajouter une nouvelle image : uploadez 7.jpg, 8.jpg, etc.</li>
-                    <li>Format recommandé : JPG, 800x600 pixels minimum</li>
-                </ul>
+                <div style="background: #1a1a2e; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d4af37;">
+                    <p><strong>📁 Structure API :</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>/api/scan</code> - Scanner toutes les images</li>
+                        <li><code>/api/upload</code> - Uploader une image</li>
+                        <li><code>/api/delete</code> - Supprimer une image</li>
+                        <li><code>/api/generate-json</code> - Générer JSON pour GitHub</li>
+                    </ul>
+                </div>
             </div>
             
             <div class="manager-section">
-                <h3>Statistiques :</h3>
+                <h3>Statistiques en direct :</h3>
                 <div id="image-stats">
-                    <table class="stats-table">
-                        <!-- Rempli dynamiquement -->
-                    </table>
+                    <p style="text-align: center; padding: 20px;">Chargement des statistiques...</p>
                 </div>
             </div>
             
             <div class="manager-actions">
+                <button onclick="window.open('https://rayschic-python-admin.onrender.com/static/admin.html', '_blank')" class="btn-action">
+                    <i class="fas fa-external-link-alt"></i> Ouvrir l'Admin Python
+                </button>
                 <button onclick="refreshAllImages()" class="btn-action">
                     <i class="fas fa-sync-alt"></i> Actualiser les images
                 </button>
-                <button onclick="scanForNewImages()" class="btn-action">
-                    <i class="fas fa-search"></i> Scanner nouvelles images
+                <button onclick="testAPI()" class="btn-action">
+                    <i class="fas fa-bug"></i> Tester l'API
                 </button>
                 <button onclick="closeImageManager()" class="btn-close">
                     <i class="fas fa-times"></i> Fermer
@@ -1134,12 +1134,18 @@ images/
             </div>
             
             <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 5px; border-left: 4px solid #d4af37;">
-                <p><strong>Astuce :</strong> Appuyez sur <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> pour forcer le rechargement des images</p>
+                <p><strong>💡 Astuce :</strong> L'Admin Python permet de :</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Uploader des images par drag & drop</li>
+                    <li>Organiser par collections</li>
+                    <li>Supprimer des images</li>
+                    <li>Générer le JSON pour GitHub</li>
+                </ul>
             </div>
         </div>
     </div>
 
-      <!-- ============================================ -->
+    <!-- ============================================ -->
     <!-- SCRIPT MIS À JOUR POUR SYSTÈME PYTHON RENDER -->
     <!-- ============================================ -->
     <script>
@@ -1147,7 +1153,8 @@ images/
     // CONFIGURATION
     // ============================================
     const CONFIG = {
-        apiUrl: 'https://rayschic-admin.onrender.com', // VOTRE ADMIN PYTHON
+        apiUrl: 'https://rayschic-python-admin.onrender.com', // VOTRE ADMIN PYTHON
+        adminUrl: 'https://rayschic-python-admin.onrender.com/static/admin.html',
         collections: [
             { id: 'costumes', title: 'Costumes sur Mesure', folder: 'costumes' },
             { id: 'chemises', title: 'Chemises sur Mesure', folder: 'chemises' },
@@ -1168,14 +1175,23 @@ images/
     };
 
     // ============================================
+    // ÉTAT GLOBAL
+    // ============================================
+    let currentGallery = null;
+    let collectionsData = [];
+    let apiStatus = 'loading';
+
+    // ============================================
     // CHARGEMENT DES IMAGES DEPUIS L'API PYTHON
     // ============================================
 
     async function loadImagesFromPythonAPI() {
         try {
-            console.log('📡 Chargement depuis l\'API Python...');
+            console.log('📡 Chargement depuis l\'API Python...', CONFIG.apiUrl);
             
-            const response = await fetch(`${CONFIG.apiUrl}/api/scan`);
+            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
+                signal: AbortSignal.timeout(10000) // Timeout de 10 secondes
+            });
             
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
@@ -1183,6 +1199,7 @@ images/
             
             const data = await response.json();
             console.log('✅ Données reçues:', data);
+            apiStatus = 'online';
             
             // 1. Charger l'image hero
             await loadHeroImageFromAPI(data);
@@ -1196,12 +1213,24 @@ images/
             // 4. Mettre à jour le footer
             updateFooterCollections(data);
             
+            // 5. Mettre à jour les stats
+            updateImageStats();
+            
             return data;
             
         } catch (error) {
             console.warn('⚠️ Erreur API, utilisation du fallback JSON:', error);
+            apiStatus = 'offline';
+            
             // Fallback vers le système local
             await loadFromLocalJSON();
+            
+            // Afficher notification si API hors ligne
+            if (error.name === 'AbortError') {
+                showNotification('⚠️ L\'API Python est lente, utilisation du cache local', 'warning');
+            } else {
+                showNotification('⚠️ Connexion à l\'API Python échouée, utilisation du cache', 'warning');
+            }
         }
     }
 
@@ -1211,23 +1240,43 @@ images/
         
         if (data.collections && data.collections.hero && data.collections.hero.images.length > 0) {
             const heroImage = data.collections.hero.images[0];
-            heroImg.src = `${CONFIG.apiUrl}${heroImage.url}`;
-            console.log('✅ Hero image chargée:', heroImg.src);
-        } else {
-            // Fallback local
-            const fallbackSources = ['images/hero/1.jpg', 'images/hero.jpg'];
-            for (const src of fallbackSources) {
-                if (await imageExists(src)) {
-                    heroImg.src = src;
-                    break;
-                }
+            const imgUrl = `${CONFIG.apiUrl}${heroImage.url}`;
+            
+            // Vérifier si l'image existe
+            if (await imageExists(imgUrl)) {
+                heroImg.src = imgUrl;
+                console.log('✅ Hero image chargée:', heroImg.src);
+            } else {
+                useFallbackHero(heroImg);
             }
+        } else {
+            useFallbackHero(heroImg);
         }
         
-        // Fallback final
+        // Fallback en cas d'erreur
         heroImg.onerror = function() {
             this.src = 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop';
         };
+    }
+
+    function useFallbackHero(heroImg) {
+        // Fallback local
+        const fallbackSources = [
+            'images/hero/1.jpg', 
+            'images/hero.jpg',
+            'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop'
+        ];
+        
+        // Essayer chaque source
+        fallbackSources.forEach(src => {
+            const testImg = new Image();
+            testImg.src = src;
+            testImg.onload = () => {
+                if (!heroImg.src || heroImg.src.includes('placeholder')) {
+                    heroImg.src = src;
+                }
+            };
+        });
     }
 
     // Charger les collections depuis l'API
@@ -1240,50 +1289,65 @@ images/
         }
         
         let html = '';
-        window.collectionsData = [];
+        collectionsData = [];
         
         // Parcourir toutes les collections sauf 'hero'
         for (const [collectionId, collectionData] of Object.entries(data.collections)) {
             if (collectionId === 'hero') continue;
             
             const configCollection = CONFIG.collections.find(c => c.id === collectionId);
-            if (!configCollection || collectionData.images.length === 0) continue;
+            if (!configCollection) continue;
+            
+            // Vérifier si la collection a des images
+            if (!collectionData.images || collectionData.images.length === 0) {
+                console.log(`⚠️ Collection ${collectionId} vide`);
+                continue;
+            }
+            
+            // Filtrer les images valides
+            const validImages = [];
+            for (const img of collectionData.images) {
+                const imgUrl = `${CONFIG.apiUrl}${img.url}`;
+                if (await imageExists(imgUrl)) {
+                    validImages.push({
+                        src: imgUrl,
+                        title: `${collectionData.title} ${img.filename.split('.')[0]}`,
+                        desc: `Image ${img.filename} - ${collectionData.title}`,
+                        filename: img.filename
+                    });
+                }
+            }
+            
+            if (validImages.length === 0) continue;
             
             // Stocker pour la galerie
-            const collectionImages = collectionData.images.map(img => ({
-                src: `${CONFIG.apiUrl}${img.url}`,
-                title: `${collectionData.title} ${img.filename.split('.')[0]}`,
-                desc: `Image ${img.filename} - ${collectionData.title}`,
-                filename: img.filename
-            }));
-            
-            window.collectionsData.push({
+            collectionsData.push({
                 id: collectionId,
-                title: collectionData.title,
-                images: collectionImages,
-                description: CONFIG.descriptions[collectionId] || collectionData.title
+                title: collectionData.title || configCollection.title,
+                images: validImages,
+                description: CONFIG.descriptions[collectionId] || collectionData.title || ''
             });
             
             // Créer la carte de collection
             html += `
                 <div class="collection-card" data-collection="${collectionId}">
                     <div class="collection-image">
-                        <img src="${CONFIG.apiUrl}${collectionData.images[0].url}" 
+                        <img src="${validImages[0].src}" 
                              alt="${collectionData.title}"
                              loading="lazy"
-                             onerror="this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${collectionData.title}'">
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${encodeURIComponent(collectionData.title)}'">
                     </div>
                     <div class="collection-content">
-                        <h3>${collectionData.title}</h3>
-                        <p>${CONFIG.descriptions[collectionId] || collectionData.title}</p>
-                        <div class="collection-tag">${collectionData.count} modèle${collectionData.count > 1 ? 's' : ''}</div>
+                        <h3>${collectionData.title || configCollection.title}</h3>
+                        <p>${CONFIG.descriptions[collectionId] || collectionData.title || ''}</p>
+                        <div class="collection-tag">${validImages.length} modèle${validImages.length > 1 ? 's' : ''}</div>
                     </div>
                 </div>
             `;
         }
         
         grid.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
-        console.log(`✅ ${window.collectionsData.length} collections chargées`);
+        console.log(`✅ ${collectionsData.length} collections chargées`);
     }
 
     // Mettre à jour les collections dans le footer
@@ -1293,11 +1357,12 @@ images/
         
         let html = '';
         
-        for (const [collectionId, collectionData] of Object.entries(data.collections)) {
-            if (collectionId === 'hero') continue;
+        for (const collection of CONFIG.collections) {
+            const collectionData = data.collections ? data.collections[collection.id] : null;
+            const hasImages = collectionData && collectionData.images && collectionData.images.length > 0;
             
-            if (collectionData.images && collectionData.images.length > 0) {
-                html += `<li><a href="#" data-collection="${collectionId}">${collectionData.title.toUpperCase()}</a></li>`;
+            if (hasImages) {
+                html += `<li><a href="#" data-collection="${collection.id}">${collection.title.toUpperCase()}</a></li>`;
             }
         }
         
@@ -1327,6 +1392,7 @@ images/
             await loadCollectionsFromLocalJSON(data);
             
             initEvents();
+            updateImageStats();
             
         } catch (error) {
             console.error('❌ Erreur chargement local:', error);
@@ -1336,12 +1402,12 @@ images/
 
     async function loadCollectionsFromLocalJSON(data) {
         const grid = document.getElementById('collections-container');
-        window.collectionsData = [];
+        collectionsData = [];
         
         let html = '';
         
         for (const collection of CONFIG.collections) {
-            const collectionData = data.collections[collection.id];
+            const collectionData = data.collections ? data.collections[collection.id] : null;
             
             if (collectionData && collectionData.images && collectionData.images.length > 0) {
                 // Stocker pour galerie
@@ -1352,7 +1418,7 @@ images/
                     filename: img.filename
                 }));
                 
-                window.collectionsData.push({
+                collectionsData.push({
                     id: collection.id,
                     title: collectionData.title,
                     images: collectionImages,
@@ -1366,7 +1432,7 @@ images/
                             <img src="${collectionData.images[0].url}" 
                                  alt="${collectionData.title}"
                                  loading="lazy"
-                                 onerror="this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${collectionData.title}'">
+                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${encodeURIComponent(collectionData.title)}'">
                         </div>
                         <div class="collection-content">
                             <h3>${collectionData.title}</h3>
@@ -1414,9 +1480,9 @@ images/
     // ============================================
 
     function openGallery(collectionId) {
-        const collection = window.collectionsData.find(c => c.id === collectionId);
+        const collection = collectionsData.find(c => c.id === collectionId);
         if (!collection || !collection.images || collection.images.length === 0) {
-            alert('Aucune image disponible pour cette collection');
+            showNotification('Aucune image disponible pour cette collection', 'warning');
             return;
         }
         
@@ -1434,7 +1500,7 @@ images/
                 <img src="${img.src}" 
                      alt="${img.title}" 
                      loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/300x250/2d3047/d4af37?text=Image+${index+1}'">
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x250/2d3047/d4af37?text=Image+${index+1}'">
                 <div class="modal-gallery-overlay">
                     <h4>${img.title}</h4>
                     <p>${img.desc}</p>
@@ -1455,7 +1521,7 @@ images/
     }
 
     function openFullscreenImage(collectionId, index) {
-        const collection = window.collectionsData.find(c => c.id === collectionId);
+        const collection = collectionsData.find(c => c.id === collectionId);
         if (!collection || !collection.images[index]) return;
         
         const modal = document.getElementById('fullscreen-modal');
@@ -1474,7 +1540,7 @@ images/
         modal.style.display = 'flex';
         
         // Stocker pour navigation
-        window.currentGallery = {
+        currentGallery = {
             collectionId,
             index,
             images: collection.images
@@ -1525,18 +1591,18 @@ images/
         
         // Navigation plein écran
         document.querySelector('.fullscreen-nav.prev').addEventListener('click', () => {
-            if (window.currentGallery) {
-                let newIndex = window.currentGallery.index - 1;
-                if (newIndex < 0) newIndex = window.currentGallery.images.length - 1;
-                openFullscreenImage(window.currentGallery.collectionId, newIndex);
+            if (currentGallery) {
+                let newIndex = currentGallery.index - 1;
+                if (newIndex < 0) newIndex = currentGallery.images.length - 1;
+                openFullscreenImage(currentGallery.collectionId, newIndex);
             }
         });
         
         document.querySelector('.fullscreen-nav.next').addEventListener('click', () => {
-            if (window.currentGallery) {
-                let newIndex = window.currentGallery.index + 1;
-                if (newIndex >= window.currentGallery.images.length) newIndex = 0;
-                openFullscreenImage(window.currentGallery.collectionId, newIndex);
+            if (currentGallery) {
+                let newIndex = currentGallery.index + 1;
+                if (newIndex >= currentGallery.images.length) newIndex = 0;
+                openFullscreenImage(currentGallery.collectionId, newIndex);
             }
         });
         
@@ -1611,23 +1677,8 @@ images/
     // ============================================
 
     function openImageManager() {
-        document.getElementById('image-manager-overlay').style.display = 'flex';
-        
-        // Mettre à jour les boutons
-        const actionsDiv = document.querySelector('.manager-actions');
-        if (actionsDiv) {
-            actionsDiv.innerHTML = `
-                <button onclick="window.open('${CONFIG.apiUrl}/admin', '_blank')" class="btn-action">
-                    <i class="fas fa-external-link-alt"></i> Ouvrir l'Admin Python
-                </button>
-                <button onclick="refreshAllImages()" class="btn-action">
-                    <i class="fas fa-sync-alt"></i> Actualiser les images
-                </button>
-                <button onclick="closeImageManager()" class="btn-close">
-                    <i class="fas fa-times"></i> Fermer
-                </button>
-            `;
-        }
+        const overlay = document.getElementById('image-manager-overlay');
+        overlay.style.display = 'flex';
         
         updateImageStats();
     }
@@ -1641,16 +1692,24 @@ images/
         if (!statsDiv) return;
         
         try {
-            const response = await fetch(`${CONFIG.apiUrl}/api/scan`);
+            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
+                signal: AbortSignal.timeout(5000)
+            });
+            
+            if (!response.ok) throw new Error('API error');
+            
             const data = await response.json();
             
             let html = '<table class="stats-table">';
             html += '<tr><th>Collection</th><th>Images</th><th>Statut</th></tr>';
             
-            for (const [collectionId, collection] of Object.entries(data.collections)) {
-                if (collectionId === 'hero') continue;
+            let totalImages = 0;
+            
+            for (const collection of CONFIG.collections) {
+                const collectionData = data.collections[collection.id];
+                const count = collectionData ? (collectionData.count || collectionData.images.length) : 0;
+                totalImages += count;
                 
-                const count = collection.count || collection.images.length;
                 const status = count > 0 ? '✓' : '✗';
                 const color = count > 0 ? '#4CAF50' : '#f44336';
                 
@@ -1666,10 +1725,18 @@ images/
             // Hero image
             const heroCount = data.collections.hero ? data.collections.hero.images.length : 0;
             html += `
-                <tr>
-                    <td>Image Hero</td>
-                    <td>${heroCount}/1</td>
+                <tr style="background:rgba(212,175,55,0.1);">
+                    <td><strong>Image Hero</strong></td>
+                    <td><strong>${heroCount}/1</strong></td>
                     <td style="color:${heroCount > 0 ? '#4CAF50' : '#f44336'}; font-weight:bold;">${heroCount > 0 ? '✓' : '✗'}</td>
+                </tr>
+            `;
+            
+            html += `
+                <tr style="background:#2d3047; border-top:2px solid #d4af37;">
+                    <td><strong>TOTAL</strong></td>
+                    <td><strong>${totalImages} images</strong></td>
+                    <td style="color:#d4af37; font-weight:bold;">${apiStatus === 'online' ? '✅ En ligne' : '⚠️ Hors ligne'}</td>
                 </tr>
             `;
             
@@ -1677,7 +1744,35 @@ images/
             statsDiv.innerHTML = html;
             
         } catch (error) {
-            statsDiv.innerHTML = '<p style="color:#f44336; text-align:center;">Impossible de charger les statistiques</p>';
+            statsDiv.innerHTML = `
+                <p style="color:#f44336; text-align:center; padding:20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Impossible de charger les statistiques
+                </p>
+                <p style="text-align:center; color:#aaa;">
+                    API Python: ${apiStatus === 'online' ? '✅ En ligne' : '⚠️ Hors ligne'}
+                </p>
+            `;
+        }
+    }
+
+    async function testAPI() {
+        try {
+            showNotification('Test de l\'API en cours...', 'info');
+            
+            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
+                signal: AbortSignal.timeout(5000)
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                showNotification(`✅ API fonctionne ! ${data.stats.total_images} images disponibles`, 'success');
+                updateImageStats();
+            } else {
+                showNotification('❌ API retourne une erreur', 'error');
+            }
+            
+        } catch (error) {
+            showNotification('❌ Impossible de contacter l\'API Python', 'error');
         }
     }
 
@@ -1692,7 +1787,7 @@ images/
         
         // Recharger les données
         loadImagesFromPythonAPI().then(() => {
-            showNotification('Images actualisées !', 'success');
+            showNotification('✅ Images actualisées depuis l\'API Python', 'success');
         });
     }
 
@@ -1704,7 +1799,8 @@ images/
         notification.className = 'notification';
         notification.textContent = message;
         notification.style.background = type === 'success' ? '#4CAF50' : 
-                                      type === 'error' ? '#f44336' : '#2196F3';
+                                      type === 'error' ? '#f44336' : 
+                                      type === 'warning' ? '#ff9800' : '#2196F3';
         
         document.body.appendChild(notification);
         setTimeout(() => notification.remove(), 3000);
@@ -1715,8 +1811,10 @@ images/
     // ============================================
 
     async function imageExists(url) {
+        if (!url || url.includes('placeholder')) return false;
+        
         try {
-            const response = await fetch(url, { method: 'HEAD' });
+            const response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(3000) });
             return response.ok;
         } catch {
             return false;
@@ -1729,12 +1827,37 @@ images/
 
     document.addEventListener('DOMContentLoaded', async function() {
         console.log('🚀 Initialisation du site Rayschic...');
+        console.log('📡 API Python:', CONFIG.apiUrl);
         
         // Charger les images depuis l'API Python
         await loadImagesFromPythonAPI();
         
         console.log('✅ Site prêt ! Système Python intégré.');
+        
+        // Afficher statut
+        if (apiStatus === 'online') {
+            console.log('🌐 API Python: En ligne');
+        } else {
+            console.log('⚠️ API Python: Hors ligne, utilisant le cache');
+        }
     });
+    
+    // Ajouter timeout au fetch
+    if (!window.fetch.timeout) {
+        window.fetch.timeout = function(url, options = {}) {
+            const timeout = options.timeout || 10000;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            
+            return fetch(url, {
+                ...options,
+                signal: controller.signal
+            }).then(response => {
+                clearTimeout(id);
+                return response;
+            });
+        };
+    }
     </script>
 </body>
 </html>
