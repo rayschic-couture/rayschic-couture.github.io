@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rayschic - Couture Masculine sur Mesure</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Netlify Identity Widget CSS -->
-    <link rel="stylesheet" href="https://identity.netlify.com/v1/netlify-identity-widget.css">
     <style>
         * {
             margin: 0;
@@ -743,74 +741,123 @@
             }
         }
 
-        /* Améliorations pour les images */
-        .image-error {
-            background-color: #2d3047;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #d4af37;
-            padding: 20px;
-            text-align: center;
-            height: 100%;
+        /* Styles pour le gestionnaire d'images */
+        .image-manager-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-
-        .image-error i {
-            font-size: 3rem;
+        
+        .image-manager-content {
+            background: #1a1a2e;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 100%;
+            border: 2px solid #d4af37;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .image-manager-content h2 {
+            color: #d4af37;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .manager-section {
+            background: #2d3047;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .manager-section h3 {
+            color: #d4af37;
             margin-bottom: 15px;
         }
         
-        /* Styles pour le système de rechargement dynamique */
-        .img-retry-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
+        .manager-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
         
-        .img-retry-btn button {
+        .btn-action {
             background: #d4af37;
             color: #1a1a2e;
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 12px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 12px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.3s;
         }
         
-        .img-retry-btn button:hover {
-            background: #b8941f;
-            transform: scale(1.05);
+        .btn-close {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
         }
         
-        @keyframes imageUpdate {
-            0% { 
-                opacity: 0.8;
-                transform: scale(0.98);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.02);
-            }
-            100% { 
-                opacity: 1;
-                transform: scale(1);
-            }
+        .btn-action:hover, .btn-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
-        .img-loading {
-            background: linear-gradient(90deg, #2d3047 25%, #3a3d5c 50%, #2d3047 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .stats-table th, .stats-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #2d3047;
+        }
+        
+        .stats-table th {
+            color: #d4af37;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 100000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
@@ -847,10 +894,8 @@
                 <a href="#contact" class="cta-button">Prendre rendez-vous</a>
             </div>
             <div class="hero-image">
-                <!-- Image principale avec cache buster dynamique -->
-                <img id="hero-img" src="images/hero.jpg" alt="Costume masculin sur mesure" 
-                     data-filename="hero.jpg"
-                     onerror="window.handleImageError ? handleImageError(this) : this.src='https://images.unsplash.com/photo-1596755094514-f87e34085b2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80&t=' + Date.now()">
+                <!-- Image chargée dynamiquement -->
+                <img id="hero-img" src="" alt="Costume masculin sur mesure">
             </div>
         </div>
     </section>
@@ -860,90 +905,8 @@
         <h2 class="section-title">Nos Collections sur Mesure</h2>
         <p style="text-align: center; margin-bottom: 40px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto;">Découvrez nos créations exclusives, chaque pièce est conçue sur mesure pour s'adapter parfaitement à votre morphologie et à votre style personnel.</p>
         
-        <div class="collections-grid">
-            <!-- Costumes -->
-            <div class="collection-card" data-collection="costumes">
-                <div class="collection-image">
-                    <img src="images/costume1.jpg" alt="Costumes sur mesure" 
-                         data-filename="costume1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des costumes non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Costumes sur Mesure</h3>
-                    <p>Création de costumes élégants parfaitement adaptés à votre morphologie et à votre style, pour toutes les occasions.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            
-            <!-- Chemises -->
-            <div class="collection-card" data-collection="chemises">
-                <div class="collection-image">
-                    <img src="images/chemise1.jpg" alt="Chemises sur mesure" 
-                         data-filename="chemise1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des chemises non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Chemises sur Mesure</h3>
-                    <p>Chemises personnalisées avec choix des tissus, coupes et finitions pour un style unique et élégant.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            
-            <!-- Pantalons -->
-            <div class="collection-card" data-collection="pantalons">
-                <div class="collection-image">
-                    <img src="images/pantalon1.jpg" alt="Pantalons sur mesure" 
-                         data-filename="pantalon1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des pantalons non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Pantalons sur Mesure</h3>
-                    <p>Pantalons confectionnés sur mesure pour un ajustement parfait, un confort optimal et une élégance remarquable.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            
-            <!-- Vestes -->
-            <div class="collection-card" data-collection="vestes">
-                <div class="collection-image">
-                    <img src="images/veste1.jpg" alt="Vestes sur mesure" 
-                         data-filename="veste1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des vestes non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Vestes & Blazers</h3>
-                    <p>Vestes et blazers confectionnés sur mesure pour compléter votre garde-robe masculine avec élégance.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            
-            <!-- Tenues spécifiques -->
-            <div class="collection-card" data-collection="tenues">
-                <div class="collection-image">
-                    <img src="images/tenue1.jpg" alt="Tenues spécifiques" 
-                         data-filename="tenue1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des tenues non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Tenues Spécifiques</h3>
-                    <p>Créations pour occasions spéciales : mariages, cérémonies, événements d'affaires et autres moments importants.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            
-            <!-- Accessoires -->
-            <div class="collection-card" data-collection="accessoires">
-                <div class="collection-image">
-                    <img src="images/accessoire1.jpg" alt="Accessoires" 
-                         data-filename="accessoire1.jpg"
-                         onerror="window.handleImageError ? handleImageError(this) : this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-tshirt\'></i><p>Image des accessoires non disponible</p></div>'">
-                </div>
-                <div class="collection-content">
-                    <h3>Accessoires Masculins</h3>
-                    <p>Accessoires soigneusement sélectionnés et personnalisés pour compléter votre tenue sur mesure.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
+        <div class="collections-grid" id="collections-container">
+            <!-- Rempli dynamiquement par JavaScript -->
         </div>
     </section>
 
@@ -1022,9 +985,7 @@
             </div>
             <div class="modal-gallery">
                 <p id="modal-description" class="collection-description"></p>
-                <div class="modal-gallery-grid" id="modal-gallery-grid">
-                    <!-- Les images seront ajoutées dynamiquement par JavaScript -->
-                </div>
+                <div class="modal-gallery-grid" id="modal-gallery-grid"></div>
             </div>
         </div>
     </div>
@@ -1074,11 +1035,8 @@
                 
                 <div class="footer-column">
                     <h3>COLLECTIONS</h3>
-                    <ul>
-                        <li><a href="#" data-collection="costumes">COSTUMES SUR MESURE</a></li>
-                        <li><a href="#" data-collection="chemises">CHEMISES SUR MESURE</a></li>
-                        <li><a href="#" data-collection="pantalons">PANTALONS SUR MESURE</a></li>
-                        <li><a href="#" data-collection="vestes">VESTES & BLAZERS</a></li>
+                    <ul id="footer-collections">
+                        <!-- Rempli dynamiquement -->
                     </ul>
                 </div>
                 
@@ -1120,584 +1078,493 @@
             
             <div class="copyright">
                 <p>&copy; 2026 RAYSCHIC Couture Masculine sur Mesure. Tous droits réservés. | Kinshasa, RDC</p>
-            </div>
-            
-            <!-- Admin Link (discret) -->
-            <div class="admin-link">
-                <a href="/admin/" title="Accéder à l'interface d'administration">
-                    <i class="fas fa-cog"></i> Administration
-                </a>
+                <p style="margin-top: 10px; font-size: 0.9em;">
+                    <a href="#" onclick="openImageManager(); return false;" style="color: #d4af37;">
+                        <i class="fas fa-images"></i> Gérer les images
+                    </a>
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- Script de rechargement dynamique des images -->
-    <script>
-        // ============================================
-        // SYSTÈME DE RECHARGEMENT DYNAMIQUE DES IMAGES
-        // ============================================
-        
-        // Cache buster global pour toutes les images
-        window.imageCacheVersion = localStorage.getItem('rayschic_cache_version') || Date.now();
-        window.lastImageCheck = localStorage.getItem('rayschic_last_check') || 0;
-        
-        // Fonction pour générer un timestamp unique
-        function getCacheBuster() {
-            const now = Date.now();
-            // Changer le cache buster toutes les 5 minutes
-            if (now - window.imageCacheVersion > 300000) {
-                window.imageCacheVersion = now;
-                localStorage.setItem('rayschic_cache_version', now);
-            }
-            return window.imageCacheVersion;
-        }
-        
-        // Fonction pour appliquer le cache buster à toutes les images
-        function applyCacheBusterToAllImages() {
-            const cacheBuster = getCacheBuster();
-            const images = document.querySelectorAll('img[src*="images/"]');
+    <!-- Image Manager Modal -->
+    <div id="image-manager-overlay" class="image-manager-overlay">
+        <div class="image-manager-content">
+            <h2><i class="fas fa-images"></i> Gestionnaire d'Images</h2>
             
-            images.forEach(img => {
-                const src = img.getAttribute('src');
-                if (src && src.includes('images/')) {
-                    const cleanSrc = src.split('?')[0];
-                    const newSrc = `${cleanSrc}?v=${cacheBuster}`;
-                    
-                    if (newSrc !== src) {
-                        // Ajouter une classe de chargement
-                        img.classList.add('img-loading');
-                        
-                        // Créer une image temporaire pour vérifier si elle existe
-                        const tempImg = new Image();
-                        tempImg.onload = function() {
-                            img.src = newSrc;
-                            img.classList.remove('img-loading');
-                            img.style.animation = 'imageUpdate 0.5s ease-out';
-                            setTimeout(() => img.style.animation = '', 500);
-                        };
-                        tempImg.onerror = function() {
-                            img.classList.remove('img-loading');
-                            // L'image n'existe pas, on laisse la gestion d'erreur standard
-                        };
-                        tempImg.src = newSrc;
-                    }
-                }
-            });
-            
-            console.log(`🔄 ${images.length} images mises à jour avec cache buster`);
-        }
-        
-        // Fonction de gestion d'erreur d'image
-        window.handleImageError = function(imgElement) {
-            const filename = imgElement.getAttribute('data-filename') || imgElement.src.split('/').pop().split('?')[0] || 'image';
-            const displayName = filename.replace('.jpg', '').replace(/(\d+)/, ' $1');
-            const cleanSrc = imgElement.src.split('?')[0];
-            
-            // Essayer avec un nouveau timestamp
-            const retrySrc = `${cleanSrc}?retry=${Date.now()}`;
-            
-            const tempImg = new Image();
-            tempImg.onload = function() {
-                imgElement.src = retrySrc;
-                console.log(`✅ Image rechargée: ${filename}`);
-            };
-            tempImg.onerror = function() {
-                // Si toujours en erreur, afficher placeholder ou message d'erreur
-                if (imgElement.parentElement.classList.contains('collection-image')) {
-                    // Pour les cartes de collection
-                    imgElement.style.display = 'none';
-                    imgElement.parentElement.innerHTML = `
-                        <div class="image-error">
-                            <i class="fas fa-image"></i>
-                            <h4>${displayName.toUpperCase()}</h4>
-                            <p>Image non disponible</p>
-                            <button onclick="retryImage('${filename}', this)" 
-                                    style="margin-top: 10px; padding: 5px 10px; background: #d4af37; color: #1a1a2e; border: none; border-radius: 4px; cursor: pointer;">
-                                Réessayer
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    // Pour les autres images
-                    imgElement.src = `https://via.placeholder.com/400x300/1a1a2e/d4af37?text=${encodeURIComponent(displayName)}`;
-                    imgElement.style.objectFit = 'cover';
-                    imgElement.style.border = '2px dashed #d4af37';
-                }
-                console.warn(`❌ Placeholder pour: ${filename}`);
-            };
-            tempImg.src = retrySrc;
-        };
-        
-        // Fonction pour réessayer une image
-        window.retryImage = function(filename, button) {
-            const container = button.closest('.collection-image') || button.closest('.image-error');
-            const img = new Image();
-            const src = `images/${filename}?force=${Date.now()}`;
-            
-            img.onload = function() {
-                if (container) {
-                    container.innerHTML = `<img src="${src}" alt="${filename}" data-filename="${filename}" onerror="handleImageError(this)">`;
-                    console.log(`✅ Image restaurée: ${filename}`);
-                }
-            };
-            img.onerror = function() {
-                button.textContent = 'Échec, réessayer?';
-                button.style.background = '#ff6b6b';
-                console.warn(`❌ Échec restauration: ${filename}`);
-            };
-            img.src = src;
-        };
-        
-        // Vérifier les images périodiquement (toutes les 30 secondes)
-        function startImageChecker() {
-            setInterval(() => {
-                const now = Date.now();
-                if (now - window.lastImageCheck > 30000) { // 30 secondes
-                    console.log('🔄 Vérification périodique des images...');
-                    applyCacheBusterToAllImages();
-                    window.lastImageCheck = now;
-                    localStorage.setItem('rayschic_last_check', now);
-                }
-            }, 10000); // Vérifier toutes les 10 secondes
-        }
-        
-        // Appliquer le cache buster au chargement initial
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initialisation du système de rechargement d\'images...');
-            applyCacheBusterToAllImages();
-            startImageChecker();
-            
-            // Ajouter un raccourci clavier pour forcer le rechargement (Ctrl+Shift+R)
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-                    e.preventDefault();
-                    console.log('🧹 Rechargement forcé de toutes les images...');
-                    window.imageCacheVersion = Date.now();
-                    localStorage.setItem('rayschic_cache_version', window.imageCacheVersion);
-                    applyCacheBusterToAllImages();
-                    
-                    // Afficher une notification
-                    const notification = document.createElement('div');
-                    notification.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: #d4af37;
-                        color: #1a1a2e;
-                        padding: 15px;
-                        border-radius: 5px;
-                        z-index: 9999;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                        font-weight: bold;
-                    `;
-                    notification.textContent = '🔄 Images rechargées!';
-                    document.body.appendChild(notification);
-                    setTimeout(() => notification.remove(), 3000);
-                }
-            });
-        });
-
-        // ============================================
-        // GALERIE ET MODALES
-        // ============================================
-        
-        const collectionData = {
-            "costumes": {
-                title: "Collection - Costumes sur Mesure",
-                description: "Nos costumes sur mesure sont le fruit d'un savoir-faire artisanal exceptionnel. Chaque pièce est confectionnée avec les meilleurs tissus et une attention particulière aux détails, créant une silhouette parfaite et une élégance intemporelle.",
-                images: [
-                    {src: "images/costume1.jpg", title: "Costume classique", desc: "Deux pièces en laine fine"},
-                    {src: "images/costume2.jpg", title: "Costume trois pièces", desc: "Pour occasions spéciales"},
-                    {src: "images/costume3.jpg", title: "Costume moderne", desc: "Coupe contemporaine et ajustée"},
-                    {src: "images/costume4.jpg", title: "Costume de cérémonie", desc: "Élégance pour événements"},
-                    {src: "images/costume5.jpg", title: "Costume d'affaires", desc: "Professionnel et raffiné"},
-                    {src: "images/costume6.jpg", title: "Costume sur mesure", desc: "Tissu premium, finitions main"}
-                ]
-            },
-            "chemises": {
-                title: "Collection - Chemises sur Mesure",
-                description: "Nos chemises sur mesure sont confectionnées avec des tissus de qualité supérieure et une coupe parfaitement adaptée à votre morphologie. Chaque détail, du col aux poignets, est pensé pour votre confort et votre élégance au quotidien.",
-                images: [
-                    {src: "images/chemise1.jpg", title: "Chemise formelle", desc: "Coton égyptien, col classique"},
-                    {src: "images/chemise2.jpg", title: "Chemise casual", desc: "Tissu léger, coupe décontractée"},
-                    {src: "images/chemise3.jpg", title: "Chemise à manches longues", desc: "Pour toutes les saisons"},
-                    {src: "images/chemise4.jpg", title: "Chemise à manches courtes", desc: "Parfaite pour l'été"},
-                    {src: "images/chemise5.jpg", title: "Chemise de cérémonie", desc: "Pour occasions spéciales"},
-                    {src: "images/chemise6.jpg", title: "Chemise sur mesure", desc: "Personnalisation complète"}
-                ]
-            },
-            "pantalons": {
-                title: "Collection - Pantalons sur Mesure",
-                description: "Nos pantalons sur mesure offrent un ajustement parfait et un confort exceptionnel. Chaque paire est confectionnée selon vos mesures exactes et vos préférences de style, garantissant une silhouette élégante et une liberté de mouvement.",
-                images: [
-                    {src: "images/pantalon1.jpg", title: "Pantalon de costume", desc: "Coupe droite, tissu premium"},
-                    {src: "images/pantalon2.jpg", title: "Pantalon chino", desc: "Décontracté mais élégant"},
-                    {src: "images/pantalon3.jpg", title: "Pantalon de ville", desc: "Pour un style urbain raffiné"},
-                    {src: "images/pantalon4.jpg", title: "Pantalon en lin", desc: "Léger et confortable"},
-                    {src: "images/pantalon5.jpg", title: "Pantalon à pinces", desc: "Style classique et élégant"},
-                    {src: "images/pantalon6.jpg", title: "Pantalon ajusté", desc: "Coupe moderne et flatteuse"}
-                ]
-            },
-            "vestes": {
-                title: "Collection - Vestes & Blazers sur Mesure",
-                description: "Nos vestes et blazers sur mesure sont conçus pour compléter parfaitement votre garde-robe masculine. Confectionnés avec précision et élégance, ils s'adaptent à toutes les occasions, du plus formel au plus décontracté.",
-                images: [
-                    {src: "images/veste1.jpg", title: "Veste de costume", desc: "Deux boutons, coupe classique"},
-                    {src: "images/veste2.jpg", title: "Blazer décontracté", desc: "Pour un style smart casual"},
-                    {src: "images/veste3.jpg", title: "Veste trois boutons", desc: "Style élégant et structuré"},
-                    {src: "images/veste4.jpg", title: "Veste en tweed", desc: "Tissu traditionnel, style intemporel"},
-                    {src: "images/veste5.jpg", title: "Veste d'été", desc: "Tissu léger, parfaite pour la saison chaude"},
-                    {src: "images/veste6.jpg", title: "Veste sur mesure", desc: "Personnalisation complète"}
-                ]
-            },
-            "tenues": {
-                title: "Collection - Tenues pour Occasions Spéciales",
-                description: "Nous créons des tenues sur mesure pour vos moments les plus importants. Mariages, cérémonies, événements d'affaires ou célébrations, chaque création est pensée pour vous mettre en valeur et refléter l'importance de l'occasion.",
-                images: [
-                    {src: "images/tenue1.jpg", title: "Tenue de mariage", desc: "Élégance pour le grand jour"},
-                    {src: "images/tenue2.jpg", title: "Costume de cérémonie", desc: "Pour événements officiels"},
-                    {src: "images/tenue3.jpg", title: "Tenue de gala", desc: "Raffinement pour soirées"},
-                    {src: "images/tenue4.jpg", title: "Tenue d'affaires", desc: "Professionnel et distingué"},
-                    {src: "images/tenue5.jpg", title: "Tenue de réception", desc: "Élégance pour réceptions"},
-                    {src: "images/tenue6.jpg", title: "Tenue sur mesure", desc: "Création unique pour votre événement"}
-                ]
-            },
-            "accessoires": {
-                title: "Collection - Accessoires Masculins",
-                description: "Complétez votre tenue sur mesure avec nos accessoires soigneusement sélectionnés et personnalisés. Chaque détail contribue à parfaire votre style et à affirmer votre personnalité.",
-                images: [
-                    {src: "images/accessoire1.jpg", title: "Cravates sur mesure", desc: "Tissus exclusifs, finitions main"},
-                    {src: "images/accessoire2.jpg", title: "Pochette de costume", desc: "Accord parfait avec votre tenue"},
-                    {src: "images/accessoire3.jpg", title: "Ceintures personnalisées", desc: "Cuirs sélectionnés, boucles uniques"},
-                    {src: "images/accessoire4.jpg", title: "Boutons de manchette", desc: "Élégance discrète et raffinée"},
-                    {src: "images/accessoire5.jpg", title: "Noeuds papillon", desc: "Classiques ou modernes"},
-                    {src: "images/accessoire6.jpg", title: "Accessoires personnalisés", desc: "Créés spécialement pour vous"}
-                ]
-            }
-        };
-
-        // Éléments du DOM
-        const modal = document.getElementById('gallery-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDescription = document.getElementById('modal-description');
-        const modalGalleryGrid = document.getElementById('modal-gallery-grid');
-        const closeModalBtn = document.querySelector('.close-modal');
-        
-        // Éléments pour le modal plein écran
-        const fullscreenModal = document.getElementById('fullscreen-modal');
-        const fullscreenImage = document.getElementById('fullscreen-image');
-        const fullscreenTitle = document.getElementById('fullscreen-title');
-        const fullscreenDescription = document.getElementById('fullscreen-description');
-        const fullscreenCounter = document.getElementById('fullscreen-counter');
-        const fullscreenCloseBtn = document.querySelector('.fullscreen-modal-close');
-        const prevBtn = document.querySelector('.fullscreen-nav.prev');
-        const nextBtn = document.querySelector('.fullscreen-nav.next');
-        
-        // Variables pour la navigation entre images
-        let currentCollectionId = '';
-        let currentImageIndex = 0;
-        let currentImages = [];
-
-        // Fonction pour créer un élément d'image avec gestion d'erreur
-        function createImageElement(imageSrc, imageAlt, imageTitle, imageDesc, index) {
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'modal-gallery-item';
-            galleryItem.dataset.index = index;
-            
-            // Ajouter un timestamp pour éviter le cache
-            const cacheBuster = getCacheBuster();
-            const imgSrcWithTimestamp = `${imageSrc}?v=${cacheBuster}`;
-            
-            const img = document.createElement('img');
-            img.src = imgSrcWithTimestamp;
-            img.alt = imageAlt;
-            img.onerror = function() {
-                const newCacheBuster = Date.now();
-                this.src = `${imageSrc}?retry=${newCacheBuster}`;
+            <div class="manager-section">
+                <h3>Structure des dossiers :</h3>
+                <pre style="background: #1a1a2e; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 15px 0; color: #d4af37;">
+images/
+├── costumes/     (1.jpg, 2.jpg, ... 6.jpg)
+├── chemises/     (1.jpg, 2.jpg, ... 6.jpg)
+├── pantalons/    (1.jpg, 2.jpg, ... 6.jpg)
+├── vestes/       (1.jpg, 2.jpg, ... 6.jpg)
+├── tenues/       (1.jpg, 2.jpg, ... 6.jpg)
+├── accessoires/  (1.jpg, 2.jpg, ... 6.jpg)
+└── hero/         (1.jpg)</pre>
                 
-                // Si toujours en erreur, afficher placeholder
-                this.onerror = function() {
-                    this.parentElement.innerHTML = `
-                        <div class="image-error">
-                            <i class="fas fa-image"></i>
-                            <h4>${imageTitle}</h4>
-                            <p>${imageDesc}</p>
-                            <p><small>Image non disponible</small></p>
-                        </div>
-                    `;
-                };
-            };
+                <p><strong>Instructions :</strong></p>
+                <ul style="margin-left: 20px; line-height: 1.6;">
+                    <li>Les images sont automatiquement détectées par numéro</li>
+                    <li>Pour ajouter une nouvelle image : uploadez 7.jpg, 8.jpg, etc.</li>
+                    <li>Format recommandé : JPG, 800x600 pixels minimum</li>
+                </ul>
+            </div>
             
-            galleryItem.innerHTML = `
-                <div class="modal-gallery-overlay">
-                    <h4>${imageTitle}</h4>
-                    <p>${imageDesc}</p>
+            <div class="manager-section">
+                <h3>Statistiques :</h3>
+                <div id="image-stats">
+                    <table class="stats-table">
+                        <!-- Rempli dynamiquement -->
+                    </table>
                 </div>
-            `;
+            </div>
             
-            galleryItem.prepend(img);
-            return galleryItem;
-        }
+            <div class="manager-actions">
+                <button onclick="refreshAllImages()" class="btn-action">
+                    <i class="fas fa-sync-alt"></i> Actualiser les images
+                </button>
+                <button onclick="scanForNewImages()" class="btn-action">
+                    <i class="fas fa-search"></i> Scanner nouvelles images
+                </button>
+                <button onclick="closeImageManager()" class="btn-close">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 5px; border-left: 4px solid #d4af37;">
+                <p><strong>Astuce :</strong> Appuyez sur <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> pour forcer le rechargement des images</p>
+            </div>
+        </div>
+    </div>
 
-        // Fonction pour ouvrir la modale avec une collection
-        function openGallery(collectionId) {
-            const collection = collectionData[collectionId];
+    <!-- ============================================ -->
+    <!-- SCRIPT MIS À JOUR POUR VOS 6 IMAGES PAR COLLECTION -->
+    <!-- ============================================ -->
+    <script>
+    // ============================================
+    // CONFIGURATION - ADAPTÉE À VOTRE STRUCTURE
+    // ============================================
+    const CONFIG = {
+        collections: [
+            { id: 'costumes', title: 'Costumes sur Mesure', folder: 'costumes' },
+            { id: 'chemises', title: 'Chemises sur Mesure', folder: 'chemises' },
+            { id: 'pantalons', title: 'Pantalons sur Mesure', folder: 'pantalons' },
+            { id: 'vestes', title: 'Vestes & Blazers', folder: 'vestes' },
+            { id: 'tenues', title: 'Tenues Spécifiques', folder: 'tenues' },
+            { id: 'accessoires', title: 'Accessoires Masculins', folder: 'accessoires' }
+        ],
+        
+        descriptions: {
+            costumes: "Création de costumes élégants parfaitement adaptés à votre morphologie et à votre style, pour toutes les occasions.",
+            chemises: "Chemises personnalisées avec choix des tissus, coupes et finitions pour un style unique et élégant.",
+            pantalons: "Pantalons confectionnés sur mesure pour un ajustement parfait, un confort optimal et une élégance remarquable.",
+            vestes: "Vestes et blazers confectionnés sur mesure pour compléter votre garde-robe masculine avec élégance.",
+            tenues: "Créations pour occasions spéciales : mariages, cérémonies, événements d'affaires et autres moments importants.",
+            accessoires: "Accessoires soigneusement sélectionnés et personnalisés pour compléter votre tenue sur mesure."
+        }
+    };
+
+    // ============================================
+    // FONCTIONS UTILITAIRES
+    // ============================================
+
+    // Vérifier si une image existe
+    async function imageExists(url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            return response.ok;
+        } catch {
+            return false;
+        }
+    }
+
+    // Trouver toutes les images d'une collection (1.jpg à 6.jpg)
+    async function findCollectionImages(folder) {
+        const images = [];
+        
+        for (let i = 1; i <= 6; i++) {
+            const imageUrl = `images/${folder}/${i}.jpg`;
             
-            if (!collection) return;
-            
-            // Stocker l'ID de collection actuelle
-            currentCollectionId = collectionId;
-            currentImages = collection.images;
-            
-            // Mettre à jour le contenu de la modale
-            modalTitle.textContent = collection.title;
-            modalDescription.textContent = collection.description;
-            
-            // Vider et remplir la galerie
-            modalGalleryGrid.innerHTML = '';
-            
-            collection.images.forEach((image, index) => {
-                const galleryItem = createImageElement(
-                    image.src, 
-                    image.title, 
-                    image.title, 
-                    image.desc,
-                    index
-                );
-                
-                // Ajouter un écouteur pour ouvrir l'image en plein écran
-                galleryItem.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    openFullscreenImage(collectionId, index);
+            if (await imageExists(imageUrl)) {
+                images.push({
+                    src: imageUrl,
+                    title: `${folder.charAt(0).toUpperCase() + folder.slice(1)} ${i}`,
+                    desc: `Image ${i} de la collection ${folder}`
                 });
-                
-                modalGalleryGrid.appendChild(galleryItem);
-            });
-            
-            // Afficher la modale
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Fonction pour ouvrir une image en plein écran
-        function openFullscreenImage(collectionId, index) {
-            const collection = collectionData[collectionId];
-            
-            if (!collection || !collection.images[index]) return;
-            
-            currentCollectionId = collectionId;
-            currentImageIndex = index;
-            currentImages = collection.images;
-            
-            const imageData = collection.images[index];
-            
-            // Ajouter un cache buster
-            const cacheBuster = getCacheBuster();
-            const imgSrc = `${imageData.src}?v=${cacheBuster}`;
-            
-            // Mettre à jour l'image et les informations
-            fullscreenImage.src = imgSrc;
-            fullscreenImage.alt = imageData.title;
-            fullscreenTitle.textContent = imageData.title;
-            fullscreenDescription.textContent = imageData.desc;
-            fullscreenCounter.textContent = `${index + 1} / ${collection.images.length}`;
-            
-            // Gestion d'erreur pour l'image plein écran
-            fullscreenImage.onerror = function() {
-                const newCacheBuster = Date.now();
-                this.src = `${imageData.src}?retry=${newCacheBuster}`;
-                
-                this.onerror = function() {
-                    this.style.display = 'none';
-                    fullscreenTitle.textContent = "Image non disponible";
-                    fullscreenDescription.textContent = "L'image n'a pas pu être chargée.";
-                };
-            };
-            
-            // Afficher le modal plein écran
-            fullscreenModal.style.display = 'flex';
-        }
-
-        // Fonction pour changer d'image dans le modal plein écran
-        function changeFullscreenImage(direction) {
-            const collection = collectionData[currentCollectionId];
-            if (!collection) return;
-            
-            // Calculer le nouvel index
-            let newIndex = currentImageIndex + direction;
-            
-            // Gérer les limites
-            if (newIndex < 0) {
-                newIndex = collection.images.length - 1;
-            } else if (newIndex >= collection.images.length) {
-                newIndex = 0;
-            }
-            
-            // Ouvrir la nouvelle image
-            openFullscreenImage(currentCollectionId, newIndex);
-        }
-
-        // Fermer la modale galerie
-        function closeModal() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Fermer la modale plein écran
-        function closeFullscreenModal() {
-            fullscreenModal.style.display = 'none';
-        }
-
-        // Navigation au clavier
-        function handleKeydown(e) {
-            // Échap pour fermer les modales
-            if (e.key === 'Escape') {
-                if (fullscreenModal.style.display === 'flex') {
-                    closeFullscreenModal();
-                } else if (modal.style.display === 'block') {
-                    closeModal();
-                }
-            }
-            
-            // Flèches pour navigation dans le modal plein écran
-            if (fullscreenModal.style.display === 'flex') {
-                if (e.key === 'ArrowLeft') {
-                    changeFullscreenImage(-1);
-                } else if (e.key === 'ArrowRight') {
-                    changeFullscreenImage(1);
-                }
             }
         }
+        
+        return images;
+    }
 
-        // Événements pour ouvrir les galeries
-        document.addEventListener('DOMContentLoaded', function() {
-            // Clic sur les cartes de collection
-            document.querySelectorAll('.collection-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const collectionId = this.getAttribute('data-collection');
-                    openGallery(collectionId);
+    // Charger l'image hero
+    async function loadHeroImage() {
+        const heroImg = document.getElementById('hero-img');
+        
+        // Essayer différentes sources
+        const sources = [
+            'images/hero/1.jpg',
+            'images/hero.jpg'
+        ];
+        
+        for (const src of sources) {
+            if (await imageExists(src)) {
+                heroImg.src = src;
+                break;
+            }
+        }
+        
+        // Fallback si aucune image n'existe
+        heroImg.onerror = function() {
+            this.src = 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop';
+        };
+    }
+
+    // ============================================
+    // CHARGEMENT DES COLLECTIONS
+    // ============================================
+
+    async function loadCollections() {
+        const grid = document.getElementById('collections-container');
+        const footerList = document.getElementById('footer-collections');
+        
+        grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37;">Chargement des collections...</div>';
+        
+        // Charger chaque collection
+        const collectionsData = [];
+        
+        for (const collection of CONFIG.collections) {
+            const images = await findCollectionImages(collection.folder);
+            
+            if (images.length > 0) {
+                collectionsData.push({
+                    ...collection,
+                    images: images
                 });
-            });
-            
-            // Clic sur les liens du footer
-            document.querySelectorAll('footer a[data-collection]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const collectionId = this.getAttribute('data-collection');
-                    openGallery(collectionId);
-                });
-            });
-            
-            // Clic sur le bouton de fermeture de la modale galerie
-            closeModalBtn.addEventListener('click', closeModal);
-            
-            // Clic en dehors de la modale galerie pour la fermer
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal();
+                
+                // Ajouter la carte
+                const card = createCollectionCard(collection, images[0]);
+                if (grid.innerHTML.includes('Chargement')) {
+                    grid.innerHTML = card;
+                } else {
+                    grid.innerHTML += card;
                 }
-            });
-            
-            // Clic sur le bouton de fermeture du modal plein écran
-            fullscreenCloseBtn.addEventListener('click', closeFullscreenModal);
-            
-            // Clic en dehors du modal plein écran pour le fermer
-            fullscreenModal.addEventListener('click', function(e) {
-                if (e.target === fullscreenModal) {
-                    closeFullscreenModal();
+                
+                // Ajouter au footer
+                if (footerList) {
+                    footerList.innerHTML += `
+                        <li><a href="#" data-collection="${collection.id}">${collection.title.toUpperCase()}</a></li>
+                    `;
                 }
-            });
-            
-            // Navigation entre images plein écran
-            prevBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                changeFullscreenImage(-1);
-            });
-            
-            nextBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                changeFullscreenImage(1);
-            });
-            
-            // Navigation au clavier
-            document.addEventListener('keydown', handleKeydown);
-            
-            // Navigation fluide pour les ancres
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    if (this.hasAttribute('data-collection')) return;
-                    
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if(targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
+            }
+        }
+        
+        // Stocker pour la galerie
+        window.collectionsData = collectionsData;
+        
+        // Attacher les événements
+        attachCollectionEvents();
+        
+        console.log(`✅ ${collectionsData.length} collections chargées avec succès`);
+        
+        return collectionsData;
+    }
+
+    function createCollectionCard(collection, image) {
+        return `
+            <div class="collection-card" data-collection="${collection.id}">
+                <div class="collection-image">
+                    <img src="${image.src}" alt="${collection.title}" loading="lazy">
+                </div>
+                <div class="collection-content">
+                    <h3>${collection.title}</h3>
+                    <p>${CONFIG.descriptions[collection.id]}</p>
+                    <div class="collection-tag">${collection.id === 'costumes' ? 'Collection exclusive' : 'Sur mesure'}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ============================================
+    // GALERIE MODALE
+    // ============================================
+
+    function openGallery(collectionId) {
+        const collection = window.collectionsData.find(c => c.id === collectionId);
+        if (!collection) return;
+        
+        const modal = document.getElementById('gallery-modal');
+        const title = document.getElementById('modal-title');
+        const desc = document.getElementById('modal-description');
+        const grid = document.getElementById('modal-gallery-grid');
+        
+        title.textContent = `Collection - ${collection.title}`;
+        desc.textContent = CONFIG.descriptions[collection.id];
+        
+        // Afficher les 6 images
+        grid.innerHTML = collection.images.map((img, index) => `
+            <div class="modal-gallery-item" data-index="${index}">
+                <img src="${img.src}" alt="${img.title}" loading="lazy">
+                <div class="modal-gallery-overlay">
+                    <h4>${img.title}</h4>
+                    <p>${img.desc}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Attacher les événements
+        grid.querySelectorAll('.modal-gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const index = parseInt(item.dataset.index);
+                openFullscreenImage(collectionId, index);
             });
         });
-    </script>
-    
-    <!-- Netlify Identity Widget Script -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-        // Netlify Identity integration
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
+    }
+
+    function openFullscreenImage(collectionId, index) {
+        const collection = window.collectionsData.find(c => c.id === collectionId);
+        if (!collection || !collection.images[index]) return;
+        
+        const modal = document.getElementById('fullscreen-modal');
+        const img = document.getElementById('fullscreen-image');
+        const title = document.getElementById('fullscreen-title');
+        const desc = document.getElementById('fullscreen-description');
+        const counter = document.getElementById('fullscreen-counter');
+        
+        const image = collection.images[index];
+        
+        img.src = image.src;
+        title.textContent = image.title;
+        desc.textContent = image.desc;
+        counter.textContent = `${index + 1} / ${collection.images.length}`;
+        
+        modal.style.display = 'flex';
+        
+        // Stocker pour navigation
+        window.currentGallery = {
+            collectionId,
+            index,
+            images: collection.images
+        };
+    }
+
+    // ============================================
+    // ÉVÉNEMENTS
+    // ============================================
+
+    function attachCollectionEvents() {
+        // Cartes de collection
+        document.querySelectorAll('.collection-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const collectionId = this.dataset.collection;
+                openGallery(collectionId);
+            });
+        });
+        
+        // Liens du footer
+        document.querySelectorAll('#footer-collections a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const collectionId = this.dataset.collection;
+                openGallery(collectionId);
+            });
+        });
+        
+        // Fermer modale
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('gallery-modal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Fermer modale plein écran
+        document.querySelector('.fullscreen-modal-close').addEventListener('click', () => {
+            document.getElementById('fullscreen-modal').style.display = 'none';
+        });
+        
+        // Navigation plein écran
+        document.querySelector('.fullscreen-nav.prev').addEventListener('click', () => {
+            if (window.currentGallery) {
+                let newIndex = window.currentGallery.index - 1;
+                if (newIndex < 0) newIndex = window.currentGallery.images.length - 1;
+                openFullscreenImage(window.currentGallery.collectionId, newIndex);
+            }
+        });
+        
+        document.querySelector('.fullscreen-nav.next').addEventListener('click', () => {
+            if (window.currentGallery) {
+                let newIndex = window.currentGallery.index + 1;
+                if (newIndex >= window.currentGallery.images.length) newIndex = 0;
+                openFullscreenImage(window.currentGallery.collectionId, newIndex);
+            }
+        });
+        
+        // Navigation clavier
+        document.addEventListener('keydown', (e) => {
+            // Échap pour fermer
+            if (e.key === 'Escape') {
+                const fullscreen = document.getElementById('fullscreen-modal');
+                const gallery = document.getElementById('gallery-modal');
+                
+                if (fullscreen.style.display === 'flex') {
+                    fullscreen.style.display = 'none';
+                } else if (gallery.style.display === 'block') {
+                    gallery.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                } else if (document.getElementById('image-manager-overlay').style.display === 'flex') {
+                    closeImageManager();
+                }
+            }
+            
+            // Flèches pour navigation plein écran
+            if (document.getElementById('fullscreen-modal').style.display === 'flex') {
+                if (e.key === 'ArrowLeft') {
+                    document.querySelector('.fullscreen-nav.prev').click();
+                } else if (e.key === 'ArrowRight') {
+                    document.querySelector('.fullscreen-nav.next').click();
+                }
+            }
+            
+            // Raccourci pour le gestionnaire (Ctrl+Shift+I)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                openImageManager();
+            }
+            
+            // Raccourci pour recharger (Ctrl+Shift+R)
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                e.preventDefault();
+                refreshAllImages();
+            }
+        });
+    }
+
+    // ============================================
+    // GESTIONNAIRE D'IMAGES
+    // ============================================
+
+    function openImageManager() {
+        document.getElementById('image-manager-overlay').style.display = 'flex';
+        updateImageStats();
+    }
+
+    function closeImageManager() {
+        document.getElementById('image-manager-overlay').style.display = 'none';
+    }
+
+    async function updateImageStats() {
+        const statsDiv = document.getElementById('image-stats');
+        if (!statsDiv) return;
+        
+        let html = '<table class="stats-table">';
+        html += '<tr><th>Collection</th><th>Images détectées</th><th>Statut</th></tr>';
+        
+        for (const collection of CONFIG.collections) {
+            const images = await findCollectionImages(collection.folder);
+            const status = images.length > 0 ? '✓' : '✗';
+            const color = images.length > 0 ? '#4CAF50' : '#f44336';
+            const countText = images.length === 6 ? '6/6 ✓' : `${images.length}/6`;
+            
+            html += `
+                <tr>
+                    <td>${collection.title}</td>
+                    <td>${countText}</td>
+                    <td style="color:${color}; font-weight:bold;">${status}</td>
+                </tr>
+            `;
+        }
+        
+        // Vérifier l'image hero
+        const heroExists = await imageExists('images/hero/1.jpg') || await imageExists('images/hero.jpg');
+        html += `
+            <tr>
+                <td>Image Hero</td>
+                <td>${heroExists ? '1/1 ✓' : '0/1'}</td>
+                <td style="color:${heroExists ? '#4CAF50' : '#f44336'}; font-weight:bold;">${heroExists ? '✓' : '✗'}</td>
+            </tr>
+        `;
+        
+        html += '</table>';
+        statsDiv.innerHTML = html;
+    }
+
+    function refreshAllImages() {
+        // Ajouter un timestamp pour forcer le rechargement
+        document.querySelectorAll('img').forEach(img => {
+            if (img.src.includes('images/')) {
+                const cleanSrc = img.src.split('?')[0];
+                img.src = cleanSrc + '?t=' + Date.now();
+            }
+        });
+        
+        showNotification('Images actualisées !', 'success');
+    }
+
+    async function scanForNewImages() {
+        // Recharger les collections
+        await loadCollections();
+        updateImageStats();
+        showNotification('Nouvelles images détectées et chargées !', 'success');
+    }
+
+    function showNotification(message, type = 'success') {
+        // Supprimer les anciennes notifications
+        document.querySelectorAll('.notification').forEach(n => n.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.background = type === 'success' ? '#4CAF50' : '#2196F3';
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+
+    // ============================================
+    // INITIALISATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log('🚀 Initialisation du site Rayschic...');
+        
+        // Charger l'image hero
+        loadHeroImage();
+        
+        // Charger les collections
+        await loadCollections();
+        
+        // Navigation fluide
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.dataset.collection) return;
+                
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
                     });
                 }
             });
-        }
+        });
         
-        // Keyboard shortcut for admin (Ctrl+Shift+A)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                e.preventDefault();
-                window.location.href = '/admin/';
+        // Fermer le gestionnaire en cliquant à l'extérieur
+        document.getElementById('image-manager-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageManager();
             }
         });
         
-        // Pour l'admin : ajouter un bouton pour forcer le rechargement des images
-        if (window.location.pathname.includes('/admin/')) {
-            document.addEventListener('DOMContentLoaded', function() {
-                // Ajouter un bouton dans l'admin
-                const adminBar = document.querySelector('.admin-bar') || document.body;
-                const reloadBtn = document.createElement('button');
-                reloadBtn.innerHTML = '🔄 Recharger les images';
-                reloadBtn.style.cssText = `
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    background: #d4af37;
-                    color: #1a1a2e;
-                    border: none;
-                    padding: 10px 15px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-weight: bold;
-                    z-index: 9999;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                `;
-                reloadBtn.onclick = function() {
-                    if (confirm('Voulez-vous forcer le rechargement de toutes les images?')) {
-                        window.imageCacheVersion = Date.now();
-                        localStorage.setItem('rayschic_cache_version', window.imageCacheVersion);
-                        applyCacheBusterToAllImages();
-                        alert('Images rechargées! Actualisez la page principale.');
-                    }
-                };
-                adminBar.appendChild(reloadBtn);
-            });
-        }
+        console.log('✅ Site prêt ! 6 images par collection détectées automatiquement.');
+    });
     </script>
 </body>
 </html>
