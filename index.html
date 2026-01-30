@@ -1139,14 +1139,15 @@ images/
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SCRIPT MIS À JOUR POUR VOS 6 IMAGES PAR COLLECTION -->
+      <!-- ============================================ -->
+    <!-- SCRIPT MIS À JOUR POUR SYSTÈME PYTHON RENDER -->
     <!-- ============================================ -->
     <script>
     // ============================================
-    // CONFIGURATION - ADAPTÉE À VOTRE STRUCTURE
+    // CONFIGURATION
     // ============================================
     const CONFIG = {
+        apiUrl: 'https://rayschic-admin.onrender.com', // VOTRE ADMIN PYTHON
         collections: [
             { id: 'costumes', title: 'Costumes sur Mesure', folder: 'costumes' },
             { id: 'chemises', title: 'Chemises sur Mesure', folder: 'chemises' },
@@ -1167,124 +1168,245 @@ images/
     };
 
     // ============================================
-    // FONCTIONS UTILITAIRES
+    // CHARGEMENT DES IMAGES DEPUIS L'API PYTHON
     // ============================================
 
-    // Vérifier si une image existe
-    async function imageExists(url) {
+    async function loadImagesFromPythonAPI() {
         try {
-            const response = await fetch(url, { method: 'HEAD' });
-            return response.ok;
-        } catch {
-            return false;
-        }
-    }
-
-    // Trouver toutes les images d'une collection (1.jpg à 6.jpg)
-    async function findCollectionImages(folder) {
-        const images = [];
-        
-        for (let i = 1; i <= 6; i++) {
-            const imageUrl = `images/${folder}/${i}.jpg`;
+            console.log('📡 Chargement depuis l\'API Python...');
             
-            if (await imageExists(imageUrl)) {
-                images.push({
-                    src: imageUrl,
-                    title: `${folder.charAt(0).toUpperCase() + folder.slice(1)} ${i}`,
-                    desc: `Image ${i} de la collection ${folder}`
-                });
+            const response = await fetch(`${CONFIG.apiUrl}/api/scan`);
+            
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
             }
+            
+            const data = await response.json();
+            console.log('✅ Données reçues:', data);
+            
+            // 1. Charger l'image hero
+            await loadHeroImageFromAPI(data);
+            
+            // 2. Charger les collections
+            await loadCollectionsFromAPI(data);
+            
+            // 3. Initialiser les événements
+            initEvents();
+            
+            // 4. Mettre à jour le footer
+            updateFooterCollections(data);
+            
+            return data;
+            
+        } catch (error) {
+            console.warn('⚠️ Erreur API, utilisation du fallback JSON:', error);
+            // Fallback vers le système local
+            await loadFromLocalJSON();
         }
-        
-        return images;
     }
 
-    // Charger l'image hero
-    async function loadHeroImage() {
+    // Charger l'image hero depuis l'API
+    async function loadHeroImageFromAPI(data) {
         const heroImg = document.getElementById('hero-img');
         
-        // Essayer différentes sources
-        const sources = [
-            'images/hero/1.jpg',
-            'images/hero.jpg'
-        ];
-        
-        for (const src of sources) {
-            if (await imageExists(src)) {
-                heroImg.src = src;
-                break;
+        if (data.collections && data.collections.hero && data.collections.hero.images.length > 0) {
+            const heroImage = data.collections.hero.images[0];
+            heroImg.src = `${CONFIG.apiUrl}${heroImage.url}`;
+            console.log('✅ Hero image chargée:', heroImg.src);
+        } else {
+            // Fallback local
+            const fallbackSources = ['images/hero/1.jpg', 'images/hero.jpg'];
+            for (const src of fallbackSources) {
+                if (await imageExists(src)) {
+                    heroImg.src = src;
+                    break;
+                }
             }
         }
         
-        // Fallback si aucune image n'existe
+        // Fallback final
         heroImg.onerror = function() {
             this.src = 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop';
         };
     }
 
-    // ============================================
-    // CHARGEMENT DES COLLECTIONS
-    // ============================================
-
-    async function loadCollections() {
+    // Charger les collections depuis l'API
+    async function loadCollectionsFromAPI(data) {
         const grid = document.getElementById('collections-container');
-        const footerList = document.getElementById('footer-collections');
         
-        grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37;">Chargement des collections...</div>';
+        if (!data.collections || Object.keys(data.collections).length === 0) {
+            grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune image disponible</div>';
+            return;
+        }
         
-        // Charger chaque collection
-        const collectionsData = [];
+        let html = '';
+        window.collectionsData = [];
         
-        for (const collection of CONFIG.collections) {
-            const images = await findCollectionImages(collection.folder);
+        // Parcourir toutes les collections sauf 'hero'
+        for (const [collectionId, collectionData] of Object.entries(data.collections)) {
+            if (collectionId === 'hero') continue;
             
-            if (images.length > 0) {
-                collectionsData.push({
-                    ...collection,
-                    images: images
-                });
-                
-                // Ajouter la carte
-                const card = createCollectionCard(collection, images[0]);
-                if (grid.innerHTML.includes('Chargement')) {
-                    grid.innerHTML = card;
-                } else {
-                    grid.innerHTML += card;
-                }
-                
-                // Ajouter au footer
-                if (footerList) {
-                    footerList.innerHTML += `
-                        <li><a href="#" data-collection="${collection.id}">${collection.title.toUpperCase()}</a></li>
-                    `;
-                }
+            const configCollection = CONFIG.collections.find(c => c.id === collectionId);
+            if (!configCollection || collectionData.images.length === 0) continue;
+            
+            // Stocker pour la galerie
+            const collectionImages = collectionData.images.map(img => ({
+                src: `${CONFIG.apiUrl}${img.url}`,
+                title: `${collectionData.title} ${img.filename.split('.')[0]}`,
+                desc: `Image ${img.filename} - ${collectionData.title}`,
+                filename: img.filename
+            }));
+            
+            window.collectionsData.push({
+                id: collectionId,
+                title: collectionData.title,
+                images: collectionImages,
+                description: CONFIG.descriptions[collectionId] || collectionData.title
+            });
+            
+            // Créer la carte de collection
+            html += `
+                <div class="collection-card" data-collection="${collectionId}">
+                    <div class="collection-image">
+                        <img src="${CONFIG.apiUrl}${collectionData.images[0].url}" 
+                             alt="${collectionData.title}"
+                             loading="lazy"
+                             onerror="this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${collectionData.title}'">
+                    </div>
+                    <div class="collection-content">
+                        <h3>${collectionData.title}</h3>
+                        <p>${CONFIG.descriptions[collectionId] || collectionData.title}</p>
+                        <div class="collection-tag">${collectionData.count} modèle${collectionData.count > 1 ? 's' : ''}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        grid.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
+        console.log(`✅ ${window.collectionsData.length} collections chargées`);
+    }
+
+    // Mettre à jour les collections dans le footer
+    function updateFooterCollections(data) {
+        const footerList = document.getElementById('footer-collections');
+        if (!footerList) return;
+        
+        let html = '';
+        
+        for (const [collectionId, collectionData] of Object.entries(data.collections)) {
+            if (collectionId === 'hero') continue;
+            
+            if (collectionData.images && collectionData.images.length > 0) {
+                html += `<li><a href="#" data-collection="${collectionId}">${collectionData.title.toUpperCase()}</a></li>`;
             }
         }
         
-        // Stocker pour la galerie
-        window.collectionsData = collectionsData;
-        
-        // Attacher les événements
-        attachCollectionEvents();
-        
-        console.log(`✅ ${collectionsData.length} collections chargées avec succès`);
-        
-        return collectionsData;
+        footerList.innerHTML = html;
     }
 
-    function createCollectionCard(collection, image) {
-        return `
-            <div class="collection-card" data-collection="${collection.id}">
+    // ============================================
+    // FALLBACK - SYSTÈME LOCAL (JSON)
+    // ============================================
+
+    async function loadFromLocalJSON() {
+        try {
+            console.log('📁 Tentative de chargement local...');
+            
+            const response = await fetch('data/images.json');
+            if (!response.ok) throw new Error('JSON non trouvé');
+            
+            const data = await response.json();
+            
+            // Charger hero
+            const heroImg = document.getElementById('hero-img');
+            if (data.hero && data.hero.url) {
+                heroImg.src = data.hero.url;
+            }
+            
+            // Charger collections
+            await loadCollectionsFromLocalJSON(data);
+            
+            initEvents();
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement local:', error);
+            showDefaultContent();
+        }
+    }
+
+    async function loadCollectionsFromLocalJSON(data) {
+        const grid = document.getElementById('collections-container');
+        window.collectionsData = [];
+        
+        let html = '';
+        
+        for (const collection of CONFIG.collections) {
+            const collectionData = data.collections[collection.id];
+            
+            if (collectionData && collectionData.images && collectionData.images.length > 0) {
+                // Stocker pour galerie
+                const collectionImages = collectionData.images.map(img => ({
+                    src: img.url,
+                    title: `${collectionData.title} ${img.number || ''}`,
+                    desc: `Image ${img.filename} - ${collectionData.title}`,
+                    filename: img.filename
+                }));
+                
+                window.collectionsData.push({
+                    id: collection.id,
+                    title: collectionData.title,
+                    images: collectionImages,
+                    description: CONFIG.descriptions[collection.id]
+                });
+                
+                // Créer carte
+                html += `
+                    <div class="collection-card" data-collection="${collection.id}">
+                        <div class="collection-image">
+                            <img src="${collectionData.images[0].url}" 
+                                 alt="${collectionData.title}"
+                                 loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${collectionData.title}'">
+                        </div>
+                        <div class="collection-content">
+                            <h3>${collectionData.title}</h3>
+                            <p>${CONFIG.descriptions[collection.id]}</p>
+                            <div class="collection-tag">${collectionData.count || collectionData.images.length} modèle${(collectionData.count || collectionData.images.length) > 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        grid.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
+    }
+
+    function showDefaultContent() {
+        const grid = document.getElementById('collections-container');
+        grid.innerHTML = `
+            <div class="collection-card">
                 <div class="collection-image">
-                    <img src="${image.src}" alt="${collection.title}" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=600&auto=format&fit=crop" alt="Costumes">
                 </div>
                 <div class="collection-content">
-                    <h3>${collection.title}</h3>
-                    <p>${CONFIG.descriptions[collection.id]}</p>
-                    <div class="collection-tag">${collection.id === 'costumes' ? 'Collection exclusive' : 'Sur mesure'}</div>
+                    <h3>Costumes sur Mesure</h3>
+                    <p>Création de costumes élégants parfaitement adaptés à votre morphologie.</p>
+                    <div class="collection-tag">Collection exclusive</div>
+                </div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-image">
+                    <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop" alt="Chemises">
+                </div>
+                <div class="collection-content">
+                    <h3>Chemises sur Mesure</h3>
+                    <p>Chemises personnalisées avec choix des tissus, coupes et finitions.</p>
+                    <div class="collection-tag">Sur mesure</div>
                 </div>
             </div>
         `;
+        
+        initEvents();
     }
 
     // ============================================
@@ -1293,7 +1415,10 @@ images/
 
     function openGallery(collectionId) {
         const collection = window.collectionsData.find(c => c.id === collectionId);
-        if (!collection) return;
+        if (!collection || !collection.images || collection.images.length === 0) {
+            alert('Aucune image disponible pour cette collection');
+            return;
+        }
         
         const modal = document.getElementById('gallery-modal');
         const title = document.getElementById('modal-title');
@@ -1301,12 +1426,15 @@ images/
         const grid = document.getElementById('modal-gallery-grid');
         
         title.textContent = `Collection - ${collection.title}`;
-        desc.textContent = CONFIG.descriptions[collection.id];
+        desc.textContent = collection.description;
         
-        // Afficher les 6 images
+        // Afficher toutes les images
         grid.innerHTML = collection.images.map((img, index) => `
             <div class="modal-gallery-item" data-index="${index}">
-                <img src="${img.src}" alt="${img.title}" loading="lazy">
+                <img src="${img.src}" 
+                     alt="${img.title}" 
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/300x250/2d3047/d4af37?text=Image+${index+1}'">
                 <div class="modal-gallery-overlay">
                     <h4>${img.title}</h4>
                     <p>${img.desc}</p>
@@ -1357,7 +1485,7 @@ images/
     // ÉVÉNEMENTS
     // ============================================
 
-    function attachCollectionEvents() {
+    function initEvents() {
         // Cartes de collection
         document.querySelectorAll('.collection-card').forEach(card => {
             card.addEventListener('click', function() {
@@ -1368,6 +1496,15 @@ images/
         
         // Liens du footer
         document.querySelectorAll('#footer-collections a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const collectionId = this.dataset.collection;
+                openGallery(collectionId);
+            });
+        });
+        
+        // Services exclusifs
+        document.querySelectorAll('.footer-column ul li a[data-collection]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const collectionId = this.dataset.collection;
@@ -1428,114 +1565,7 @@ images/
                     document.querySelector('.fullscreen-nav.next').click();
                 }
             }
-            
-            // Raccourci pour le gestionnaire (Ctrl+Shift+I)
-            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-                e.preventDefault();
-                openImageManager();
-            }
-            
-            // Raccourci pour recharger (Ctrl+Shift+R)
-            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-                e.preventDefault();
-                refreshAllImages();
-            }
         });
-    }
-
-    // ============================================
-    // GESTIONNAIRE D'IMAGES
-    // ============================================
-
-    function openImageManager() {
-        document.getElementById('image-manager-overlay').style.display = 'flex';
-        updateImageStats();
-    }
-
-    function closeImageManager() {
-        document.getElementById('image-manager-overlay').style.display = 'none';
-    }
-
-    async function updateImageStats() {
-        const statsDiv = document.getElementById('image-stats');
-        if (!statsDiv) return;
-        
-        let html = '<table class="stats-table">';
-        html += '<tr><th>Collection</th><th>Images détectées</th><th>Statut</th></tr>';
-        
-        for (const collection of CONFIG.collections) {
-            const images = await findCollectionImages(collection.folder);
-            const status = images.length > 0 ? '✓' : '✗';
-            const color = images.length > 0 ? '#4CAF50' : '#f44336';
-            const countText = images.length === 6 ? '6/6 ✓' : `${images.length}/6`;
-            
-            html += `
-                <tr>
-                    <td>${collection.title}</td>
-                    <td>${countText}</td>
-                    <td style="color:${color}; font-weight:bold;">${status}</td>
-                </tr>
-            `;
-        }
-        
-        // Vérifier l'image hero
-        const heroExists = await imageExists('images/hero/1.jpg') || await imageExists('images/hero.jpg');
-        html += `
-            <tr>
-                <td>Image Hero</td>
-                <td>${heroExists ? '1/1 ✓' : '0/1'}</td>
-                <td style="color:${heroExists ? '#4CAF50' : '#f44336'}; font-weight:bold;">${heroExists ? '✓' : '✗'}</td>
-            </tr>
-        `;
-        
-        html += '</table>';
-        statsDiv.innerHTML = html;
-    }
-
-    function refreshAllImages() {
-        // Ajouter un timestamp pour forcer le rechargement
-        document.querySelectorAll('img').forEach(img => {
-            if (img.src.includes('images/')) {
-                const cleanSrc = img.src.split('?')[0];
-                img.src = cleanSrc + '?t=' + Date.now();
-            }
-        });
-        
-        showNotification('Images actualisées !', 'success');
-    }
-
-    async function scanForNewImages() {
-        // Recharger les collections
-        await loadCollections();
-        updateImageStats();
-        showNotification('Nouvelles images détectées et chargées !', 'success');
-    }
-
-    function showNotification(message, type = 'success') {
-        // Supprimer les anciennes notifications
-        document.querySelectorAll('.notification').forEach(n => n.remove());
-        
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        notification.style.background = type === 'success' ? '#4CAF50' : '#2196F3';
-        
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
-    }
-
-    // ============================================
-    // INITIALISATION
-    // ============================================
-
-    document.addEventListener('DOMContentLoaded', async function() {
-        console.log('🚀 Initialisation du site Rayschic...');
-        
-        // Charger l'image hero
-        loadHeroImage();
-        
-        // Charger les collections
-        await loadCollections();
         
         // Navigation fluide
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1556,14 +1586,154 @@ images/
             });
         });
         
-        // Fermer le gestionnaire en cliquant à l'extérieur
-        document.getElementById('image-manager-overlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeImageManager();
+        // Gestionnaire d'images
+        const imageManagerBtn = document.querySelector('a[onclick*="openImageManager"]');
+        if (imageManagerBtn) {
+            imageManagerBtn.onclick = function(e) {
+                e.preventDefault();
+                openImageManager();
+            };
+        }
+        
+        // Fermer gestionnaire en cliquant à l'extérieur
+        const imageManagerOverlay = document.getElementById('image-manager-overlay');
+        if (imageManagerOverlay) {
+            imageManagerOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeImageManager();
+                }
+            });
+        }
+    }
+
+    // ============================================
+    // GESTIONNAIRE D'IMAGES (mis à jour)
+    // ============================================
+
+    function openImageManager() {
+        document.getElementById('image-manager-overlay').style.display = 'flex';
+        
+        // Mettre à jour les boutons
+        const actionsDiv = document.querySelector('.manager-actions');
+        if (actionsDiv) {
+            actionsDiv.innerHTML = `
+                <button onclick="window.open('${CONFIG.apiUrl}/admin', '_blank')" class="btn-action">
+                    <i class="fas fa-external-link-alt"></i> Ouvrir l'Admin Python
+                </button>
+                <button onclick="refreshAllImages()" class="btn-action">
+                    <i class="fas fa-sync-alt"></i> Actualiser les images
+                </button>
+                <button onclick="closeImageManager()" class="btn-close">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            `;
+        }
+        
+        updateImageStats();
+    }
+
+    function closeImageManager() {
+        document.getElementById('image-manager-overlay').style.display = 'none';
+    }
+
+    async function updateImageStats() {
+        const statsDiv = document.getElementById('image-stats');
+        if (!statsDiv) return;
+        
+        try {
+            const response = await fetch(`${CONFIG.apiUrl}/api/scan`);
+            const data = await response.json();
+            
+            let html = '<table class="stats-table">';
+            html += '<tr><th>Collection</th><th>Images</th><th>Statut</th></tr>';
+            
+            for (const [collectionId, collection] of Object.entries(data.collections)) {
+                if (collectionId === 'hero') continue;
+                
+                const count = collection.count || collection.images.length;
+                const status = count > 0 ? '✓' : '✗';
+                const color = count > 0 ? '#4CAF50' : '#f44336';
+                
+                html += `
+                    <tr>
+                        <td>${collection.title}</td>
+                        <td>${count} image${count !== 1 ? 's' : ''}</td>
+                        <td style="color:${color}; font-weight:bold;">${status}</td>
+                    </tr>
+                `;
+            }
+            
+            // Hero image
+            const heroCount = data.collections.hero ? data.collections.hero.images.length : 0;
+            html += `
+                <tr>
+                    <td>Image Hero</td>
+                    <td>${heroCount}/1</td>
+                    <td style="color:${heroCount > 0 ? '#4CAF50' : '#f44336'}; font-weight:bold;">${heroCount > 0 ? '✓' : '✗'}</td>
+                </tr>
+            `;
+            
+            html += '</table>';
+            statsDiv.innerHTML = html;
+            
+        } catch (error) {
+            statsDiv.innerHTML = '<p style="color:#f44336; text-align:center;">Impossible de charger les statistiques</p>';
+        }
+    }
+
+    function refreshAllImages() {
+        // Ajouter un timestamp pour forcer le rechargement
+        document.querySelectorAll('img').forEach(img => {
+            if (img.src.includes(CONFIG.apiUrl) || img.src.includes('images/')) {
+                const cleanSrc = img.src.split('?')[0];
+                img.src = cleanSrc + '?t=' + Date.now();
             }
         });
         
-        console.log('✅ Site prêt ! 6 images par collection détectées automatiquement.');
+        // Recharger les données
+        loadImagesFromPythonAPI().then(() => {
+            showNotification('Images actualisées !', 'success');
+        });
+    }
+
+    function showNotification(message, type = 'success') {
+        // Supprimer les anciennes notifications
+        document.querySelectorAll('.notification').forEach(n => n.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        notification.style.background = type === 'success' ? '#4CAF50' : 
+                                      type === 'error' ? '#f44336' : '#2196F3';
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+
+    // ============================================
+    // FONCTIONS UTILITAIRES
+    // ============================================
+
+    async function imageExists(url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            return response.ok;
+        } catch {
+            return false;
+        }
+    }
+
+    // ============================================
+    // INITIALISATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log('🚀 Initialisation du site Rayschic...');
+        
+        // Charger les images depuis l'API Python
+        await loadImagesFromPythonAPI();
+        
+        console.log('✅ Site prêt ! Système Python intégré.');
     });
     </script>
 </body>
