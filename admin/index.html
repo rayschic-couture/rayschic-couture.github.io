@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Rayschic - Gestionnaire d'Images</title>
+    <title>Admin Rayschic - Upload Simple</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,7 +21,7 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 800px;
             margin: auto;
             background: #2d3047;
             padding: 30px;
@@ -33,185 +33,73 @@
             text-align: center;
             color: #d4af37;
             margin-bottom: 30px;
-            font-size: 2.5rem;
         }
         
         h1 span {
             color: white;
         }
         
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            background: #1a1a2e;
-            padding: 15px;
-            border-radius: 10px;
+        .upload-box {
+            border: 3px dashed #d4af37;
+            border-radius: 15px;
+            padding: 40px;
             text-align: center;
-            min-width: 120px;
-            border: 1px solid #d4af37;
-        }
-        
-        .stat-card h3 {
-            color: #d4af37;
-            margin-bottom: 5px;
-            font-size: 1.2rem;
-        }
-        
-        .filter-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #1a1a2e;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-box:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .upload-box.dragover {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: #fff;
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: #d4af37;
+            margin-bottom: 20px;
         }
         
         .btn {
-            background: #2d3047;
-            color: white;
-            border: 2px solid #d4af37;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background: #d4af37;
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1.1rem;
             transition: all 0.3s;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         .btn:hover {
-            background: #d4af37;
-            color: #1a1a2e;
+            background: #c19b2e;
             transform: translateY(-2px);
         }
         
-        .btn-primary {
-            background: #d4af37;
-            color: #1a1a2e;
-        }
-        
-        .btn-danger {
-            background: #ff4757;
-            border-color: #ff4757;
-            color: white;
-        }
-        
-        .btn-success {
-            background: #2ecc71;
-            border-color: #2ecc71;
-            color: white;
-        }
-        
-        .active-filter {
-            background: #d4af37 !important;
-            color: #1a1a2e !important;
-        }
-        
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .image-card {
-            background: #1a1a2e;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #2d3047;
-        }
-        
-        .image-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border-color: #d4af37;
-        }
-        
-        .image-preview {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            background: #2d3047;
-        }
-        
-        .image-info {
-            padding: 15px;
-        }
-        
-        .image-info h4 {
-            color: #d4af37;
-            margin-bottom: 5px;
-            font-size: 1.1rem;
-            word-break: break-all;
-        }
-        
-        .image-info .category {
-            display: inline-block;
-            background: #2d3047;
-            color: #d4af37;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-        }
-        
-        .image-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .image-actions button {
-            flex: 1;
-            min-width: 70px;
-            padding: 8px 5px;
-            font-size: 0.9rem;
-        }
-        
-        .upload-section {
-            background: #1a1a2e;
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border: 2px dashed #d4af37;
-        }
-        
-        .upload-section h3 {
-            color: #d4af37;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .btn-large {
+            padding: 20px 40px;
+            font-size: 1.3rem;
         }
         
         .collection-selector {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
+            margin: 30px 0;
         }
         
         .collection-option {
-            background: #2d3047;
-            padding: 15px;
-            border-radius: 8px;
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 10px;
             cursor: pointer;
             text-align: center;
             transition: all 0.3s;
@@ -220,7 +108,6 @@
         
         .collection-option:hover {
             border-color: #d4af37;
-            background: #2d3047;
         }
         
         .collection-option.selected {
@@ -228,14 +115,35 @@
             background: rgba(212, 175, 55, 0.1);
         }
         
-        .collection-option h4 {
+        .collection-option i {
+            font-size: 2rem;
             color: #d4af37;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .file-list {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #2d3047;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
         }
         
         .instructions {
-            background: #2d3047;
-            padding: 20px;
+            background: #1a1a2e;
+            padding: 25px;
             border-radius: 10px;
             margin-top: 30px;
             border-left: 4px solid #d4af37;
@@ -244,6 +152,9 @@
         .instructions h3 {
             color: #d4af37;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .instructions ol {
@@ -255,411 +166,146 @@
             margin-bottom: 10px;
         }
         
-        .instructions code {
-            background: #1a1a2e;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #d4af37;
-            font-family: monospace;
+        .success-message {
+            background: #2ecc71;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 20px;
             color: #d4af37;
-            font-size: 1.2rem;
         }
         
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .loading i {
+            animation: spin 1s linear infinite;
         }
         
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .admin-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .stats {
-                justify-content: center;
-            }
-            
-            .image-grid {
-                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .image-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-            
-            .collection-selector {
-                grid-template-columns: 1fr;
-            }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <h1><i class="fas fa-cog"></i> RAY<span>SCHIC</span> ADMIN</h1>
-        
-        <div class="admin-header">
-            <div class="stats">
-                <div class="stat-card">
-                    <h3 id="total-images">0</h3>
-                    <p>Images totales</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="hero-images">0</h3>
-                    <p>Image Hero</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="collections-count">6</h3>
-                    <p>Collections</p>
-                </div>
-            </div>
-            
-            <div>
-                <button class="btn btn-primary" onclick="refreshAllImages()">
-                    <i class="fas fa-sync-alt"></i> Actualiser
-                </button>
-                <button class="btn btn-success" onclick="scanForNewImages()">
-                    <i class="fas fa-search"></i> Scanner
-                </button>
-                <button class="btn" onclick="goToSite()">
-                    <i class="fas fa-external-link-alt"></i> Voir le site
-                </button>
-            </div>
-        </div>
-        
-        <div class="filter-buttons">
-            <button class="btn btn-primary active-filter" onclick="filterImages('all')">
-                <i class="fas fa-layer-group"></i> Tout voir
-            </button>
-            <button class="btn" onclick="filterImages('hero')">
-                <i class="fas fa-crown"></i> Hero
-            </button>
-            <button class="btn" onclick="filterImages('costumes')">
-                <i class="fas fa-tshirt"></i> Costumes
-            </button>
-            <button class="btn" onclick="filterImages('chemises')">
-                <i class="fas fa-tshirt"></i> Chemises
-            </button>
-            <button class="btn" onclick="filterImages('pantalons')">
-                <i class="fas fa-tshirt"></i> Pantalons
-            </button>
-            <button class="btn" onclick="filterImages('vestes')">
-                <i class="fas fa-tshirt"></i> Vestes
-            </button>
-            <button class="btn" onclick="filterImages('tenues')">
-                <i class="fas fa-tshirt"></i> Tenues
-            </button>
-            <button class="btn" onclick="filterImages('accessoires')">
-                <i class="fas fa-gem"></i> Accessoires
-            </button>
-        </div>
-        
-        <div id="imageGrid" class="image-grid">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i> Chargement des images...
-            </div>
-        </div>
-        
-        <div class="upload-section">
-            <h3><i class="fas fa-cloud-upload-alt"></i> Ajouter une nouvelle image</h3>
-            
-            <p style="margin-bottom: 15px; color: #ddd;">Sélectionnez une collection pour voir les instructions d'upload :</p>
-            
-            <div class="collection-selector">
-                <div class="collection-option" onclick="selectCollection('hero')">
-                    <h4><i class="fas fa-crown"></i> Hero</h4>
-                    <p>Image principale du site</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('costumes')">
-                    <h4><i class="fas fa-tshirt"></i> Costumes</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('chemises')">
-                    <h4><i class="fas fa-tshirt"></i> Chemises</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('pantalons')">
-                    <h4><i class="fas fa-tshirt"></i> Pantalons</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('vestes')">
-                    <h4><i class="fas fa-tshirt"></i> Vestes</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('tenues')">
-                    <h4><i class="fas fa-tshirt"></i> Tenues</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-                <div class="collection-option" onclick="selectCollection('accessoires')">
-                    <h4><i class="fas fa-gem"></i> Accessoires</h4>
-                    <p>6 images (1.jpg à 6.jpg)</p>
-                </div>
-            </div>
-            
-            <div id="upload-instructions" style="display: none;">
-                <div style="background: #2d3047; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                    <h4 id="instruction-title"></h4>
-                    <p id="instruction-details"></p>
-                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="openGitHubUpload()">
-                        <i class="fab fa-github"></i> Upload sur GitHub
-                    </button>
-                </div>
-            </div>
-        </div>
+        <h1><i class="fas fa-cloud-upload-alt"></i> RAY<span>SCHIC</span> - UPLOAD SIMPLE</h1>
         
         <div class="instructions">
-            <h3><i class="fas fa-info-circle"></i> Instructions d'utilisation</h3>
+            <h3><i class="fas fa-lightbulb"></i> Comment changer une image ?</h3>
             <ol>
-                <li><strong>Structure des images :</strong> Les images sont numérotées de 1 à 6 dans chaque dossier</li>
-                <li><strong>Pour modifier une image :</strong> Cliquez sur "Remplacer" et uploadez la nouvelle image avec le même nom</li>
-                <li><strong>Pour ajouter une image :</strong> Uploadez <code>7.jpg</code>, <code>8.jpg</code>, etc. dans le dossier correspondant</li>
-                <li><strong>Format recommandé :</strong> JPG, minimum 800x600 pixels</li>
-                <li><strong>Nommage :</strong> Toujours utiliser des numéros (1.jpg, 2.jpg, etc.)</li>
+                <li><strong>Sélectionnez</strong> la collection ci-dessous</li>
+                <li><strong>Glissez-déposez</strong> votre image (peu importe son nom !)</li>
+                <li><strong>Choisissez</strong> quel numéro elle doit remplacer (1.jpg, 2.jpg, etc.)</li>
+                <li><strong>Cliquez "Upload"</strong> - Le système renomme automatiquement !</li>
             </ol>
+        </div>
+        
+        <div class="collection-selector">
+            <div class="collection-option" onclick="selectCollection('hero')">
+                <i class="fas fa-crown"></i>
+                <h4>Image Hero</h4>
+                <small>Image principale</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('costumes')">
+                <i class="fas fa-tshirt"></i>
+                <h4>Costumes</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('chemises')">
+                <i class="fas fa-tshirt"></i>
+                <h4>Chemises</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('pantalons')">
+                <i class="fas fa-tshirt"></i>
+                <h4>Pantalons</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('vestes')">
+                <i class="fas fa-tshirt"></i>
+                <h4>Vestes</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('tenues')">
+                <i class="fas fa-tshirt"></i>
+                <h4>Tenues</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+            <div class="collection-option" onclick="selectCollection('accessoires')">
+                <i class="fas fa-gem"></i>
+                <h4>Accessoires</h4>
+                <small>1.jpg à 6.jpg</small>
+            </div>
+        </div>
+        
+        <div class="upload-box" id="uploadBox">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3>Glissez-déposez votre image ici</h3>
+            <p>ou cliquez pour parcourir vos fichiers</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div id="fileList" class="file-list">
+            <h3>Image sélectionnée :</h3>
+            <div id="fileItem" class="file-item">
+                <div>
+                    <strong id="fileName"></strong><br>
+                    <small id="fileSize"></small>
+                </div>
+                <div id="numberSelector" style="display: none;">
+                    <label>Remplacer le numéro :</label>
+                    <select id="imageNumber" style="background: #2d3047; color: white; padding: 5px; border-radius: 5px; margin-left: 10px;">
+                        <option value="1">1.jpg</option>
+                        <option value="2">2.jpg</option>
+                        <option value="3">3.jpg</option>
+                        <option value="4">4.jpg</option>
+                        <option value="5">5.jpg</option>
+                        <option value="6">6.jpg</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn btn-large" onclick="uploadImage()" id="uploadBtn" disabled>
+                <i class="fas fa-upload"></i> Upload sur GitHub
+            </button>
+        </div>
+        
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> 
+            <span id="successText"></span>
+        </div>
+        
+        <div id="loading" class="loading" style="display: none;">
+            <i class="fas fa-spinner"></i> Préparation de l'upload...
         </div>
     </div>
 
     <script>
         // ============================================
-        // CONFIGURATION
+        // VARIABLES GLOBALES
         // ============================================
-        const CONFIG = {
-            collections: [
-                { id: 'costumes', title: 'Costumes', folder: 'costumes', icon: 'fa-tshirt' },
-                { id: 'chemises', title: 'Chemises', folder: 'chemises', icon: 'fa-tshirt' },
-                { id: 'pantalons', title: 'Pantalons', folder: 'pantalons', icon: 'fa-tshirt' },
-                { id: 'vestes', title: 'Vestes', folder: 'vestes', icon: 'fa-tshirt' },
-                { id: 'tenues', title: 'Tenues', folder: 'tenues', icon: 'fa-tshirt' },
-                { id: 'accessoires', title: 'Accessoires', folder: 'accessoires', icon: 'fa-gem' }
-            ],
-            
-            githubRepo: 'rayschic-couture/rayschic-couture.github.io',
-            githubBranch: 'main',
-            baseUrl: 'https://raw.githubusercontent.com'
-        };
-
-        // Variables globales
-        let allImages = [];
         let selectedCollection = null;
+        let selectedFile = null;
+        let currentImageNumber = '1';
 
         // ============================================
-        // FONCTIONS UTILITAIRES
+        // SÉLECTION DE LA COLLECTION
         // ============================================
-
-        // Vérifier si une image existe
-        async function imageExists(url) {
-            try {
-                const response = await fetch(url, { method: 'HEAD' });
-                return response.ok;
-            } catch {
-                return false;
-            }
-        }
-
-        // Trouver toutes les images d'une collection (1.jpg à 20.jpg maximum)
-        async function findCollectionImages(folder, max = 20) {
-            const images = [];
-            
-            for (let i = 1; i <= max; i++) {
-                const imageUrl = `${CONFIG.baseUrl}/${CONFIG.githubRepo}/${CONFIG.githubBranch}/images/${folder}/${i}.jpg`;
-                
-                if (await imageExists(imageUrl)) {
-                    images.push({
-                        src: imageUrl,
-                        filename: `${i}.jpg`,
-                        folder: folder,
-                        category: folder === 'hero' ? 'hero' : folder,
-                        fullPath: `images/${folder}/${i}.jpg`
-                    });
-                } else {
-                    // Arrêter si on trouve un trou dans la numérotation
-                    if (images.length > 0) break;
-                }
-            }
-            
-            return images;
-        }
-
-        // Trouver l'image hero
-        async function findHeroImages() {
-            const images = [];
-            const sources = [
-                'images/hero/1.jpg',
-                'images/hero.jpg'
-            ];
-            
-            for (const source of sources) {
-                const url = `${CONFIG.baseUrl}/${CONFIG.githubRepo}/${CONFIG.githubBranch}/${source}`;
-                if (await imageExists(url)) {
-                    images.push({
-                        src: url,
-                        filename: source.split('/').pop(),
-                        folder: 'hero',
-                        category: 'hero',
-                        fullPath: source
-                    });
-                    break;
-                }
-            }
-            
-            return images;
-        }
-
-        // ============================================
-        // CHARGEMENT DES IMAGES
-        // ============================================
-
-        async function loadAllImages() {
-            const grid = document.getElementById('imageGrid');
-            grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des images...</div>';
-            
-            allImages = [];
-            
-            // Charger l'image hero
-            const heroImages = await findHeroImages();
-            allImages.push(...heroImages);
-            
-            // Charger les collections
-            for (const collection of CONFIG.collections) {
-                const images = await findCollectionImages(collection.folder);
-                allImages.push(...images);
-            }
-            
-            // Mettre à jour les statistiques
-            updateStats();
-            
-            // Afficher les images
-            displayImages(allImages);
-            
-            console.log(`✅ ${allImages.length} images chargées`);
-            return allImages;
-        }
-
-        function displayImages(images) {
-            const grid = document.getElementById('imageGrid');
-            
-            if (images.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37; grid-column:1/-1;">Aucune image trouvée</div>';
-                return;
-            }
-            
-            grid.innerHTML = images.map(image => `
-                <div class="image-card" data-category="${image.category}">
-                    <img src="${image.src}?t=${Date.now()}" 
-                         class="image-preview" 
-                         alt="${image.filename}"
-                         onerror="this.src='https://via.placeholder.com/300x200/2d3047/d4af37?text=${encodeURIComponent(image.filename)}'">
-                    <div class="image-info">
-                        <h4>${image.filename}</h4>
-                        <span class="category">${image.category}</span>
-                        <div class="image-actions">
-                            <button class="btn" onclick="replaceImage('${image.fullPath}')">
-                                <i class="fas fa-edit"></i> Remplacer
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteImage('${image.fullPath}')">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ============================================
-        // FILTRES ET STATISTIQUES
-        // ============================================
-
-        function filterImages(category) {
-            // Mettre à jour les boutons actifs
-            document.querySelectorAll('.filter-buttons button').forEach(btn => {
-                btn.classList.remove('active-filter');
-            });
-            event.target.classList.add('active-filter');
-            
-            // Filtrer les images
-            if (category === 'all') {
-                displayImages(allImages);
-            } else {
-                const filtered = allImages.filter(img => img.category === category);
-                displayImages(filtered);
-            }
-        }
-
-        function updateStats() {
-            const total = allImages.length;
-            const hero = allImages.filter(img => img.category === 'hero').length;
-            
-            document.getElementById('total-images').textContent = total;
-            document.getElementById('hero-images').textContent = hero;
-        }
-
-        // ============================================
-        // ACTIONS SUR LES IMAGES
-        // ============================================
-
-        function replaceImage(fullPath) {
-            const fileName = fullPath.split('/').pop();
-            const folder = fullPath.split('/')[1];
-            
-            const githubUrl = `https://github.com/${CONFIG.githubRepo}/upload/${CONFIG.githubBranch}/${folder}`;
-            window.open(githubUrl, '_blank');
-            
-            showNotification(`Uploadez la nouvelle image avec le nom : ${fileName}`, 'info');
-        }
-
-        function deleteImage(fullPath) {
-            if (confirm(`Voulez-vous vraiment supprimer ${fullPath} ?`)) {
-                const githubUrl = `https://github.com/${CONFIG.githubRepo}/blob/${CONFIG.githubBranch}/${fullPath}`;
-                window.open(githubUrl, '_blank');
-                
-                showNotification('Ouvrez le fichier sur GitHub et cliquez sur "Delete"', 'warning');
-            }
-        }
-
-        function refreshAllImages() {
-            showNotification('Actualisation des images...', 'info');
-            loadAllImages().then(() => {
-                showNotification('Images actualisées avec succès !', 'success');
-            });
-        }
-
-        async function scanForNewImages() {
-            showNotification('Recherche de nouvelles images...', 'info');
-            await loadAllImages();
-            showNotification('Scan terminé !', 'success');
-        }
-
-        // ============================================
-        // UPLOAD DE NOUVELLES IMAGES
-        // ============================================
-
         function selectCollection(collectionId) {
             selectedCollection = collectionId;
             
@@ -667,106 +313,211 @@
             document.querySelectorAll('.collection-option').forEach(option => {
                 option.classList.remove('selected');
             });
-            event.target.classList.add('selected');
+            event.currentTarget.classList.add('selected');
             
-            // Afficher les instructions
-            const instructions = document.getElementById('upload-instructions');
-            const title = document.getElementById('instruction-title');
-            const details = document.getElementById('instruction-details');
-            
-            instructions.style.display = 'block';
-            
+            // Afficher le sélecteur de numéro si ce n'est pas hero
+            const numberSelector = document.getElementById('numberSelector');
             if (collectionId === 'hero') {
-                title.textContent = 'Upload de l\'image Hero';
-                details.textContent = 'Uploadez votre image dans le dossier images/hero/ avec le nom 1.jpg';
+                numberSelector.style.display = 'none';
+                currentImageNumber = '1';
             } else {
-                const collection = CONFIG.collections.find(c => c.id === collectionId);
-                title.textContent = `Upload pour ${collection.title}`;
-                details.textContent = `Uploadez votre image dans le dossier images/${collection.folder}/ avec le numéro suivant (ex: 7.jpg, 8.jpg, etc.)`;
+                numberSelector.style.display = 'block';
             }
+            
+            // Activer le bouton upload si un fichier est déjà sélectionné
+            if (selectedFile) {
+                document.getElementById('uploadBtn').disabled = false;
+            }
+            
+            updateInstructions();
         }
 
-        function openGitHubUpload() {
-            if (!selectedCollection) {
-                showNotification('Veuillez sélectionner une collection d\'abord', 'warning');
+        // ============================================
+        // GESTION DU FICHIER
+        // ============================================
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+
+        // Glisser-déposer
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+
+        // Cliquer pour parcourir
+        uploadBox.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Veuillez sélectionner une image !');
                 return;
             }
             
-            let folderPath;
+            selectedFile = file;
+            
+            // Afficher les infos du fichier
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            document.getElementById('fileList').style.display = 'block';
+            
+            // Activer le bouton upload si une collection est sélectionnée
+            if (selectedCollection) {
+                document.getElementById('uploadBtn').disabled = false;
+            }
+            
+            // Avertir si le fichier est trop gros
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                alert('⚠️ Image trop lourde (>5MB). Compressez-la d\'abord.');
+            }
+        }
+
+        // ============================================
+        // UPLOAD VERS GITHUB
+        // ============================================
+        function uploadImage() {
+            if (!selectedCollection || !selectedFile) {
+                alert('Veuillez sélectionner une collection ET une image !');
+                return;
+            }
+            
+            // Afficher le chargement
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('uploadBtn').disabled = true;
+            
+            // Déterminer le nom final
+            let finalFileName;
             if (selectedCollection === 'hero') {
-                folderPath = 'images/hero';
+                finalFileName = '1.jpg';
             } else {
-                const collection = CONFIG.collections.find(c => c.id === selectedCollection);
-                folderPath = `images/${collection.folder}`;
+                currentImageNumber = document.getElementById('imageNumber').value;
+                finalFileName = `${currentImageNumber}.jpg`;
             }
             
-            const githubUrl = `https://github.com/${CONFIG.githubRepo}/upload/${CONFIG.githubBranch}/${folderPath}`;
-            window.open(githubUrl, '_blank');
+            // Préparer l'URL GitHub
+            const folderPath = selectedCollection === 'hero' ? 'images/hero' : `images/${selectedCollection}`;
+            const githubUrl = `https://github.com/rayschic-couture/rayschic-couture.github.io/upload/main/${folderPath}`;
             
-            showNotification('Ouvrez GitHub et glissez-déposez votre image', 'info');
-        }
-
-        // ============================================
-        // AUTRES FONCTIONS
-        // ============================================
-
-        function goToSite() {
-            window.open('https://rayschic-couture.github.io', '_blank');
-        }
-
-        function showNotification(message, type = 'info') {
-            // Supprimer les anciennes notifications
-            document.querySelectorAll('.notification').forEach(n => n.remove());
-            
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                <span>${message}</span>
-            `;
-            
-            notification.style.background = 
-                type === 'success' ? '#4CAF50' : 
-                type === 'warning' ? '#ff9800' : '#2196F3';
-            
-            document.body.appendChild(notification);
-            
-            // Supprimer après 5 secondes
+            // Ouvrir GitHub dans un nouvel onglet
             setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
-                }
-            }, 5000);
+                window.open(githubUrl, '_blank');
+                
+                // Afficher les instructions
+                document.getElementById('loading').style.display = 'none';
+                
+                const successMessage = document.getElementById('successMessage');
+                const successText = document.getElementById('successText');
+                
+                successText.innerHTML = `
+                    <strong>Étapes à suivre sur GitHub :</strong><br><br>
+                    1. <strong>Glissez-déposez</strong> votre image "${selectedFile.name}"<br>
+                    2. <strong>Renommez-la</strong> en : <code style="background:#1a1a2e;padding:2px 6px;border-radius:4px">${finalFileName}</code><br>
+                    3. <strong>Commit changes</strong> avec le message : "Mise à jour ${selectedCollection} ${currentImageNumber}"<br>
+                    4. <strong>Attendez 2 minutes</strong> puis actualisez votre site (Ctrl+F5)
+                `;
+                
+                successMessage.style.display = 'block';
+                successMessage.style.background = '#3498db';
+                
+                // Réinitialiser après 10 secondes
+                setTimeout(() => {
+                    resetForm();
+                }, 10000);
+                
+            }, 1000);
         }
 
         // ============================================
-        // RACCOURCIS CLAVIER
+        // FONCTIONS UTILITAIRES
         // ============================================
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
 
-        document.addEventListener('keydown', function(e) {
-            // Ctrl+R pour actualiser
-            if (e.ctrlKey && e.key === 'r') {
+        function updateInstructions() {
+            const instructions = document.querySelector('.instructions');
+            if (selectedCollection) {
+                instructions.innerHTML = `
+                    <h3><i class="fas fa-lightbulb"></i> Instructions pour ${selectedCollection}</h3>
+                    <ol>
+                        <li>Votre image sera renommée automatiquement</li>
+                        <li>Elle remplacera le fichier existant</li>
+                        <li>GitHub s'ouvrira dans le bon dossier</li>
+                        <li>Suivez les étapes affichées après l'upload</li>
+                    </ol>
+                `;
+            }
+        }
+
+        function resetForm() {
+            selectedFile = null;
+            selectedCollection = null;
+            
+            document.getElementById('fileList').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('uploadBtn').disabled = true;
+            document.getElementById('fileInput').value = '';
+            
+            document.querySelectorAll('.collection-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            document.querySelector('.instructions').innerHTML = `
+                <h3><i class="fas fa-lightbulb"></i> Comment changer une image ?</h3>
+                <ol>
+                    <li><strong>Sélectionnez</strong> la collection ci-dessous</li>
+                    <li><strong>Glissez-déposez</strong> votre image (peu importe son nom !)</li>
+                    <li><strong>Choisissez</strong> quel numéro elle doit remplacer (1.jpg, 2.jpg, etc.)</li>
+                    <li><strong>Cliquez "Upload"</strong> - Le système renomme automatiquement !</li>
+                </ol>
+            `;
+        }
+
+        // ============================================
+        // RACCOURCI CLAVIER
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+U pour upload
+            if (e.ctrlKey && e.key === 'u') {
                 e.preventDefault();
-                refreshAllImages();
+                uploadImage();
             }
             
-            // Échap pour revenir au site
+            // Échap pour réinitialiser
             if (e.key === 'Escape') {
-                window.history.back();
+                resetForm();
             }
         });
 
         // ============================================
-        // INITIALISATION
+        // MESSAGE DE BIENVENUE
         // ============================================
-
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initialisation de l\'admin Rayschic...');
-            loadAllImages();
-            
-            // Sélectionner automatiquement "Tout voir"
-            document.querySelector('.filter-buttons .btn-primary').click();
-        });
+        window.onload = function() {
+            console.log('🚀 Admin Upload Simple - Prêt !');
+            console.log('💡 Vous pouvez uploader n\'importe quelle image, peu importe son nom !');
+        };
     </script>
 </body>
 </html>
