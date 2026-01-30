@@ -1,246 +1,38 @@
-
 {
+  "last_updated": "2024-01-01",
   "hero": {
-    "image": "images/hero/1.jpg",
-    "alt": "Rayschic Couture Masculine - Excellence en costumes sur mesure",
-    "title": "RaySchic - L'excellence en couture masculine"
+    "url": "https://rayschic-admin.onrender.com/uploads/hero/hero.jpg"
   },
-  "collections": [
-    {
-      "id": "costumes",
+  "collections": {
+    "costumes": {
       "title": "Costumes sur Mesure",
-      "folder": "costumes",
-      "description": "Nos costumes sur mesure sont le fruit d'un savoir-faire artisanal exceptionnel. Chaque pièce est confectionnée avec les meilleurs tissus et une attention particulière aux détails, créant une silhouette parfaite et une élégance intemporelle.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Costume classique deux pièces",
-          "desc": "Costume en laine fine, coupe ajustée, pour un style élégant au quotidien"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Costume trois pièces de cérémonie",
-          "desc": "Costume complet avec gilet, idéal pour les occasions spéciales"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Costume moderne slim fit",
-          "desc": "Coupe contemporaine et ajustée pour un look jeune et dynamique"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Costume de mariage élégant",
-          "desc": "Pour le grand jour, élégance et sophistication garanties"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Costume d'affaires professionnel",
-          "desc": "Style professionnel et raffiné pour le monde des affaires"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Costume sur mesure premium",
-          "desc": "Tissu premium et finitions main pour une excellence absolue"
-        }
-      ]
+      "images": [],
+      "count": 0
     },
-    {
-      "id": "chemises",
+    "chemises": {
       "title": "Chemises sur Mesure",
-      "folder": "chemises",
-      "description": "Nos chemises sur mesure sont confectionnées avec des tissus de qualité supérieure et une coupe parfaitement adaptée à votre morphologie. Chaque détail, du col aux poignets, est pensé pour votre confort et votre élégance au quotidien.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Chemise formelle en coton égyptien",
-          "desc": "Col classique, tissu respirant, parfaite pour le bureau"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Chemise casual décontractée",
-          "desc": "Tissu léger et coupe moderne pour un style décontracté élégant"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Chemise à manches longues ajustée",
-          "desc": "Coupe parfaite pour toutes les saisons et occasions"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Chemise à manches courtes d'été",
-          "desc": "Légère et confortable, idéale pour les chaudes journées"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Chemise de cérémonie raffinée",
-          "desc": "Pour les occasions spéciales, élégance et raffinement"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Chemise sur mesure personnalisée",
-          "desc": "Personnalisation complète selon vos préférences"
-        }
-      ]
+      "images": [],
+      "count": 0
     },
-    {
-      "id": "pantalons",
+    "pantalons": {
       "title": "Pantalons sur Mesure",
-      "folder": "pantalons",
-      "description": "Nos pantalons sur mesure offrent un ajustement parfait et un confort exceptionnel. Chaque paire est confectionnée selon vos mesures exactes et vos préférences de style, garantissant une silhouette élégante et une liberté de mouvement.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Pantalon de costume classique",
-          "desc": "Coupe droite, tissu premium, pour un style élégant et intemporel"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Pantalon chino moderne",
-          "desc": "Style décontracté mais élégant, parfait pour le smart casual"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Pantalon de ville ajusté",
-          "desc": "Pour un style urbain raffiné et contemporain"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Pantalon en lin d'été",
-          "desc": "Léger, confortable et parfait pour les saisons chaudes"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Pantalon à pinces traditionnel",
-          "desc": "Style classique et élégant avec des finitions soignées"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Pantalon slim fit ajusté",
-          "desc": "Coupe moderne et flatteuse pour une silhouette élégante"
-        }
-      ]
+      "images": [],
+      "count": 0
     },
-    {
-      "id": "vestes",
+    "vestes": {
       "title": "Vestes & Blazers",
-      "folder": "vestes",
-      "description": "Nos vestes et blazers sur mesure sont conçus pour compléter parfaitement votre garde-robe masculine. Confectionnés avec précision et élégance, ils s'adaptent à toutes les occasions, du plus formel au plus décontracté.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Veste de costume deux boutons",
-          "desc": "Coupe classique, élégante pour toutes les occasions formelles"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Blazer décontracté smart casual",
-          "desc": "Parfait pour un style élégant mais décontracté"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Veste trois boutons structurée",
-          "desc": "Style élégant et structuré pour une silhouette parfaite"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Veste en tweed traditionnelle",
-          "desc": "Tissu traditionnel, style intemporel et élégant"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Veste d'été légère",
-          "desc": "Tissu léger et respirant, parfaite pour la saison chaude"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Veste sur mesure personnalisée",
-          "desc": "Personnalisation complète selon vos goûts et préférences"
-        }
-      ]
+      "images": [],
+      "count": 0
     },
-    {
-      "id": "tenues",
+    "tenues": {
       "title": "Tenues Spécifiques",
-      "folder": "tenues",
-      "description": "Nous créons des tenues sur mesure pour vos moments les plus importants. Mariages, cérémonies, événements d'affaires ou célébrations, chaque création est pensée pour vous mettre en valeur et refléter l'importance de l'occasion.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Tenue de mariage élégante",
-          "desc": "Élégance et sophistication pour le grand jour"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Costume de cérémonie officiel",
-          "desc": "Pour les événements officiels et cérémonies importantes"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Tenue de gala raffinée",
-          "desc": "Raffinement et élégance pour les soirées de gala"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Tenue d'affaires distinguée",
-          "desc": "Professionnel et distingué pour le monde des affaires"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Tenue de réception élégante",
-          "desc": "Élégance et style pour les réceptions et cocktails"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Tenue sur mesure événement",
-          "desc": "Création unique spécialement pour votre événement"
-        }
-      ]
+      "images": [],
+      "count": 0
     },
-    {
-      "id": "accessoires",
+    "accessoires": {
       "title": "Accessoires Masculins",
-      "folder": "accessoires",
-      "description": "Complétez votre tenue sur mesure avec nos accessoires soigneusement sélectionnés et personnalisés. Chaque détail contribue à parfaire votre style et à affirmer votre personnalité.",
-      "images": [
-        {
-          "filename": "1.jpg",
-          "title": "Cravates sur mesure exclusives",
-          "desc": "Tissus exclusifs et finitions main pour une élégance parfaite"
-        },
-        {
-          "filename": "2.jpg",
-          "title": "Pochette de costume assortie",
-          "desc": "Accord parfait avec votre tenue, élégance discrète"
-        },
-        {
-          "filename": "3.jpg",
-          "title": "Ceintures personnalisées en cuir",
-          "desc": "Cuirs sélectionnés et boucles uniques personnalisables"
-        },
-        {
-          "filename": "4.jpg",
-          "title": "Boutons de manchette raffinés",
-          "desc": "Élégance discrète et raffinée pour compléter votre tenue"
-        },
-        {
-          "filename": "5.jpg",
-          "title": "Nœuds papillon élégants",
-          "desc": "Classiques ou modernes, pour toutes les occasions"
-        },
-        {
-          "filename": "6.jpg",
-          "title": "Accessoires personnalisés sur mesure",
-          "desc": "Créés spécialement pour vous et votre style unique"
-        }
-      ]
+      "images": [],
+      "count": 0
     }
-  ],
-  "metadata": {
-    "lastUpdated": "2024-01-20",
-    "totalCollections": 6,
-    "totalImages": 36,
-    "imageStructure": "Numbered (1-6 per collection)",
-    "imageFormat": "JPG",
-    "recommendedSize": "Minimum 800x600 pixels"
   }
 }
