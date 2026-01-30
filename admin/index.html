@@ -1,112 +1,772 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Admin Rayschic</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<style>
-body{background:#1a1a2e;color:white;font-family:Segoe UI;padding:20px}
-.container{max-width:1200px;margin:auto;background:#2d3047;padding:25px;border-radius:15px}
-.btn{background:#d4af37;color:#1a1a2e;border:none;padding:10px 15px;border-radius:5px;cursor:pointer}
-.btn-secondary{background:transparent;border:2px solid #d4af37;color:#d4af37}
-.delete-btn{background:#ff4757;color:white}
-.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px}
-.image-card{background:#0003;border-radius:10px;overflow:hidden}
-.image-preview{width:100%;height:140px;object-fit:cover}
-.image-info{padding:10px}
-.filter-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px}
-.active-filter{background:#d4af37!important;color:#1a1a2e!important}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000c;justify-content:center;align-items:center}
-.modal-content{background:#2d3047;padding:20px;border-radius:10px;width:90%;max-width:400px}
-</style>
+    <meta charset="UTF-8">
+    <title>Admin Rayschic - Gestionnaire d'Images</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            background: #2d3047;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #d4af37;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        h1 span {
+            color: white;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 120px;
+            border: 1px solid #d4af37;
+        }
+        
+        .stat-card h3 {
+            color: #d4af37;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1a1a2e;
+        }
+        
+        .btn {
+            background: #2d3047;
+            color: white;
+            border: 2px solid #d4af37;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #d4af37;
+            color: #1a1a2e;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: #d4af37;
+            color: #1a1a2e;
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+            border-color: #ff4757;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+            border-color: #2ecc71;
+            color: white;
+        }
+        
+        .active-filter {
+            background: #d4af37 !important;
+            color: #1a1a2e !important;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .image-card {
+            background: #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #2d3047;
+        }
+        
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: #d4af37;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #2d3047;
+        }
+        
+        .image-info {
+            padding: 15px;
+        }
+        
+        .image-info h4 {
+            color: #d4af37;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+        
+        .image-info .category {
+            display: inline-block;
+            background: #2d3047;
+            color: #d4af37;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .image-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .image-actions button {
+            flex: 1;
+            min-width: 70px;
+            padding: 8px 5px;
+            font-size: 0.9rem;
+        }
+        
+        .upload-section {
+            background: #1a1a2e;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 2px dashed #d4af37;
+        }
+        
+        .upload-section h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .collection-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .collection-option {
+            background: #2d3047;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .collection-option:hover {
+            border-color: #d4af37;
+            background: #2d3047;
+        }
+        
+        .collection-option.selected {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .collection-option h4 {
+            color: #d4af37;
+            margin-bottom: 5px;
+        }
+        
+        .instructions {
+            background: #2d3047;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #d4af37;
+        }
+        
+        .instructions h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .instructions code {
+            background: #1a1a2e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d4af37;
+            font-family: monospace;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #d4af37;
+            font-size: 1.2rem;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .collection-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
-<div class="container">
-<h1 style="text-align:center;color:#d4af37">RAY<span style="color:white">SCHIC</span> ADMIN</h1>
+    <div class="container">
+        <h1><i class="fas fa-cog"></i> RAY<span>SCHIC</span> ADMIN</h1>
+        
+        <div class="admin-header">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="total-images">0</h3>
+                    <p>Images totales</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="hero-images">0</h3>
+                    <p>Image Hero</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="collections-count">6</h3>
+                    <p>Collections</p>
+                </div>
+            </div>
+            
+            <div>
+                <button class="btn btn-primary" onclick="refreshAllImages()">
+                    <i class="fas fa-sync-alt"></i> Actualiser
+                </button>
+                <button class="btn btn-success" onclick="scanForNewImages()">
+                    <i class="fas fa-search"></i> Scanner
+                </button>
+                <button class="btn" onclick="goToSite()">
+                    <i class="fas fa-external-link-alt"></i> Voir le site
+                </button>
+            </div>
+        </div>
+        
+        <div class="filter-buttons">
+            <button class="btn btn-primary active-filter" onclick="filterImages('all')">
+                <i class="fas fa-layer-group"></i> Tout voir
+            </button>
+            <button class="btn" onclick="filterImages('hero')">
+                <i class="fas fa-crown"></i> Hero
+            </button>
+            <button class="btn" onclick="filterImages('costumes')">
+                <i class="fas fa-tshirt"></i> Costumes
+            </button>
+            <button class="btn" onclick="filterImages('chemises')">
+                <i class="fas fa-tshirt"></i> Chemises
+            </button>
+            <button class="btn" onclick="filterImages('pantalons')">
+                <i class="fas fa-tshirt"></i> Pantalons
+            </button>
+            <button class="btn" onclick="filterImages('vestes')">
+                <i class="fas fa-tshirt"></i> Vestes
+            </button>
+            <button class="btn" onclick="filterImages('tenues')">
+                <i class="fas fa-tshirt"></i> Tenues
+            </button>
+            <button class="btn" onclick="filterImages('accessoires')">
+                <i class="fas fa-gem"></i> Accessoires
+            </button>
+        </div>
+        
+        <div id="imageGrid" class="image-grid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Chargement des images...
+            </div>
+        </div>
+        
+        <div class="upload-section">
+            <h3><i class="fas fa-cloud-upload-alt"></i> Ajouter une nouvelle image</h3>
+            
+            <p style="margin-bottom: 15px; color: #ddd;">Sélectionnez une collection pour voir les instructions d'upload :</p>
+            
+            <div class="collection-selector">
+                <div class="collection-option" onclick="selectCollection('hero')">
+                    <h4><i class="fas fa-crown"></i> Hero</h4>
+                    <p>Image principale du site</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('costumes')">
+                    <h4><i class="fas fa-tshirt"></i> Costumes</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('chemises')">
+                    <h4><i class="fas fa-tshirt"></i> Chemises</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('pantalons')">
+                    <h4><i class="fas fa-tshirt"></i> Pantalons</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('vestes')">
+                    <h4><i class="fas fa-tshirt"></i> Vestes</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('tenues')">
+                    <h4><i class="fas fa-tshirt"></i> Tenues</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+                <div class="collection-option" onclick="selectCollection('accessoires')">
+                    <h4><i class="fas fa-gem"></i> Accessoires</h4>
+                    <p>6 images (1.jpg à 6.jpg)</p>
+                </div>
+            </div>
+            
+            <div id="upload-instructions" style="display: none;">
+                <div style="background: #2d3047; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <h4 id="instruction-title"></h4>
+                    <p id="instruction-details"></p>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="openGitHubUpload()">
+                        <i class="fab fa-github"></i> Upload sur GitHub
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> Instructions d'utilisation</h3>
+            <ol>
+                <li><strong>Structure des images :</strong> Les images sont numérotées de 1 à 6 dans chaque dossier</li>
+                <li><strong>Pour modifier une image :</strong> Cliquez sur "Remplacer" et uploadez la nouvelle image avec le même nom</li>
+                <li><strong>Pour ajouter une image :</strong> Uploadez <code>7.jpg</code>, <code>8.jpg</code>, etc. dans le dossier correspondant</li>
+                <li><strong>Format recommandé :</strong> JPG, minimum 800x600 pixels</li>
+                <li><strong>Nommage :</strong> Toujours utiliser des numéros (1.jpg, 2.jpg, etc.)</li>
+            </ol>
+        </div>
+    </div>
 
-<div class="filter-buttons">
-<button class="btn btn-secondary active-filter" onclick="filterImages('all')">Tout</button>
-<button class="btn btn-secondary" onclick="filterImages('hero')">Hero</button>
-<button class="btn btn-secondary" onclick="filterImages('costumes')">Costumes</button>
-<button class="btn btn-secondary" onclick="filterImages('chemises')">Chemises</button>
-<button class="btn btn-secondary" onclick="filterImages('pantalons')">Pantalons</button>
-<button class="btn btn-secondary" onclick="filterImages('vestes')">Vestes</button>
-<button class="btn btn-secondary" onclick="filterImages('tenues')">Tenues</button>
-<button class="btn btn-secondary" onclick="filterImages('accessoires')">Accessoires</button>
-</div>
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const CONFIG = {
+            collections: [
+                { id: 'costumes', title: 'Costumes', folder: 'costumes', icon: 'fa-tshirt' },
+                { id: 'chemises', title: 'Chemises', folder: 'chemises', icon: 'fa-tshirt' },
+                { id: 'pantalons', title: 'Pantalons', folder: 'pantalons', icon: 'fa-tshirt' },
+                { id: 'vestes', title: 'Vestes', folder: 'vestes', icon: 'fa-tshirt' },
+                { id: 'tenues', title: 'Tenues', folder: 'tenues', icon: 'fa-tshirt' },
+                { id: 'accessoires', title: 'Accessoires', folder: 'accessoires', icon: 'fa-gem' }
+            ],
+            
+            githubRepo: 'rayschic-couture/rayschic-couture.github.io',
+            githubBranch: 'main',
+            baseUrl: 'https://raw.githubusercontent.com'
+        };
 
-<div id="imageGrid" class="image-grid"></div>
-<div id="status"></div>
-</div>
+        // Variables globales
+        let allImages = [];
+        let selectedCollection = null;
 
-<script>
-const GITHUB_REPO="rayschic-couture/rayschic-couture.github.io";
-const GITHUB_BRANCH="main";
-const RAW="https://raw.githubusercontent.com";
+        // ============================================
+        // FONCTIONS UTILITAIRES
+        // ============================================
 
-const SITE_IMAGES=[
-"hero.jpg",
-"costume1.jpg","costume2.jpg","costume3.jpg",
-"chemise1.jpg","chemise2.jpg","chemise3.jpg",
-"pantalon1.jpg","pantalon2.jpg","pantalon3.jpg",
-"veste1.jpg","veste2.jpg","veste3.jpg",
-"tenue1.jpg","tenue2.jpg","tenue3.jpg",
-"accessoire1.jpg","accessoire2.jpg","accessoire3.jpg"
-];
+        // Vérifier si une image existe
+        async function imageExists(url) {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                return response.ok;
+            } catch {
+                return false;
+            }
+        }
 
-function getCategory(file){
-if(file==="hero.jpg")return"hero";
-if(file.includes("costume"))return"costumes";
-if(file.includes("chemise"))return"chemises";
-if(file.includes("pantalon"))return"pantalons";
-if(file.includes("veste"))return"vestes";
-if(file.includes("tenue"))return"tenues";
-if(file.includes("accessoire"))return"accessoires";
-return"autre";
-}
+        // Trouver toutes les images d'une collection (1.jpg à 20.jpg maximum)
+        async function findCollectionImages(folder, max = 20) {
+            const images = [];
+            
+            for (let i = 1; i <= max; i++) {
+                const imageUrl = `${CONFIG.baseUrl}/${CONFIG.githubRepo}/${CONFIG.githubBranch}/images/${folder}/${i}.jpg`;
+                
+                if (await imageExists(imageUrl)) {
+                    images.push({
+                        src: imageUrl,
+                        filename: `${i}.jpg`,
+                        folder: folder,
+                        category: folder === 'hero' ? 'hero' : folder,
+                        fullPath: `images/${folder}/${i}.jpg`
+                    });
+                } else {
+                    // Arrêter si on trouve un trou dans la numérotation
+                    if (images.length > 0) break;
+                }
+            }
+            
+            return images;
+        }
 
-function loadImages(){
-let html="";
-SITE_IMAGES.forEach(f=>{
-let cat=getCategory(f);
-let url=`${RAW}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${f}?t=${Date.now()}`;
-html+=`
-<div class="image-card" data-category="${cat}">
-<img src="${url}" class="image-preview">
-<div class="image-info">
-<b>${f}</b><br>
-<small>${cat}</small><br>
-<button class="btn" onclick="replaceImage('${f}')">Modifier</button>
-<button class="btn delete-btn" onclick="deleteImage('${f}')">Supprimer</button>
-</div></div>`;
-});
-document.getElementById("imageGrid").innerHTML=html;
-}
+        // Trouver l'image hero
+        async function findHeroImages() {
+            const images = [];
+            const sources = [
+                'images/hero/1.jpg',
+                'images/hero.jpg'
+            ];
+            
+            for (const source of sources) {
+                const url = `${CONFIG.baseUrl}/${CONFIG.githubRepo}/${CONFIG.githubBranch}/${source}`;
+                if (await imageExists(url)) {
+                    images.push({
+                        src: url,
+                        filename: source.split('/').pop(),
+                        folder: 'hero',
+                        category: 'hero',
+                        fullPath: source
+                    });
+                    break;
+                }
+            }
+            
+            return images;
+        }
 
-function filterImages(cat){
-document.querySelectorAll(".image-card").forEach(c=>{
-c.style.display=(cat==="all"||c.dataset.category===cat)?"block":"none";
-});
-document.querySelectorAll(".filter-buttons button").forEach(b=>b.classList.remove("active-filter"));
-event.target.classList.add("active-filter");
-}
+        // ============================================
+        // CHARGEMENT DES IMAGES
+        // ============================================
 
-function replaceImage(f){
-window.open(`https://github.com/${GITHUB_REPO}/upload/${GITHUB_BRANCH}/images`,"_blank");
-alert("Renomme ton fichier en : "+f);
-}
+        async function loadAllImages() {
+            const grid = document.getElementById('imageGrid');
+            grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des images...</div>';
+            
+            allImages = [];
+            
+            // Charger l'image hero
+            const heroImages = await findHeroImages();
+            allImages.push(...heroImages);
+            
+            // Charger les collections
+            for (const collection of CONFIG.collections) {
+                const images = await findCollectionImages(collection.folder);
+                allImages.push(...images);
+            }
+            
+            // Mettre à jour les statistiques
+            updateStats();
+            
+            // Afficher les images
+            displayImages(allImages);
+            
+            console.log(`✅ ${allImages.length} images chargées`);
+            return allImages;
+        }
 
-function deleteImage(f){
-if(confirm("Supprimer "+f+" ?")){
-window.open(`https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/images/${f}`,"_blank");
-}
-}
+        function displayImages(images) {
+            const grid = document.getElementById('imageGrid');
+            
+            if (images.length === 0) {
+                grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37; grid-column:1/-1;">Aucune image trouvée</div>';
+                return;
+            }
+            
+            grid.innerHTML = images.map(image => `
+                <div class="image-card" data-category="${image.category}">
+                    <img src="${image.src}?t=${Date.now()}" 
+                         class="image-preview" 
+                         alt="${image.filename}"
+                         onerror="this.src='https://via.placeholder.com/300x200/2d3047/d4af37?text=${encodeURIComponent(image.filename)}'">
+                    <div class="image-info">
+                        <h4>${image.filename}</h4>
+                        <span class="category">${image.category}</span>
+                        <div class="image-actions">
+                            <button class="btn" onclick="replaceImage('${image.fullPath}')">
+                                <i class="fas fa-edit"></i> Remplacer
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteImage('${image.fullPath}')">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-loadImages();
-</script>
+        // ============================================
+        // FILTRES ET STATISTIQUES
+        // ============================================
+
+        function filterImages(category) {
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                btn.classList.remove('active-filter');
+            });
+            event.target.classList.add('active-filter');
+            
+            // Filtrer les images
+            if (category === 'all') {
+                displayImages(allImages);
+            } else {
+                const filtered = allImages.filter(img => img.category === category);
+                displayImages(filtered);
+            }
+        }
+
+        function updateStats() {
+            const total = allImages.length;
+            const hero = allImages.filter(img => img.category === 'hero').length;
+            
+            document.getElementById('total-images').textContent = total;
+            document.getElementById('hero-images').textContent = hero;
+        }
+
+        // ============================================
+        // ACTIONS SUR LES IMAGES
+        // ============================================
+
+        function replaceImage(fullPath) {
+            const fileName = fullPath.split('/').pop();
+            const folder = fullPath.split('/')[1];
+            
+            const githubUrl = `https://github.com/${CONFIG.githubRepo}/upload/${CONFIG.githubBranch}/${folder}`;
+            window.open(githubUrl, '_blank');
+            
+            showNotification(`Uploadez la nouvelle image avec le nom : ${fileName}`, 'info');
+        }
+
+        function deleteImage(fullPath) {
+            if (confirm(`Voulez-vous vraiment supprimer ${fullPath} ?`)) {
+                const githubUrl = `https://github.com/${CONFIG.githubRepo}/blob/${CONFIG.githubBranch}/${fullPath}`;
+                window.open(githubUrl, '_blank');
+                
+                showNotification('Ouvrez le fichier sur GitHub et cliquez sur "Delete"', 'warning');
+            }
+        }
+
+        function refreshAllImages() {
+            showNotification('Actualisation des images...', 'info');
+            loadAllImages().then(() => {
+                showNotification('Images actualisées avec succès !', 'success');
+            });
+        }
+
+        async function scanForNewImages() {
+            showNotification('Recherche de nouvelles images...', 'info');
+            await loadAllImages();
+            showNotification('Scan terminé !', 'success');
+        }
+
+        // ============================================
+        // UPLOAD DE NOUVELLES IMAGES
+        // ============================================
+
+        function selectCollection(collectionId) {
+            selectedCollection = collectionId;
+            
+            // Mettre à jour l'interface
+            document.querySelectorAll('.collection-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // Afficher les instructions
+            const instructions = document.getElementById('upload-instructions');
+            const title = document.getElementById('instruction-title');
+            const details = document.getElementById('instruction-details');
+            
+            instructions.style.display = 'block';
+            
+            if (collectionId === 'hero') {
+                title.textContent = 'Upload de l\'image Hero';
+                details.textContent = 'Uploadez votre image dans le dossier images/hero/ avec le nom 1.jpg';
+            } else {
+                const collection = CONFIG.collections.find(c => c.id === collectionId);
+                title.textContent = `Upload pour ${collection.title}`;
+                details.textContent = `Uploadez votre image dans le dossier images/${collection.folder}/ avec le numéro suivant (ex: 7.jpg, 8.jpg, etc.)`;
+            }
+        }
+
+        function openGitHubUpload() {
+            if (!selectedCollection) {
+                showNotification('Veuillez sélectionner une collection d\'abord', 'warning');
+                return;
+            }
+            
+            let folderPath;
+            if (selectedCollection === 'hero') {
+                folderPath = 'images/hero';
+            } else {
+                const collection = CONFIG.collections.find(c => c.id === selectedCollection);
+                folderPath = `images/${collection.folder}`;
+            }
+            
+            const githubUrl = `https://github.com/${CONFIG.githubRepo}/upload/${CONFIG.githubBranch}/${folderPath}`;
+            window.open(githubUrl, '_blank');
+            
+            showNotification('Ouvrez GitHub et glissez-déposez votre image', 'info');
+        }
+
+        // ============================================
+        // AUTRES FONCTIONS
+        // ============================================
+
+        function goToSite() {
+            window.open('https://rayschic-couture.github.io', '_blank');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Supprimer les anciennes notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            notification.style.background = 
+                type === 'success' ? '#4CAF50' : 
+                type === 'warning' ? '#ff9800' : '#2196F3';
+            
+            document.body.appendChild(notification);
+            
+            // Supprimer après 5 secondes
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // ============================================
+        // RACCOURCIS CLAVIER
+        // ============================================
+
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+R pour actualiser
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshAllImages();
+            }
+            
+            // Échap pour revenir au site
+            if (e.key === 'Escape') {
+                window.history.back();
+            }
+        });
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initialisation de l\'admin Rayschic...');
+            loadAllImages();
+            
+            // Sélectionner automatiquement "Tout voir"
+            document.querySelector('.filter-buttons .btn-primary').click();
+        });
+    </script>
 </body>
 </html>
