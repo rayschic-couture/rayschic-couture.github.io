@@ -42,14 +42,34 @@
             border-bottom: 1px solid #2d3047;
         }
         
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             text-decoration: none;
         }
         
-        .logo span {
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d4af37;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .logo-text span {
             color: #d4af37;
         }
         
@@ -662,6 +682,12 @@
                 gap: 15px;
             }
             
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
             .hero {
                 flex-direction: column;
             }
@@ -882,7 +908,10 @@
     <header>
         <div class="container">
             <div class="header-top">
-                <a href="#" class="logo">RAY<span>SCHIC</span></a>
+                <a href="#" class="logo-container">
+                    <img src="IMG_5238.jpg" alt="Logo Rayschic" class="logo-img">
+                    <div class="logo-text">RAY<span>SCHIC</span></div>
+                </a>
                 <div class="slogan">
                     <strong>L'excellence en couture masculine</strong> 
                     <span style="color: #d4af37; margin-left: 5px;">sur mesure</span>
