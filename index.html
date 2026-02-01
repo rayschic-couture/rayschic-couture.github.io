@@ -859,6 +859,22 @@
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+        
+        /* Loader */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #d4af37;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -894,8 +910,7 @@
                 <a href="#contact" class="cta-button">Prendre rendez-vous</a>
             </div>
             <div class="hero-image">
-                <!-- Image chargée dynamiquement depuis l'API Python -->
-                <img id="hero-img" src="" alt="Costume masculin sur mesure">
+                <img id="hero-img" src="https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop" alt="Costume masculin sur mesure">
             </div>
         </div>
     </section>
@@ -906,7 +921,7 @@
         <p style="text-align: center; margin-bottom: 40px; color: #666; max-width: 800px; margin-left: auto; margin-right: auto;">Découvrez nos créations exclusives, chaque pièce est conçue sur mesure pour s'adapter parfaitement à votre morphologie et à votre style personnel.</p>
         
         <div class="collections-grid" id="collections-container">
-            <!-- Rempli dynamiquement par JavaScript depuis l'API Python -->
+            <!-- Rempli dynamiquement -->
         </div>
     </section>
 
@@ -1096,66 +1111,57 @@
             <h2><i class="fas fa-images"></i> Gestionnaire d'Images</h2>
             
             <div class="manager-section">
-                <h3>Système d'Images - Python</h3>
-                <p><strong>Serveur Python :</strong> https://rayschic-python-admin.onrender.com</p>
-                <p><strong>Interface Admin :</strong> <a href="https://rayschic-python-admin.onrender.com/static/admin.html" target="_blank" style="color:#d4af37;">Ouvrir l'Admin Python</a></p>
+                <h3>Système Python sur Render</h3>
+                <p><strong>Serveur API :</strong> https://rayschic-python-admin.onrender.com</p>
+                <p><strong>Status :</strong> <span id="api-status">Vérification...</span></p>
+                <p><strong>Stockage :</strong> <span id="storage-type">Vérification...</span></p>
                 
                 <div style="background: #1a1a2e; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d4af37;">
-                    <p><strong>📁 Structure API :</strong></p>
+                    <p><strong>📁 Endpoints API :</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li><code>/api/scan</code> - Scanner toutes les images</li>
-                        <li><code>/api/upload</code> - Uploader une image</li>
-                        <li><code>/api/delete</code> - Supprimer une image</li>
-                        <li><code>/api/generate-json</code> - Générer JSON pour GitHub</li>
+                        <li><code><a href="https://rayschic-python-admin.onrender.com/api/scan" target="_blank">/api/scan</a></code> - Lister toutes les images</li>
+                        <li><code><a href="https://rayschic-python-admin.onrender.com/api/health" target="_blank">/api/health</a></code> - Vérifier santé API</li>
+                        <li><code><a href="https://rayschic-python-admin.onrender.com/api/test-cloudinary" target="_blank">/api/test-cloudinary</a></code> - Tester Cloudinary</li>
                     </ul>
                 </div>
             </div>
             
             <div class="manager-section">
-                <h3>Statistiques en direct :</h3>
+                <h3>Statistiques Images</h3>
                 <div id="image-stats">
-                    <p style="text-align: center; padding: 20px;">Chargement des statistiques...</p>
+                    <div class="loader"></div>
+                    <p style="text-align: center;">Chargement des statistiques...</p>
                 </div>
             </div>
             
             <div class="manager-actions">
                 <button onclick="window.open('https://rayschic-python-admin.onrender.com/static/admin.html', '_blank')" class="btn-action">
-                    <i class="fas fa-external-link-alt"></i> Ouvrir l'Admin Python
+                    <i class="fas fa-external-link-alt"></i> Ouvrir Admin Python
                 </button>
                 <button onclick="refreshAllImages()" class="btn-action">
                     <i class="fas fa-sync-alt"></i> Actualiser les images
                 </button>
-                <button onclick="testAPI()" class="btn-action">
-                    <i class="fas fa-bug"></i> Tester l'API
+                <button onclick="testPythonAPI()" class="btn-action">
+                    <i class="fas fa-bug"></i> Tester l'API Python
                 </button>
                 <button onclick="closeImageManager()" class="btn-close">
                     <i class="fas fa-times"></i> Fermer
                 </button>
             </div>
-            
-            <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 5px; border-left: 4px solid #d4af37;">
-                <p><strong>💡 Astuce :</strong> L'Admin Python permet de :</p>
-                <ul style="margin-left: 20px; margin-top: 10px;">
-                    <li>Uploader des images par drag & drop</li>
-                    <li>Organiser par collections</li>
-                    <li>Supprimer des images</li>
-                    <li>Générer le JSON pour GitHub</li>
-                </ul>
-            </div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- SCRIPT MIS À JOUR POUR SYSTÈME PYTHON RENDER -->
-    <!-- ============================================ -->
     <script>
     // ============================================
-    // CONFIGURATION
+    // CONFIGURATION PRINCIPALE
     // ============================================
     const CONFIG = {
-        apiUrl: 'https://rayschic-python-admin.onrender.com', // VOTRE ADMIN PYTHON
-        adminUrl: 'https://rayschic-python-admin.onrender.com/static/admin.html',
-        collections: [
+        // URL de votre API Python sur Render
+        PYTHON_API_URL: 'https://rayschic-python-admin.onrender.com',
+        
+        // Collections disponibles
+        COLLECTIONS: [
+            { id: 'hero', title: 'Image Principale', folder: 'hero' },
             { id: 'costumes', title: 'Costumes sur Mesure', folder: 'costumes' },
             { id: 'chemises', title: 'Chemises sur Mesure', folder: 'chemises' },
             { id: 'pantalons', title: 'Pantalons sur Mesure', folder: 'pantalons' },
@@ -1164,13 +1170,25 @@
             { id: 'accessoires', title: 'Accessoires Masculins', folder: 'accessoires' }
         ],
         
-        descriptions: {
-            costumes: "Création de costumes élégants parfaitement adaptés à votre morphologie et à votre style, pour toutes les occasions.",
-            chemises: "Chemises personnalisées avec choix des tissus, coupes et finitions pour un style unique et élégant.",
-            pantalons: "Pantalons confectionnés sur mesure pour un ajustement parfait, un confort optimal et une élégance remarquable.",
-            vestes: "Vestes et blazers confectionnés sur mesure pour compléter votre garde-robe masculine avec élégance.",
-            tenues: "Créations pour occasions spéciales : mariages, cérémonies, événements d'affaires et autres moments importants.",
-            accessoires: "Accessoires soigneusement sélectionnés et personnalisés pour compléter votre tenue sur mesure."
+        // Descriptions des collections
+        DESCRIPTIONS: {
+            costumes: "Costumes élégants parfaitement adaptés à votre morphologie, pour toutes les occasions.",
+            chemises: "Chemises personnalisées avec choix des tissus, coupes et finitions pour un style unique.",
+            pantalons: "Pantalons sur mesure pour un ajustement parfait et un confort optimal.",
+            vestes: "Vestes et blazers confectionnés sur mesure pour compléter votre garde-robe.",
+            tenues: "Créations pour occasions spéciales : mariages, cérémonies, événements d'affaires.",
+            accessoires: "Accessoires soigneusement sélectionnés pour compléter votre tenue sur mesure."
+        },
+        
+        // Images de secours
+        FALLBACK_IMAGES: {
+            hero: 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop',
+            costumes: 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=600&auto=format&fit=crop',
+            chemises: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop',
+            pantalons: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop',
+            vestes: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop',
+            tenues: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&auto=format&fit=crop',
+            accessoires: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop'
         }
     };
 
@@ -1178,301 +1196,298 @@
     // ÉTAT GLOBAL
     // ============================================
     let currentGallery = null;
-    let collectionsData = [];
-    let apiStatus = 'loading';
+    let allCollectionsData = {};
+    let currentCollectionImages = [];
+    let apiStatus = 'unknown';
 
     // ============================================
-    // CHARGEMENT DES IMAGES DEPUIS L'API PYTHON
+    // INITIALISATION PRINCIPALE
+    // ============================================
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log('🚀 Initialisation du site Rayschic');
+        console.log('📡 API Python:', CONFIG.PYTHON_API_URL);
+        
+        // Afficher un chargement
+        showLoadingCollections();
+        
+        // Vérifier la santé de l'API d'abord
+        await checkAPIHealth();
+        
+        // Charger les images
+        await loadAllImages();
+        
+        // Initialiser les événements
+        initEvents();
+        
+        console.log('✅ Site initialisé avec succès');
+    });
+
+    // ============================================
+    // FONCTIONS DE CHARGEMENT
     // ============================================
 
-    async function loadImagesFromPythonAPI() {
+    // Vérifier la santé de l'API
+    async function checkAPIHealth() {
         try {
-            console.log('📡 Chargement depuis l\'API Python...', CONFIG.apiUrl);
+            console.log('🔍 Vérification santé API...');
+            const response = await fetchWithTimeout(`${CONFIG.PYTHON_API_URL}/api/health`, 5000);
             
-            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
-                signal: AbortSignal.timeout(10000) // Timeout de 10 secondes
-            });
+            if (response.ok) {
+                const data = await response.json();
+                apiStatus = 'online';
+                console.log('✅ API en ligne:', data);
+                
+                // Mettre à jour l'affichage
+                const statusElement = document.getElementById('api-status');
+                const storageElement = document.getElementById('storage-type');
+                
+                if (statusElement) {
+                    statusElement.innerHTML = '<span style="color:#4CAF50;">✅ En ligne</span>';
+                }
+                if (storageElement && data.storage) {
+                    storageElement.textContent = data.storage === 'cloudinary' ? 'Cloudinary (permanent)' : 'Local (temporaire)';
+                }
+                
+                return true;
+            }
+        } catch (error) {
+            console.warn('⚠️ API non disponible:', error);
+            apiStatus = 'offline';
+            
+            const statusElement = document.getElementById('api-status');
+            if (statusElement) {
+                statusElement.innerHTML = '<span style="color:#f44336;">❌ Hors ligne</span>';
+            }
+            
+            return false;
+        }
+    }
+
+    // Charger toutes les images
+    async function loadAllImages() {
+        try {
+            // Charger depuis l'API Python
+            const pythonData = await loadFromPythonAPI();
+            
+            if (pythonData && Object.keys(pythonData).length > 0) {
+                await processCollectionsData(pythonData);
+                return;
+            }
+            
+            // Fallback: Charger depuis JSON local
+            const localData = await loadFromLocalJSON();
+            if (localData) {
+                await processCollectionsData(localData);
+                return;
+            }
+            
+            // Dernier recours: Utiliser des images de secours
+            useFallbackImages();
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement images:', error);
+            useFallbackImages();
+        }
+    }
+
+    // Charger depuis l'API Python
+    async function loadFromPythonAPI() {
+        try {
+            console.log('📡 Tentative de chargement depuis API Python...');
+            const response = await fetchWithTimeout(`${CONFIG.PYTHON_API_URL}/api/scan`, 8000);
             
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
             
             const data = await response.json();
-            console.log('✅ Données reçues:', data);
+            console.log('✅ Données API reçues:', data);
+            
+            // Mettre à jour le statut
             apiStatus = 'online';
-            
-            // 1. Charger l'image hero
-            await loadHeroImageFromAPI(data);
-            
-            // 2. Charger les collections
-            await loadCollectionsFromAPI(data);
-            
-            // 3. Initialiser les événements
-            initEvents();
-            
-            // 4. Mettre à jour le footer
-            updateFooterCollections(data);
-            
-            // 5. Mettre à jour les stats
-            updateImageStats();
+            showNotification('✅ Images chargées depuis l\'API Python', 'success');
             
             return data;
             
         } catch (error) {
-            console.warn('⚠️ Erreur API, utilisation du fallback JSON:', error);
+            console.warn('⚠️ Échec API Python:', error);
             apiStatus = 'offline';
-            
-            // Fallback vers le système local
-            await loadFromLocalJSON();
-            
-            // Afficher notification si API hors ligne
-            if (error.name === 'AbortError') {
-                showNotification('⚠️ L\'API Python est lente, utilisation du cache local', 'warning');
-            } else {
-                showNotification('⚠️ Connexion à l\'API Python échouée, utilisation du cache', 'warning');
-            }
+            return null;
         }
     }
 
-    // Charger l'image hero depuis l'API
-    async function loadHeroImageFromAPI(data) {
+    // Charger depuis JSON local
+    async function loadFromLocalJSON() {
+        try {
+            console.log('📁 Tentative de chargement local...');
+            const response = await fetch('data/images.json');
+            
+            if (!response.ok) {
+                throw new Error('JSON non trouvé');
+            }
+            
+            const data = await response.json();
+            console.log('✅ Données JSON local reçues');
+            
+            showNotification('📁 Images chargées depuis le cache local', 'info');
+            return data;
+            
+        } catch (error) {
+            console.warn('⚠️ Échec chargement local:', error);
+            return null;
+        }
+    }
+
+    // Traiter les données des collections
+    async function processCollectionsData(data) {
+        // 1. Mettre à jour les données globales
+        allCollectionsData = data.collections || {};
+        
+        // 2. Mettre à jour l'image hero
+        await updateHeroImage();
+        
+        // 3. Afficher les collections
+        displayCollections();
+        
+        // 4. Mettre à jour le footer
+        updateFooterCollections();
+        
+        // 5. Mettre à jour les stats
+        updateImageStats();
+    }
+
+    // Mettre à jour l'image hero
+    async function updateHeroImage() {
         const heroImg = document.getElementById('hero-img');
         
-        if (data.collections && data.collections.hero && data.collections.hero.images.length > 0) {
-            const heroImage = data.collections.hero.images[0];
-            const imgUrl = `${CONFIG.apiUrl}${heroImage.url}`;
+        if (allCollectionsData.hero && 
+            allCollectionsData.hero.images && 
+            allCollectionsData.hero.images.length > 0) {
             
-            // Vérifier si l'image existe
-            if (await imageExists(imgUrl)) {
-                heroImg.src = imgUrl;
-                console.log('✅ Hero image chargée:', heroImg.src);
+            const heroImage = allCollectionsData.hero.images[0];
+            const imageUrl = heroImage.url;
+            
+            // Vérifier si c'est une URL complète
+            if (imageUrl.startsWith('http')) {
+                heroImg.src = imageUrl;
             } else {
-                useFallbackHero(heroImg);
+                // Ajouter le préfixe de l'API si nécessaire
+                heroImg.src = `${CONFIG.PYTHON_API_URL}${imageUrl}`;
             }
+            
+            console.log('✅ Hero image mise à jour:', heroImg.src);
+            
         } else {
-            useFallbackHero(heroImg);
+            // Fallback
+            heroImg.src = CONFIG.FALLBACK_IMAGES.hero;
+            console.log('⚠️ Hero image non trouvée, utilisation du fallback');
         }
         
         // Fallback en cas d'erreur
         heroImg.onerror = function() {
-            this.src = 'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop';
+            this.src = CONFIG.FALLBACK_IMAGES.hero;
         };
     }
 
-    function useFallbackHero(heroImg) {
-        // Fallback local
-        const fallbackSources = [
-            'images/hero/1.jpg', 
-            'images/hero.jpg',
-            'https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=1200&auto=format&fit=crop'
-        ];
+    // Afficher les collections
+    function displayCollections() {
+        const container = document.getElementById('collections-container');
         
-        // Essayer chaque source
-        fallbackSources.forEach(src => {
-            const testImg = new Image();
-            testImg.src = src;
-            testImg.onload = () => {
-                if (!heroImg.src || heroImg.src.includes('placeholder')) {
-                    heroImg.src = src;
-                }
-            };
-        });
-    }
-
-    // Charger les collections depuis l'API
-    async function loadCollectionsFromAPI(data) {
-        const grid = document.getElementById('collections-container');
-        
-        if (!data.collections || Object.keys(data.collections).length === 0) {
-            grid.innerHTML = '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune image disponible</div>';
-            return;
-        }
+        if (!container) return;
         
         let html = '';
-        collectionsData = [];
         
-        // Parcourir toutes les collections sauf 'hero'
-        for (const [collectionId, collectionData] of Object.entries(data.collections)) {
-            if (collectionId === 'hero') continue;
+        // Parcourir toutes les collections (sauf hero)
+        for (const collection of CONFIG.COLLECTIONS) {
+            if (collection.id === 'hero') continue;
             
-            const configCollection = CONFIG.collections.find(c => c.id === collectionId);
-            if (!configCollection) continue;
+            const collectionData = allCollectionsData[collection.id];
+            const images = collectionData ? (collectionData.images || []) : [];
+            const title = collectionData ? (collectionData.title || collection.title) : collection.title;
+            const count = images.length;
             
-            // Vérifier si la collection a des images
-            if (!collectionData.images || collectionData.images.length === 0) {
-                console.log(`⚠️ Collection ${collectionId} vide`);
-                continue;
-            }
-            
-            // Filtrer les images valides
-            const validImages = [];
-            for (const img of collectionData.images) {
-                const imgUrl = `${CONFIG.apiUrl}${img.url}`;
-                if (await imageExists(imgUrl)) {
-                    validImages.push({
-                        src: imgUrl,
-                        title: `${collectionData.title} ${img.filename.split('.')[0]}`,
-                        desc: `Image ${img.filename} - ${collectionData.title}`,
-                        filename: img.filename
-                    });
+            // Image à afficher (première image ou fallback)
+            let imageUrl = '';
+            if (images.length > 0) {
+                const firstImage = images[0];
+                if (firstImage.url.startsWith('http')) {
+                    imageUrl = firstImage.url;
+                } else {
+                    imageUrl = `${CONFIG.PYTHON_API_URL}${firstImage.url}`;
                 }
+            } else {
+                imageUrl = CONFIG.FALLBACK_IMAGES[collection.id] || CONFIG.FALLBACK_IMAGES.costumes;
             }
             
-            if (validImages.length === 0) continue;
-            
-            // Stocker pour la galerie
-            collectionsData.push({
-                id: collectionId,
-                title: collectionData.title || configCollection.title,
-                images: validImages,
-                description: CONFIG.descriptions[collectionId] || collectionData.title || ''
-            });
-            
-            // Créer la carte de collection
             html += `
-                <div class="collection-card" data-collection="${collectionId}">
+                <div class="collection-card" data-collection="${collection.id}">
                     <div class="collection-image">
-                        <img src="${validImages[0].src}" 
-                             alt="${collectionData.title}"
+                        <img src="${imageUrl}" 
+                             alt="${title}"
                              loading="lazy"
-                             onerror="this.onerror=null; this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${encodeURIComponent(collectionData.title)}'">
+                             onerror="this.onerror=null; this.src='${CONFIG.FALLBACK_IMAGES[collection.id] || CONFIG.FALLBACK_IMAGES.costumes}'">
                     </div>
                     <div class="collection-content">
-                        <h3>${collectionData.title || configCollection.title}</h3>
-                        <p>${CONFIG.descriptions[collectionId] || collectionData.title || ''}</p>
-                        <div class="collection-tag">${validImages.length} modèle${validImages.length > 1 ? 's' : ''}</div>
+                        <h3>${title}</h3>
+                        <p>${CONFIG.DESCRIPTIONS[collection.id] || title}</p>
+                        <div class="collection-tag">${count} modèle${count !== 1 ? 's' : ''}</div>
                     </div>
                 </div>
             `;
         }
         
-        grid.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
-        console.log(`✅ ${collectionsData.length} collections chargées`);
+        container.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
     }
 
-    // Mettre à jour les collections dans le footer
-    function updateFooterCollections(data) {
-        const footerList = document.getElementById('footer-collections');
-        if (!footerList) return;
-        
-        let html = '';
-        
-        for (const collection of CONFIG.collections) {
-            const collectionData = data.collections ? data.collections[collection.id] : null;
-            const hasImages = collectionData && collectionData.images && collectionData.images.length > 0;
-            
-            if (hasImages) {
-                html += `<li><a href="#" data-collection="${collection.id}">${collection.title.toUpperCase()}</a></li>`;
-            }
-        }
-        
-        footerList.innerHTML = html;
-    }
-
-    // ============================================
-    // FALLBACK - SYSTÈME LOCAL (JSON)
-    // ============================================
-
-    async function loadFromLocalJSON() {
-        try {
-            console.log('📁 Tentative de chargement local...');
-            
-            const response = await fetch('data/images.json');
-            if (!response.ok) throw new Error('JSON non trouvé');
-            
-            const data = await response.json();
-            
-            // Charger hero
-            const heroImg = document.getElementById('hero-img');
-            if (data.hero && data.hero.url) {
-                heroImg.src = data.hero.url;
-            }
-            
-            // Charger collections
-            await loadCollectionsFromLocalJSON(data);
-            
-            initEvents();
-            updateImageStats();
-            
-        } catch (error) {
-            console.error('❌ Erreur chargement local:', error);
-            showDefaultContent();
+    // Afficher le chargement
+    function showLoadingCollections() {
+        const container = document.getElementById('collections-container');
+        if (container) {
+            container.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                    <div class="loader"></div>
+                    <p style="margin-top: 20px; color: #d4af37;">Chargement des collections...</p>
+                </div>
+            `;
         }
     }
 
-    async function loadCollectionsFromLocalJSON(data) {
-        const grid = document.getElementById('collections-container');
-        collectionsData = [];
+    // Utiliser les images de secours
+    function useFallbackImages() {
+        console.log('⚠️ Utilisation des images de secours');
         
+        // Hero image
+        const heroImg = document.getElementById('hero-img');
+        heroImg.src = CONFIG.FALLBACK_IMAGES.hero;
+        
+        // Collections
+        const container = document.getElementById('collections-container');
         let html = '';
         
-        for (const collection of CONFIG.collections) {
-            const collectionData = data.collections ? data.collections[collection.id] : null;
+        for (const collection of CONFIG.COLLECTIONS) {
+            if (collection.id === 'hero') continue;
             
-            if (collectionData && collectionData.images && collectionData.images.length > 0) {
-                // Stocker pour galerie
-                const collectionImages = collectionData.images.map(img => ({
-                    src: img.url,
-                    title: `${collectionData.title} ${img.number || ''}`,
-                    desc: `Image ${img.filename} - ${collectionData.title}`,
-                    filename: img.filename
-                }));
-                
-                collectionsData.push({
-                    id: collection.id,
-                    title: collectionData.title,
-                    images: collectionImages,
-                    description: CONFIG.descriptions[collection.id]
-                });
-                
-                // Créer carte
-                html += `
-                    <div class="collection-card" data-collection="${collection.id}">
-                        <div class="collection-image">
-                            <img src="${collectionData.images[0].url}" 
-                                 alt="${collectionData.title}"
-                                 loading="lazy"
-                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/350x250/2d3047/d4af37?text=${encodeURIComponent(collectionData.title)}'">
-                        </div>
-                        <div class="collection-content">
-                            <h3>${collectionData.title}</h3>
-                            <p>${CONFIG.descriptions[collection.id]}</p>
-                            <div class="collection-tag">${collectionData.count || collectionData.images.length} modèle${(collectionData.count || collectionData.images.length) > 1 ? 's' : ''}</div>
-                        </div>
+            html += `
+                <div class="collection-card" data-collection="${collection.id}">
+                    <div class="collection-image">
+                        <img src="${CONFIG.FALLBACK_IMAGES[collection.id] || CONFIG.FALLBACK_IMAGES.costumes}" 
+                             alt="${collection.title}"
+                             loading="lazy">
                     </div>
-                `;
-            }
+                    <div class="collection-content">
+                        <h3>${collection.title}</h3>
+                        <p>${CONFIG.DESCRIPTIONS[collection.id] || collection.title}</p>
+                        <div class="collection-tag">Collection exclusive</div>
+                    </div>
+                </div>
+            `;
         }
         
-        grid.innerHTML = html || '<div style="text-align:center; padding:40px; color:#d4af37;">Aucune collection disponible</div>';
-    }
-
-    function showDefaultContent() {
-        const grid = document.getElementById('collections-container');
-        grid.innerHTML = `
-            <div class="collection-card">
-                <div class="collection-image">
-                    <img src="https://images.unsplash.com/photo-1594938371076-7b5daf7d016c?w=600&auto=format&fit=crop" alt="Costumes">
-                </div>
-                <div class="collection-content">
-                    <h3>Costumes sur Mesure</h3>
-                    <p>Création de costumes élégants parfaitement adaptés à votre morphologie.</p>
-                    <div class="collection-tag">Collection exclusive</div>
-                </div>
-            </div>
-            <div class="collection-card">
-                <div class="collection-image">
-                    <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&auto=format&fit=crop" alt="Chemises">
-                </div>
-                <div class="collection-content">
-                    <h3>Chemises sur Mesure</h3>
-                    <p>Chemises personnalisées avec choix des tissus, coupes et finitions.</p>
-                    <div class="collection-tag">Sur mesure</div>
-                </div>
-            </div>
-        `;
+        if (container) {
+            container.innerHTML = html;
+        }
         
-        initEvents();
+        showNotification('⚠️ Mode hors ligne - Images de démonstration', 'warning');
     }
 
     // ============================================
@@ -1480,8 +1495,9 @@
     // ============================================
 
     function openGallery(collectionId) {
-        const collection = collectionsData.find(c => c.id === collectionId);
-        if (!collection || !collection.images || collection.images.length === 0) {
+        const collectionData = allCollectionsData[collectionId];
+        
+        if (!collectionData || !collectionData.images || collectionData.images.length === 0) {
             showNotification('Aucune image disponible pour cette collection', 'warning');
             return;
         }
@@ -1491,19 +1507,27 @@
         const desc = document.getElementById('modal-description');
         const grid = document.getElementById('modal-gallery-grid');
         
-        title.textContent = `Collection - ${collection.title}`;
-        desc.textContent = collection.description;
+        title.textContent = collectionData.title || collectionId;
+        desc.textContent = CONFIG.DESCRIPTIONS[collectionId] || '';
         
-        // Afficher toutes les images
-        grid.innerHTML = collection.images.map((img, index) => `
-            <div class="modal-gallery-item" data-index="${index}">
+        // Préparer les images pour la galerie
+        currentCollectionImages = collectionData.images.map((img, index) => ({
+            src: img.url.startsWith('http') ? img.url : `${CONFIG.PYTHON_API_URL}${img.url}`,
+            title: img.filename ? img.filename.replace(/\.[^/.]+$/, "") : `Image ${index + 1}`,
+            filename: img.filename || `image_${index + 1}.jpg`,
+            index: index
+        }));
+        
+        // Afficher les images
+        grid.innerHTML = currentCollectionImages.map(img => `
+            <div class="modal-gallery-item" data-index="${img.index}">
                 <img src="${img.src}" 
                      alt="${img.title}" 
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x250/2d3047/d4af37?text=Image+${index+1}'">
+                     onerror="this.onerror=null; this.src='${CONFIG.FALLBACK_IMAGES[collectionId] || CONFIG.FALLBACK_IMAGES.costumes}'">
                 <div class="modal-gallery-overlay">
                     <h4>${img.title}</h4>
-                    <p>${img.desc}</p>
+                    <p>${img.filename}</p>
                 </div>
             </div>
         `).join('');
@@ -1521,8 +1545,10 @@
     }
 
     function openFullscreenImage(collectionId, index) {
-        const collection = collectionsData.find(c => c.id === collectionId);
-        if (!collection || !collection.images[index]) return;
+        if (!currentCollectionImages || currentCollectionImages.length === 0) return;
+        
+        if (index < 0) index = currentCollectionImages.length - 1;
+        if (index >= currentCollectionImages.length) index = 0;
         
         const modal = document.getElementById('fullscreen-modal');
         const img = document.getElementById('fullscreen-image');
@@ -1530,12 +1556,12 @@
         const desc = document.getElementById('fullscreen-description');
         const counter = document.getElementById('fullscreen-counter');
         
-        const image = collection.images[index];
+        const image = currentCollectionImages[index];
         
         img.src = image.src;
         title.textContent = image.title;
-        desc.textContent = image.desc;
-        counter.textContent = `${index + 1} / ${collection.images.length}`;
+        desc.textContent = image.filename;
+        counter.textContent = `${index + 1} / ${currentCollectionImages.length}`;
         
         modal.style.display = 'flex';
         
@@ -1543,42 +1569,211 @@
         currentGallery = {
             collectionId,
             index,
-            images: collection.images
+            images: currentCollectionImages
         };
     }
 
     // ============================================
-    // ÉVÉNEMENTS
+    // GESTIONNAIRE D'IMAGES
     // ============================================
 
+    function openImageManager() {
+        const overlay = document.getElementById('image-manager-overlay');
+        overlay.style.display = 'flex';
+        
+        // Vérifier et mettre à jour les informations
+        checkAPIHealth();
+        updateImageStats();
+    }
+
+    function closeImageManager() {
+        document.getElementById('image-manager-overlay').style.display = 'none';
+    }
+
+    async function updateImageStats() {
+        const statsDiv = document.getElementById('image-stats');
+        if (!statsDiv) return;
+        
+        try {
+            // Essayer l'API Python d'abord
+            const response = await fetchWithTimeout(`${CONFIG.PYTHON_API_URL}/api/scan`, 5000);
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                let html = '<table class="stats-table">';
+                html += '<tr><th>Collection</th><th>Images</th><th>Statut</th></tr>';
+                
+                let totalImages = 0;
+                
+                for (const collection of CONFIG.COLLECTIONS) {
+                    const collectionData = data.collections[collection.id];
+                    const count = collectionData ? (collectionData.images ? collectionData.images.length : 0) : 0;
+                    totalImages += count;
+                    
+                    const status = count > 0 ? '✓' : '✗';
+                    const color = count > 0 ? '#4CAF50' : '#f44336';
+                    
+                    html += `
+                        <tr>
+                            <td>${collection.title}</td>
+                            <td>${count}</td>
+                            <td style="color:${color}; font-weight:bold;">${status}</td>
+                        </tr>
+                    `;
+                }
+                
+                html += `
+                    <tr style="background:#2d3047; border-top:2px solid #d4af37;">
+                        <td><strong>TOTAL</strong></td>
+                        <td><strong>${totalImages} images</strong></td>
+                        <td style="color:#d4af37; font-weight:bold;">API Python: ${apiStatus === 'online' ? '✅' : '⚠️'}</td>
+                    </tr>
+                `;
+                
+                html += '</table>';
+                statsDiv.innerHTML = html;
+                
+            } else {
+                throw new Error('API error');
+            }
+            
+        } catch (error) {
+            statsDiv.innerHTML = `
+                <p style="color:#f44336; text-align:center; padding:20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Impossible de charger les statistiques
+                </p>
+                <p style="text-align:center; color:#aaa;">
+                    API Python: ${apiStatus === 'online' ? '✅ En ligne' : '⚠️ Hors ligne'}
+                </p>
+            `;
+        }
+    }
+
+    async function testPythonAPI() {
+        try {
+            showNotification('Test de l\'API Python en cours...', 'info');
+            
+            const response = await fetchWithTimeout(`${CONFIG.PYTHON_API_URL}/api/health`, 5000);
+            
+            if (response.ok) {
+                const data = await response.json();
+                showNotification(`✅ API Python fonctionne! Stockage: ${data.storage}`, 'success');
+                
+                // Mettre à jour l'affichage
+                const statusElement = document.getElementById('api-status');
+                const storageElement = document.getElementById('storage-type');
+                
+                if (statusElement) {
+                    statusElement.innerHTML = '<span style="color:#4CAF50;">✅ En ligne</span>';
+                }
+                if (storageElement) {
+                    storageElement.textContent = data.storage === 'cloudinary' ? 'Cloudinary (permanent)' : 'Local (temporaire)';
+                }
+                
+            } else {
+                showNotification('❌ API retourne une erreur', 'error');
+            }
+            
+        } catch (error) {
+            showNotification('❌ Impossible de contacter l\'API Python', 'error');
+        }
+    }
+
+    function refreshAllImages() {
+        showNotification('Actualisation des images en cours...', 'info');
+        
+        // Recharger toutes les images
+        loadAllImages().then(() => {
+            showNotification('✅ Images actualisées avec succès', 'success');
+        });
+    }
+
+    // ============================================
+    // FONCTIONS UTILITAIRES
+    // ============================================
+
+    // Fetch avec timeout
+    async function fetchWithTimeout(url, timeout = 8000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        try {
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            throw error;
+        }
+    }
+
+    // Afficher une notification
+    function showNotification(message, type = 'success') {
+        // Supprimer les anciennes notifications
+        document.querySelectorAll('.notification').forEach(n => n.remove());
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        
+        // Couleurs par type
+        const colors = {
+            success: '#4CAF50',
+            error: '#f44336',
+            warning: '#ff9800',
+            info: '#2196F3'
+        };
+        
+        notification.style.background = colors[type] || colors.success;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+
+    // Mettre à jour les collections du footer
+    function updateFooterCollections() {
+        const footerList = document.getElementById('footer-collections');
+        if (!footerList) return;
+        
+        let html = '';
+        
+        for (const collection of CONFIG.COLLECTIONS) {
+            if (collection.id === 'hero') continue;
+            
+            const collectionData = allCollectionsData[collection.id];
+            const hasImages = collectionData && collectionData.images && collectionData.images.length > 0;
+            
+            if (hasImages) {
+                html += `<li><a href="#" data-collection="${collection.id}">${collection.title.toUpperCase()}</a></li>`;
+            }
+        }
+        
+        footerList.innerHTML = html;
+    }
+
+    // Initialiser les événements
     function initEvents() {
         // Cartes de collection
-        document.querySelectorAll('.collection-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const collectionId = this.dataset.collection;
+        document.addEventListener('click', function(e) {
+            const card = e.target.closest('.collection-card');
+            if (card) {
+                const collectionId = card.dataset.collection;
                 openGallery(collectionId);
-            });
+            }
         });
         
-        // Liens du footer
-        document.querySelectorAll('#footer-collections a').forEach(link => {
-            link.addEventListener('click', function(e) {
+        // Liens des collections dans le footer
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('#footer-collections a');
+            if (link) {
                 e.preventDefault();
-                const collectionId = this.dataset.collection;
+                const collectionId = link.dataset.collection;
                 openGallery(collectionId);
-            });
+            }
         });
         
-        // Services exclusifs
-        document.querySelectorAll('.footer-column ul li a[data-collection]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const collectionId = this.dataset.collection;
-                openGallery(collectionId);
-            });
-        });
-        
-        // Fermer modale
+        // Fermer modale galerie
         document.querySelector('.close-modal').addEventListener('click', () => {
             document.getElementById('gallery-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
@@ -1592,17 +1787,13 @@
         // Navigation plein écran
         document.querySelector('.fullscreen-nav.prev').addEventListener('click', () => {
             if (currentGallery) {
-                let newIndex = currentGallery.index - 1;
-                if (newIndex < 0) newIndex = currentGallery.images.length - 1;
-                openFullscreenImage(currentGallery.collectionId, newIndex);
+                openFullscreenImage(currentGallery.collectionId, currentGallery.index - 1);
             }
         });
         
         document.querySelector('.fullscreen-nav.next').addEventListener('click', () => {
             if (currentGallery) {
-                let newIndex = currentGallery.index + 1;
-                if (newIndex >= currentGallery.images.length) newIndex = 0;
-                openFullscreenImage(currentGallery.collectionId, newIndex);
+                openFullscreenImage(currentGallery.collectionId, currentGallery.index + 1);
             }
         });
         
@@ -1612,18 +1803,19 @@
             if (e.key === 'Escape') {
                 const fullscreen = document.getElementById('fullscreen-modal');
                 const gallery = document.getElementById('gallery-modal');
+                const manager = document.getElementById('image-manager-overlay');
                 
                 if (fullscreen.style.display === 'flex') {
                     fullscreen.style.display = 'none';
                 } else if (gallery.style.display === 'block') {
                     gallery.style.display = 'none';
                     document.body.style.overflow = 'auto';
-                } else if (document.getElementById('image-manager-overlay').style.display === 'flex') {
+                } else if (manager.style.display === 'flex') {
                     closeImageManager();
                 }
             }
             
-            // Flèches pour navigation plein écran
+            // Flèches pour navigation
             if (document.getElementById('fullscreen-modal').style.display === 'flex') {
                 if (e.key === 'ArrowLeft') {
                     document.querySelector('.fullscreen-nav.prev').click();
@@ -1636,8 +1828,6 @@
         // Navigation fluide
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                if (this.dataset.collection) return;
-                
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
@@ -1652,211 +1842,25 @@
             });
         });
         
-        // Gestionnaire d'images
-        const imageManagerBtn = document.querySelector('a[onclick*="openImageManager"]');
-        if (imageManagerBtn) {
-            imageManagerBtn.onclick = function(e) {
-                e.preventDefault();
-                openImageManager();
-            };
-        }
-        
-        // Fermer gestionnaire en cliquant à l'extérieur
-        const imageManagerOverlay = document.getElementById('image-manager-overlay');
-        if (imageManagerOverlay) {
-            imageManagerOverlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeImageManager();
-                }
-            });
-        }
-    }
-
-    // ============================================
-    // GESTIONNAIRE D'IMAGES (mis à jour)
-    // ============================================
-
-    function openImageManager() {
-        const overlay = document.getElementById('image-manager-overlay');
-        overlay.style.display = 'flex';
-        
-        updateImageStats();
-    }
-
-    function closeImageManager() {
-        document.getElementById('image-manager-overlay').style.display = 'none';
-    }
-
-    async function updateImageStats() {
-        const statsDiv = document.getElementById('image-stats');
-        if (!statsDiv) return;
-        
-        try {
-            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
-                signal: AbortSignal.timeout(5000)
-            });
+        // Fermer modales en cliquant à l'extérieur
+        document.addEventListener('click', function(e) {
+            const galleryModal = document.getElementById('gallery-modal');
+            const fullscreenModal = document.getElementById('fullscreen-modal');
+            const imageManager = document.getElementById('image-manager-overlay');
             
-            if (!response.ok) throw new Error('API error');
-            
-            const data = await response.json();
-            
-            let html = '<table class="stats-table">';
-            html += '<tr><th>Collection</th><th>Images</th><th>Statut</th></tr>';
-            
-            let totalImages = 0;
-            
-            for (const collection of CONFIG.collections) {
-                const collectionData = data.collections[collection.id];
-                const count = collectionData ? (collectionData.count || collectionData.images.length) : 0;
-                totalImages += count;
-                
-                const status = count > 0 ? '✓' : '✗';
-                const color = count > 0 ? '#4CAF50' : '#f44336';
-                
-                html += `
-                    <tr>
-                        <td>${collection.title}</td>
-                        <td>${count} image${count !== 1 ? 's' : ''}</td>
-                        <td style="color:${color}; font-weight:bold;">${status}</td>
-                    </tr>
-                `;
+            if (galleryModal && e.target === galleryModal) {
+                galleryModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
             }
             
-            // Hero image
-            const heroCount = data.collections.hero ? data.collections.hero.images.length : 0;
-            html += `
-                <tr style="background:rgba(212,175,55,0.1);">
-                    <td><strong>Image Hero</strong></td>
-                    <td><strong>${heroCount}/1</strong></td>
-                    <td style="color:${heroCount > 0 ? '#4CAF50' : '#f44336'}; font-weight:bold;">${heroCount > 0 ? '✓' : '✗'}</td>
-                </tr>
-            `;
-            
-            html += `
-                <tr style="background:#2d3047; border-top:2px solid #d4af37;">
-                    <td><strong>TOTAL</strong></td>
-                    <td><strong>${totalImages} images</strong></td>
-                    <td style="color:#d4af37; font-weight:bold;">${apiStatus === 'online' ? '✅ En ligne' : '⚠️ Hors ligne'}</td>
-                </tr>
-            `;
-            
-            html += '</table>';
-            statsDiv.innerHTML = html;
-            
-        } catch (error) {
-            statsDiv.innerHTML = `
-                <p style="color:#f44336; text-align:center; padding:20px;">
-                    <i class="fas fa-exclamation-triangle"></i> Impossible de charger les statistiques
-                </p>
-                <p style="text-align:center; color:#aaa;">
-                    API Python: ${apiStatus === 'online' ? '✅ En ligne' : '⚠️ Hors ligne'}
-                </p>
-            `;
-        }
-    }
-
-    async function testAPI() {
-        try {
-            showNotification('Test de l\'API en cours...', 'info');
-            
-            const response = await fetch(`${CONFIG.apiUrl}/api/scan`, {
-                signal: AbortSignal.timeout(5000)
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                showNotification(`✅ API fonctionne ! ${data.stats.total_images} images disponibles`, 'success');
-                updateImageStats();
-            } else {
-                showNotification('❌ API retourne une erreur', 'error');
+            if (fullscreenModal && e.target === fullscreenModal) {
+                fullscreenModal.style.display = 'none';
             }
             
-        } catch (error) {
-            showNotification('❌ Impossible de contacter l\'API Python', 'error');
-        }
-    }
-
-    function refreshAllImages() {
-        // Ajouter un timestamp pour forcer le rechargement
-        document.querySelectorAll('img').forEach(img => {
-            if (img.src.includes(CONFIG.apiUrl) || img.src.includes('images/')) {
-                const cleanSrc = img.src.split('?')[0];
-                img.src = cleanSrc + '?t=' + Date.now();
+            if (imageManager && e.target === imageManager) {
+                closeImageManager();
             }
         });
-        
-        // Recharger les données
-        loadImagesFromPythonAPI().then(() => {
-            showNotification('✅ Images actualisées depuis l\'API Python', 'success');
-        });
-    }
-
-    function showNotification(message, type = 'success') {
-        // Supprimer les anciennes notifications
-        document.querySelectorAll('.notification').forEach(n => n.remove());
-        
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        notification.style.background = type === 'success' ? '#4CAF50' : 
-                                      type === 'error' ? '#f44336' : 
-                                      type === 'warning' ? '#ff9800' : '#2196F3';
-        
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 3000);
-    }
-
-    // ============================================
-    // FONCTIONS UTILITAIRES
-    // ============================================
-
-    async function imageExists(url) {
-        if (!url || url.includes('placeholder')) return false;
-        
-        try {
-            const response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(3000) });
-            return response.ok;
-        } catch {
-            return false;
-        }
-    }
-
-    // ============================================
-    // INITIALISATION
-    // ============================================
-
-    document.addEventListener('DOMContentLoaded', async function() {
-        console.log('🚀 Initialisation du site Rayschic...');
-        console.log('📡 API Python:', CONFIG.apiUrl);
-        
-        // Charger les images depuis l'API Python
-        await loadImagesFromPythonAPI();
-        
-        console.log('✅ Site prêt ! Système Python intégré.');
-        
-        // Afficher statut
-        if (apiStatus === 'online') {
-            console.log('🌐 API Python: En ligne');
-        } else {
-            console.log('⚠️ API Python: Hors ligne, utilisant le cache');
-        }
-    });
-    
-    // Ajouter timeout au fetch
-    if (!window.fetch.timeout) {
-        window.fetch.timeout = function(url, options = {}) {
-            const timeout = options.timeout || 10000;
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeout);
-            
-            return fetch(url, {
-                ...options,
-                signal: controller.signal
-            }).then(response => {
-                clearTimeout(id);
-                return response;
-            });
-        };
     }
     </script>
 </body>
