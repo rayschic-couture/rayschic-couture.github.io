@@ -27,8 +27,8 @@
         
         /* Header */
         header {
-            background-color: #1a1a2e;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background-color: #000000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -38,24 +38,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #2d3047;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
         }
         
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
             text-decoration: none;
         }
         
         .logo-img {
-            width: 50px;
-            height: 50px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #d4af37;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+            border: 3px solid #d4af37;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
             transition: transform 0.3s;
         }
         
@@ -63,19 +62,9 @@
             transform: scale(1.05);
         }
         
-        .logo-text {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-        }
-        
-        .logo-text span {
-            color: #d4af37;
-        }
-        
         .slogan {
-            background-color: #2d3047;
-            padding: 8px 15px;
+            background-color: #222;
+            padding: 10px 20px;
             border-radius: 4px;
             font-size: 14px;
             border-left: 3px solid #d4af37;
@@ -123,13 +112,13 @@
             background-color: #d4af37;
         }
         
-        /* Hero Section */
+        /* Hero Section - CHANGEMENT : fond noir au lieu de bleu */
         .hero {
             display: flex;
             align-items: center;
             padding: 60px 0;
             gap: 40px;
-            background: linear-gradient(to right, #1a1a2e, #2d3047);
+            background: linear-gradient(to right, #000000, #222);
             color: white;
         }
         
@@ -157,7 +146,7 @@
         .cta-button {
             display: inline-block;
             background-color: #d4af37;
-            color: #1a1a2e;
+            color: #000000;
             padding: 12px 28px;
             border-radius: 4px;
             text-decoration: none;
@@ -188,7 +177,7 @@
         .section-title {
             text-align: center;
             margin-bottom: 40px;
-            color: #1a1a2e;
+            color: #000000;
             font-size: 2rem;
             position: relative;
         }
@@ -253,7 +242,7 @@
         }
         
         .collection-content h3 {
-            color: #1a1a2e;
+            color: #000000;
             margin-bottom: 10px;
         }
         
@@ -269,7 +258,7 @@
             margin-top: auto;
         }
         
-        /* Gallery Modal */
+        /* Gallery Modal - CHANGEMENT : fond noir */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -277,13 +266,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             z-index: 1000;
             overflow-y: auto;
         }
         
         .modal-content {
-            background-color: #1a1a2e;
+            background-color: #000000;
             margin: 40px auto;
             max-width: 1200px;
             border-radius: 8px;
@@ -298,7 +287,7 @@
         }
         
         .modal-header {
-            background-color: #2d3047;
+            background-color: #222;
             padding: 20px;
             display: flex;
             justify-content: space-between;
@@ -347,7 +336,7 @@
             overflow: hidden;
             height: 250px;
             position: relative;
-            background-color: #2d3047;
+            background-color: #222;
             cursor: pointer;
         }
         
@@ -367,7 +356,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(26,26,46,0.9), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             color: white;
             padding: 15px;
             opacity: 0;
@@ -378,9 +367,9 @@
             opacity: 1;
         }
         
-        /* Specialization Section */
+        /* Specialization Section - CHANGEMENT : fond noir */
         .specialization {
-            background-color: #1a1a2e;
+            background-color: #000000;
             color: white;
             padding: 60px 0;
             margin-bottom: 60px;
@@ -400,7 +389,7 @@
         }
         
         .specialization-item {
-            background-color: #2d3047;
+            background-color: #222;
             padding: 30px;
             border-radius: 8px;
             transition: transform 0.3s;
@@ -445,15 +434,15 @@
             height: 40px;
             line-height: 40px;
             background-color: #d4af37;
-            color: #1a1a2e;
+            color: #000000;
             border-radius: 50%;
             font-weight: bold;
             margin-bottom: 20px;
         }
         
-        /* Footer */
+        /* Footer - CHANGEMENT : fond noir */
         footer {
-            background-color: #1a1a2e;
+            background-color: #000000;
             color: #ecf0f1;
             padding: 50px 0 20px;
         }
@@ -500,7 +489,7 @@
         }
         
         .delivery-info {
-            background-color: #2d3047;
+            background-color: #222;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -524,7 +513,7 @@
             justify-content: center;
             width: 40px;
             height: 40px;
-            background-color: #2d3047;
+            background-color: #222;
             color: #d4af37;
             border-radius: 50%;
             text-decoration: none;
@@ -533,7 +522,7 @@
         
         .social-media a:hover {
             background-color: #d4af37;
-            color: #1a1a2e;
+            color: #000000;
             transform: translateY(-3px);
         }
         
@@ -550,7 +539,7 @@
         .copyright {
             text-align: center;
             padding-top: 20px;
-            border-top: 1px solid #2d3047;
+            border-top: 1px solid #222;
             color: #bdc3c7;
             font-size: 0.9rem;
         }
@@ -560,7 +549,7 @@
             text-align: center;
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid #2d3047;
+            border-top: 1px solid #222;
         }
         
         .admin-link a {
@@ -683,9 +672,12 @@
             }
             
             .logo-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
+                justify-content: center;
+            }
+            
+            .logo-img {
+                width: 70px;
+                height: 70px;
             }
             
             .hero {
@@ -767,14 +759,14 @@
             }
         }
 
-        /* Styles pour le gestionnaire d'images */
+        /* Styles pour le gestionnaire d'images - CHANGEMENT : fond noir */
         .image-manager-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 99999;
             display: none;
             justify-content: center;
@@ -783,7 +775,7 @@
         }
         
         .image-manager-content {
-            background: #1a1a2e;
+            background: #000000;
             color: white;
             padding: 30px;
             border-radius: 10px;
@@ -803,7 +795,7 @@
         }
         
         .manager-section {
-            background: #2d3047;
+            background: #222;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -823,7 +815,7 @@
         
         .btn-action {
             background: #d4af37;
-            color: #1a1a2e;
+            color: #000000;
             border: none;
             padding: 12px 20px;
             border-radius: 5px;
@@ -836,7 +828,7 @@
         }
         
         .btn-close {
-            background: #666;
+            background: #444;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -862,7 +854,7 @@
         .stats-table th, .stats-table td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #2d3047;
+            border-bottom: 1px solid #222;
         }
         
         .stats-table th {
@@ -910,7 +902,6 @@
             <div class="header-top">
                 <a href="#" class="logo-container">
                     <img src="IMG_5238.jpg" alt="Logo Rayschic" class="logo-img">
-                    <div class="logo-text">RAY<span>SCHIC</span></div>
                 </a>
                 <div class="slogan">
                     <strong>L'excellence en couture masculine</strong> 
@@ -1145,7 +1136,7 @@
                 <p><strong>Status :</strong> <span id="api-status">Vérification...</span></p>
                 <p><strong>Stockage :</strong> <span id="storage-type">Vérification...</span></p>
                 
-                <div style="background: #1a1a2e; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d4af37;">
+                <div style="background: #000; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d4af37;">
                     <p><strong>📁 Endpoints API :</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li><code><a href="https://rayschic-python-admin.onrender.com/api/scan" target="_blank">/api/scan</a></code> - Lister toutes les images</li>
@@ -1653,7 +1644,7 @@
                 }
                 
                 html += `
-                    <tr style="background:#2d3047; border-top:2px solid #d4af37;">
+                    <tr style="background:#222; border-top:2px solid #d4af37;">
                         <td><strong>TOTAL</strong></td>
                         <td><strong>${totalImages} images</strong></td>
                         <td style="color:#d4af37; font-weight:bold;">API Python: ${apiStatus === 'online' ? '✅' : '⚠️'}</td>
